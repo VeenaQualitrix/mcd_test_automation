@@ -1,0 +1,52 @@
+Feature: McD App User Functionality
+  As a user
+  I want to perform various actions on the McD app
+  So that I can complete my orders successfully
+
+  Scenario: Verify login with valid Mobile Number and OTP
+    Given   I open the Chrome browser
+    When    I hit the URL "www.uat.mcdapp.co"
+    When  I am on the login page
+    When I enter a valid mobile number and click verify
+    And I enter the OTP and click verify
+    Then I should land on the profile page
+
+  Scenario: Verify that the profile page opens if incomplete
+    Given I am on the login page
+    When I enter a valid mobile number and click verify
+    And I enter the OTP and click verify
+    Then the profile page should open and should be blank for new users
+
+  Scenario: Verify successful landing on Home page after completing profile
+    Given I am on the profile page
+    When I fill in all required inputs and click submit
+    Then I should land on the Home page
+
+  Scenario: Verify that user can add one address
+    Given I am on the Home page
+    When I click on add address
+    And I fill in the required inputs and confirm
+    Then the address should be added and selected
+
+  Scenario: Verify that the nearest store is selected based on user address
+    Given I have added a valid address
+    Then the nearest store should be selected based on the address
+
+  Scenario: Verify adding multiple products with customization
+    Given I am on the Home page
+    When I add "3 pc Meals" with customization to the cart
+    Then the product should be added to the cart
+
+  Scenario: Verify that the selected product is visible on the cart page
+    Given I have added a product to the cart
+    When I view the cart
+    Then the product should be visible with the correct price (excluding GST)
+
+  Scenario: Verify that user can add offers
+    Given I am on the cart page
+    When I select an available offer
+    Then the offer should be applied and reflected on the cart page
+
+  Scenario: Verify gross price matches total price on the cart page
+    Given I have applied offers on the cart page
+    Then the gross pric
