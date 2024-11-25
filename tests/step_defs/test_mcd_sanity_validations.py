@@ -5,6 +5,7 @@ from pages.home_page import HomePage
 from pages.view_page import ViewPage
 from pages.profile_page import ProfilePage
 from pages.address_page import AddressPage
+from pages.view_cart_page import ViewCartPage
 from conftest import readPreReqJson
 
 scenarios('../features/Mcd_Sanity_Validations.feature')
@@ -141,5 +142,18 @@ def add_multiple_product_with_customization_and_coke_convergence(setup_platform)
 @then("I verify the product added in cart")
 def verify_the_product_added_in_cart(setup_platform):
     print("Verifying Product Added In Cart")
-    Nearby_Restaurants = HomePage(setup_platform).verify_product_added_in_cart()
-    assert Nearby_Restaurants, ""
+    Product_Added = HomePage(setup_platform).verify_product_added_in_cart()
+    assert Product_Added, "Product Is Not Added In Cart"
+
+
+@when("I click on view cart button")
+def click_on_view_cart_button(setup_platform):
+    print("Clicking on View Cart Button")
+    HomePage(setup_platform).click_on_view_cart()
+
+
+@then('I verify product is visible on cart page with price without GST')
+def verify_product_is_visible_on_cart_page_with_price_without_gst(setup_platform):
+    print("Verifying Product Is Visible On Cart Page With Price Without GST")
+    Product_Displayed = ViewCartPage(setup_platform).verify_product_displayed_in_cart_with_price_and_without_gst()
+    assert Product_Displayed, "Product Is Not Displayed In Cart With Price And Without GST"
