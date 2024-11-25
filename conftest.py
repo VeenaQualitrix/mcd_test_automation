@@ -85,7 +85,10 @@ def launchChromeheadless():
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems in Docker containers
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--headless=old")
+    chrome_options.add_argument("--ignore-certificate-errors")
+    chrome_options.add_argument("--disable-web-security")
+    chrome_options.add_argument("--allow-insecure-localhost")
+    #chrome_options.add_argument("--headless=old")
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
@@ -118,7 +121,7 @@ def load_capabilities(config_name):
     project_root = os.getcwd()
     # os.path.dirname(os.path.dirname(__file__))
     print('project_root', project_root)
-    config_path = os.path.join(project_root, 'utils', 'platformconfig.json')
+    config_path = os.path.join(project_root, 'util', 'platformconfig.json')
     print('config_path', config_path)
     with open(config_path, 'r', encoding='utf-8') as config_file:
         config = json.load(config_file)
@@ -128,7 +131,7 @@ def load_capabilities(config_name):
 
 def readConstants(constant_key):
     project_root = os.getcwd()
-    constants_path = os.path.join(project_root, 'utils', 'constants.json')
+    constants_path = os.path.join(project_root, 'util', 'constants.json')
     with open(constants_path) as constant_file:
         costant_value = json.load(constant_file)
         # print('reading full config file ', config)
@@ -137,7 +140,7 @@ def readConstants(constant_key):
 
 def readPreReqJson(prereqFileName, constant_key):
     project_root = os.getcwd()
-    data_file_path = os.path.join(project_root, 'utils', prereqFileName + ".json")
+    data_file_path = os.path.join(project_root, 'util', prereqFileName + ".json")
     with open(data_file_path, 'r', encoding='utf-8') as constant_file:
         costant_value = json.load(constant_file)
     return costant_value.get(constant_key)
@@ -151,7 +154,7 @@ def setup_platform(env, request):
         Fixture for setting up the testing environment.
     """
     project_root = os.getcwd()
-    constants_path = os.path.join(project_root, 'utils', 'constants.json')
+    constants_path = os.path.join(project_root, 'util', 'constants.json')
     with open(constants_path) as constant_file:
         costant_value = json.load(constant_file)
        
@@ -296,7 +299,7 @@ def pytest_runtest_logreport(report):
 
 def updateConstantFile(contantKey, ConstantValue):
     project_root = os.getcwd()
-    constants_path = os.path.join(project_root, 'utils', 'constants.json')
+    constants_path = os.path.join(project_root, 'util', 'constants.json')
     with open(constants_path) as constant_file:
         costant_value = json.load(constant_file)
     costant_value[contantKey] = ConstantValue

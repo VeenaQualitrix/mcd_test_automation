@@ -7,6 +7,5 @@
     "DYNAMIC_WAIT": 100,
     "NEED_SCREENSHOTS_FOR_PASS": true,
     "IMPLICIT_WAIT": 10,
-    "APP_URL":"www.uat.mcdapp.co"
-    
+    "APP_URL": "https://www.uat.mcdapp.co"
 }
