@@ -70,7 +70,7 @@ Scenario: Verify that user able to add one address
     Then   I verify nearby restaurants are diplayed
 
 
-@TC_07
+@TC_07 @TC_08
 Scenario: Verify that user able to add multiple product with customization and coke convergence
     Given  I open the Chrome browser
     When   I hit the URL
@@ -85,11 +85,13 @@ Scenario: Verify that user able to add multiple product with customization and c
     Then   I verify profile page is incomplete
     When   I add the profile details
     Then   I verify home page navigation
-    # When   I click on add address in home page
-    # And    I click on add new button and search for location
-    # And    I select address from search results
-    # Then   I verify address is added and selected
+    When   I click on add address in home page
+    And    I click on add new button and search for location
+    And    I select address from search results
+    Then   I verify address is added and selected
     When   I add multiple product with customization and coke convergence
     Then   I verify the product added in cart
+    When   I click on view cart button
+    Then   I verify product is visible on cart page with price without GST
 
 

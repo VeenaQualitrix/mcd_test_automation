@@ -1,7 +1,6 @@
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 import time
-from selenium.webdriver.common.keys import Keys
 
 locators = {
         "HEADER_BANNER": (By.XPATH, "//ion-header[@role='banner']"),
@@ -13,7 +12,8 @@ locators = {
         "MENU_TITLE": (By.XPATH, "//h4[@class='menu__title']"),
         "ADD_TO_CART_BUTTON": (By.XPATH, "(//div[text()=' Add '])[{}]"),
         "CONFIRM_ADD_TO_CART": (By.XPATH, "//button[contains(text(), 'Add to Cart')]"),
-        "CART_LIST": (By.XPATH, "//div[@class='cart-details__card-list']")
+        "CART_LIST": (By.XPATH, "//div[@class='cart-details__card-list']"),
+        "VIEW_CART": (By.XPATH, "//div[@class='cart-status-bar__cta' and contains(text(), 'View Cart')]")
     }
 
 
@@ -46,23 +46,33 @@ class HomePage(BasePage):
         
     def add_multiple_product_with_customization_and_coke_convergence(self):
         time.sleep(5)
-        Menu_Name = "McCrispy Chk Burger + McSpicy Chicken Wings - 2 pc + Coke"
+        Three_Pc_Meals = self.driver.find_element(*locators["3_PC_MEALS"])
+        self.driver.execute_script("arguments[0].scrollIntoView();", Three_Pc_Meals)
+        Three_Pc_Meals.click()
+        time.sleep(5)
+        Menu_Name = "Mexican McAloo Tikki Burger with Cheese Combo"
         Product_Name = self.actions.wait_for_elements(*locators['MENU_TITLE'])
         for index, product in enumerate(Product_Name):
             text = product.get_attribute("textContent").strip()
             index = index + 1
+            print(text)
             if Menu_Name in text:
                 for i in range(10):
                     Add_Cart = self.driver.find_element(locators["ADD_TO_CART_BUTTON"][0], locators["ADD_TO_CART_BUTTON"][1].format(str(index)))
+                    print(Add_Cart)
                     try:
                         Add_Cart.click()
+                        print("Product Clicked")
                         break
                     except Exception:
-                        self.driver.execute_script("window.scrollBy(0, 400)")
-                        #swipe didn't work
+                        self.driver.execute_script("arguments[0].scrollIntoView();", Add_Cart)
         time.sleep(2)
         self.actions.click_button(*locators['CONFIRM_ADD_TO_CART'])
         time.sleep(5)
 
     def verify_product_added_in_cart(self):
         return self.actions.is_element_displayed(*locators['CART_LIST'])
+    
+    def click_on_view_cart(self):
+        self.actions.click_button(*locators['VIEW_CART'])
+        print("Clicked on View Cart Button")
