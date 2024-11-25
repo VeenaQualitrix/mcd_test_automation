@@ -115,6 +115,31 @@ def select_address_from_search_results(setup_platform):
 @then("I verify address is added and selected")
 def verify_address_is_added_and_selected(setup_platform):
     print("Verifying Address Is Addded And Selected")
-    #HomePage(setup_platform).click_on_add_address()
     Address_Added = AddressPage(setup_platform).verify_address_is_added_and_selected()
     assert Address_Added, "Address Is Not Added And Selected From The List Of Address"
+
+
+@when("I click on restaurants nearby in home page")
+def click_on_restaurants_nearby_in_home_page(setup_platform):
+    print("Clicking On Restaurants Nearby Button In Home Page")
+    HomePage(setup_platform).click_on_restaurants_nearby()
+
+
+@then("I verify nearby restaurants are diplayed")
+def verify_nearby_restaurants_are_displayed(setup_platform):
+    print("Verifying Address Is Addded And Selected")
+    Nearby_Restaurants = HomePage(setup_platform).verify_nearby_restaurants_are_displayed()
+    assert Nearby_Restaurants, "Nearby Restaurants Are Not Displayed For Selected Address"
+
+
+@when("I add multiple product with customization and coke convergence")
+def add_multiple_product_with_customization_and_coke_convergence(setup_platform):
+    print("Adding Multiple Product With Customization And Coke Convergence")
+    HomePage(setup_platform).add_multiple_product_with_customization_and_coke_convergence()
+
+
+@then("I verify the product added in cart")
+def verify_the_product_added_in_cart(setup_platform):
+    print("Verifying Product Added In Cart")
+    Nearby_Restaurants = HomePage(setup_platform).verify_product_added_in_cart()
+    assert Nearby_Restaurants, ""

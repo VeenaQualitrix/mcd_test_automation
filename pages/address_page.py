@@ -8,7 +8,7 @@ locators = {
         "SEARCH_INPUT_FIELD": (By.XPATH, "//input[@class='searchbar__input']"),
         "SEARCH_RESULTS": (By.XPATH, "//div[@class='search-result__item']"),
         "SELECT_ADDRESS": (By.XPATH, "//div[contains(text(), '{}')]"),
-        "CONFIRM_LOCATION": (By.XPATH, "//button[@class='nearby__cta']"),
+        "CONFIRM_LOCATION": (By.XPATH, "//button[contains(text(), 'Confirm Location')]"),
         "HOUSE_NUMBER": (By.XPATH, "//input[@placeholder='*House / Flat No.']"),
         "SAVE_ADDRESS": (By.XPATH, "//button[contains(@class, 'bottom-sheet__cta')]"),
         "ADDED_ADDRESS": (By.XPATH, "//div[contains(@class, 'address__row-2')]/div[contains(text(), '{}')]"),
@@ -22,19 +22,20 @@ class AddressPage(BasePage):
         time.sleep(5)
         self.actions.click_button(*locators['ADD_NEW'])
         self.actions.click_button(*locators['SEARCH_BUTTON'])
-        time.sleep(3)
-        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bangalore")
+        time.sleep(5)
+        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Chennai")
         time.sleep(5)
 
     def select_address_from_search_results(self):
         Multiple_locations = self.actions.wait_for_elements(*locators["SEARCH_INPUT_FIELD"])
         if len(Multiple_locations) != 0:
             print("Search Results are displayed for the entered location")
-            self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Next To Victoria Hospital Gate"))
+            self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Great Southern Trunk Road"))
             time.sleep(3)
+            self.actions.is_element_displayed(*locators['CONFIRM_LOCATION'])
             self.actions.click_button(*locators["CONFIRM_LOCATION"])
             print("Clicked Confirm Location Button")
-            time.sleep(3)
+            time.sleep(5)
             self.actions.enter_text(*locators['HOUSE_NUMBER'], "987")
             self.actions.click_button(*locators["SAVE_ADDRESS"])
         else:
