@@ -23,14 +23,14 @@ class AddressPage(BasePage):
         self.actions.click_button(*locators['ADD_NEW'])
         self.actions.click_button(*locators['SEARCH_BUTTON'])
         time.sleep(5)
-        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Chennai")
+        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bangalore")
         time.sleep(5)
 
     def select_address_from_search_results(self):
         Multiple_locations = self.actions.wait_for_elements(*locators["SEARCH_INPUT_FIELD"])
         if len(Multiple_locations) != 0:
             print("Search Results are displayed for the entered location")
-            self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Great Southern Trunk Road"))
+            self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Next To Victoria Hospital Gate"))
             time.sleep(3)
             self.actions.is_element_displayed(*locators['CONFIRM_LOCATION'])
             self.actions.click_button(*locators["CONFIRM_LOCATION"])

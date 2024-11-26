@@ -6,6 +6,7 @@ from pages.view_page import ViewPage
 from pages.profile_page import ProfilePage
 from pages.address_page import AddressPage
 from pages.view_cart_page import ViewCartPage
+from pages.juspay_page import JuspayPage
 from conftest import readPreReqJson
 
 scenarios('../features/Mcd_Sanity_Validations.feature')
@@ -157,3 +158,62 @@ def verify_product_is_visible_on_cart_page_with_price_without_gst(setup_platform
     print("Verifying Product Is Visible On Cart Page With Price Without GST")
     Product_Displayed = ViewCartPage(setup_platform).verify_product_displayed_in_cart_with_price_and_without_gst()
     assert Product_Displayed, "Product Is Not Displayed In Cart With Price And Without GST"
+
+
+@when("I select offer from list of offer cards")
+def select_offer_from_list_of_offer_cards(setup_platform):
+    print("Selecting Offer")
+    ViewCartPage(setup_platform).select_offer()
+
+
+@then("I verify offer applied for the selected product")
+def verify_offer_applied_for_the_selected_product(setup_platform):
+    print("Verifying Offer Applied For The Selected Prodct")
+    Offer_Applied = ViewCartPage(setup_platform).verify_offer_applied_for_the_selected_product()
+    assert Offer_Applied, "Offer Not Applied For The Selected Product"
+
+
+@then("I verify gross price and total price are same")
+def verify_gross_price_and_total_price_are_same(setup_platform):
+    print("Verifying Gross Price And Total Price Are Same In View Cart Page")
+    price_match = ViewCartPage(setup_platform).verify_gross_price_and_total_price_are_same()
+    assert price_match, "Gross Price And Total Price Are Not Same"
+
+
+@when("I click on pay button in view cart page")
+def click_on_pay_button_in_view_cart_page(setup_platform):
+    print("Clicking on pay button in view cart page")
+    ViewCartPage(setup_platform).click_on_pay_button_in_view_cart_page()
+
+
+@then("I verify juspay page is displayed")
+def verify_juspay_page_is_displayed(setup_platform):
+    print("Verifying Juspay Page Is Displayed")
+    juspay_page_reached = JuspayPage(setup_platform).verify_juspay_page_is_reached()
+    assert juspay_page_reached, "Juspay Page Is Not Reached After Clicking On Pay Button"
+
+
+@when("I select one payment method")
+def select_one_payment_method(setup_platform):
+    print("Selecting One Payment Method")
+    JuspayPage(setup_platform).select_payment_method()
+
+
+@then("I verify selected payment method is displayed")
+def verify_selected_payment_method_is_displayed(setup_platform):
+    print("Verifying Selected Payment Method Is Displayed")
+    payment_selected = JuspayPage(setup_platform).verify_selected_payment_method_is_displayed()
+    assert payment_selected, "Selected Payment Method Is Not Displayed In Juspay Page"
+
+
+@when("I click on proceed to pay")
+def click_on_proceed_to_pay(setup_platform):
+    print("Clicking On Proceed To Pay")
+    JuspayPage(setup_platform).click_on_proceed_to_pay()
+
+
+@then("I verify order placed successfully")
+def verify_order_placed_successfully(setup_platform):
+    print("Verifying Order Placed Successfully")
+    order_placed = JuspayPage(setup_platform).verify_order_placed_success_message()
+    assert order_placed, "Order Is Not Placed Successfully"

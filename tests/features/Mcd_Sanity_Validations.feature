@@ -70,7 +70,7 @@ Scenario: Verify that user able to add one address
     Then   I verify nearby restaurants are diplayed
 
 
-@TC_07 @TC_08
+@TC_07 @TC_08 @TC_09 @TC_10 @TC_11 @TC_12 @TC_13 @TC_14 
 Scenario: Verify that user able to add multiple product with customization and coke convergence
     Given  I open the Chrome browser
     When   I hit the URL
@@ -93,5 +93,13 @@ Scenario: Verify that user able to add multiple product with customization and c
     Then   I verify the product added in cart
     When   I click on view cart button
     Then   I verify product is visible on cart page with price without GST
-
+    When   I select offer from list of offer cards
+    Then   I verify offer applied for the selected product
+    Then   I verify gross price and total price are same
+    When   I click on pay button in view cart page
+    Then   I verify juspay page is displayed
+    When   I select one payment method
+    Then   I verify selected payment method is displayed
+    When   I click on proceed to pay
+    Then   I verify order placed successfully
 
