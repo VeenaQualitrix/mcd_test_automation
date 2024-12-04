@@ -25,7 +25,7 @@ class WebAppActions:
         Waits for a brief period of time and then enters text into a specified input field.
         """
         element = self.driver.find_element(locator_type, locator_value)
-        print("typeing values ===", text)    
+        # print("typing values ===", text)    
         element.clear()
         element.send_keys(text)
 
