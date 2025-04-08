@@ -9,7 +9,7 @@ locators = {
         "OFFER_CARD": (By.XPATH, "//div[@class='offer-card']"),
         "VIEW_ALL": (By.XPATH, "//h3[contains(text(), 'View All')]"),
         "OFFER_NAME": (By.XPATH, "//h2[@class='offer-card__titleText']"),
-        "APPLY_OFFER_BUTTON": (By.XPATH, "(//button[text()='Apply'])[{}]"),
+        "APPLY_OFFER_BUTTON": (By.XPATH, "(//button[text()='Apply'])[1]"),
         "OFFER_APPLIED_SUCCESS_MESSAGE": (By.XPATH, "//div[contains(text(), 'Promo Applied Successfully')]"),
         "SUCCESS_MESSAGE_OK_BUTTON": (By.XPATH, "//button//span[text()='OK']"),
         "OFFER_APPLIED": (By.XPATH, "//h2[contains(text(), 'Offer Applied')]"),
@@ -48,14 +48,15 @@ class ViewCartPage(BasePage):
         print("Nuumber of Offers Card Available For The Selected Product : " + str(len(Offers_Available)))
         self.actions.click_button(*locators["VIEW_ALL"])
         time.sleep(3)
-        Offer_To_Select = "McAloo tikki Burger+ Veg Pizza McPuff+ Piri Piri Spice Mix on MOV of 199"
-        Offer_Name = self.actions.wait_for_elements(*locators['OFFER_NAME'])
-        for index, offer in enumerate(Offer_Name):
-            text = offer.get_attribute("textContent").strip()
-            index = index + 1
-            if Offer_To_Select in text:
-                self.actions.click_button(locators["APPLY_OFFER_BUTTON"][0], locators["APPLY_OFFER_BUTTON"][1].format(str(index)))
-                break
+        # Offer_To_Select = "McAloo tikki Burger+ Veg Pizza McPuff+ Piri Piri Spice Mix on MOV of 199"
+        # Offer_Name = self.actions.wait_for_elements(*locators['OFFER_NAME'])
+        # for index, offer in enumerate(Offer_Name):
+        #     text = offer.get_attribute("textContent").strip()
+        #     index = index + 1
+        #     if Offer_To_Select in text:
+        #         self.actions.click_button(locators["APPLY_OFFER_BUTTON"][0], locators["APPLY_OFFER_BUTTON"][1].format(str(index)))
+        #         break
+        self.actions.click_button(*locators['APPLY_OFFER_BUTTON'])
         success_message = self.actions.is_element_displayed(*locators['OFFER_APPLIED_SUCCESS_MESSAGE'])
         print(success_message)
         if success_message:

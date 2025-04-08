@@ -1,24 +1,18 @@
 
-import http
-from http.client import RemoteDisconnected
-import platform
-import socket
-import subprocess
+
 # import time
 import allure
-from bs4 import BeautifulSoup
-import psutil
+
 import pytest
 from appium import webdriver as androidDriver
-from selenium import webdriver
 from appium.webdriver.appium_service import AppiumService
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-from requests.auth import HTTPDigestAuth
-import re
-import urllib3
-import wget
-import logging
+# from requests.auth import HTTPDigestAuth
+# import re
+# import urllib3
+# import wget
+# import logging
 # from src.app.application import Application
 # from appium.webdriver.common.appiumby import AppiumBy
 # from appium.webdriver.webdriver import AppiumOptions
@@ -147,7 +141,7 @@ def readPreReqJson(prereqFileName, constant_key):
 
 
 
-@pytest.fixture(scope="class", autouse=False)
+@pytest.fixture(scope="module", autouse=False)
 def setup_platform(env, request):
     driver = None
     """

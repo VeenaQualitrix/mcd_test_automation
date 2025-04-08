@@ -4,7 +4,7 @@ import time
 
 locators = {
         "ADD_NEW": (By.XPATH, "//span[contains(text(), 'Add new')]"),
-        "SEARCH_BUTTON": (By.XPATH, "//div[@class='searchbar__mock-input']"),
+        "SEARCH_BUTTON": (By.XPATH, "//span[@class='searchbar__placeholder']"),
         "SEARCH_INPUT_FIELD": (By.XPATH, "//input[@class='searchbar__input']"),
         "SEARCH_RESULTS": (By.XPATH, "//div[@class='search-result__item']"),
         "SELECT_ADDRESS": (By.XPATH, "//div[contains(text(), '{}')]"),
@@ -24,6 +24,9 @@ class AddressPage(BasePage):
         self.actions.click_button(*locators['SEARCH_BUTTON'])
         time.sleep(5)
         self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bangalore")
+        
+        time.sleep(5)
+        self.actions.click_button(*locators['SEARCH_BUTTON'])
         time.sleep(5)
 
     def select_address_from_search_results(self):

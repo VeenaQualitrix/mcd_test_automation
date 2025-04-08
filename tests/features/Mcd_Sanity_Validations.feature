@@ -1,10 +1,10 @@
 @McDAppValidations
 Feature: McD App User Functionality
 
-@TC_01 @TC_02
-Scenario: Verify login with valid Mobile Number and OTP
+@TC_01 @TC_02 @sanity
+Scenario Outline: Verify login with valid Mobile Number and OTP
     Given  I open the Chrome browser
-    When   I hit the URL
+    When   I launch <appURL>
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -13,9 +13,12 @@ Scenario: Verify login with valid Mobile Number and OTP
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
     Then   I verify profile page navigation
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
 
 
-@TC_03
+@TC_03 @sanity
 Scenario: Verify that profile page is incomplete after login
     Given  I open the Chrome browser
     When   I hit the URL
@@ -70,7 +73,7 @@ Scenario: Verify that user able to add one address
     Then   I verify nearby restaurants are diplayed
 
 
-@TC_07 @TC_08 @TC_09 @TC_10 @TC_11 @TC_12 @TC_13 @TC_14 
+@TC_07 @TC_08 @TC_09 @TC_10 @TC_11 @TC_12 @TC_13 @TC_14 @automated @sanity
 Scenario: Verify that user able to add multiple product with customization and coke convergence
     Given  I open the Chrome browser
     When   I hit the URL
@@ -102,4 +105,6 @@ Scenario: Verify that user able to add multiple product with customization and c
     Then   I verify selected payment method is displayed
     When   I click on proceed to pay
     Then   I verify order placed successfully
+
+    
 

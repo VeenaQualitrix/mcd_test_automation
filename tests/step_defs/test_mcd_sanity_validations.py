@@ -1,3 +1,4 @@
+from pytest_bdd.parsers import parse
 from pytest_bdd import given, when, then, scenarios
 from pages.base_page import BasePage
 from pages.login_page import LoginPage
@@ -18,6 +19,11 @@ scenarios('../features/Mcd_Sanity_Validations.feature')
 def open_the_chrome_browser(setup_platform):
     print("Launch Chrome Browser")
 
+
+@when(parse("I launch {appURL}"))
+@allure.step('When I launch {appURL}')
+def i_lanuch_appurl(setup_platform, appURL):
+    BasePage(setup_platform).launch_application(appURL)
 
 @when("I hit the URL")
 @allure.step('When I hit the URL')
