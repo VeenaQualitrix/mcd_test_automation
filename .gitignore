@@ -2,3 +2,12 @@
 
 allure-results/*
 reports/*.html
+
+# Cached files
+__pycache__/
+
+# Log files
+pytest.log
+
+# Reports
+reports/
