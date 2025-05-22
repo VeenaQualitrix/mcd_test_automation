@@ -2,7 +2,7 @@ Feature: McD App User Functionality
   As a user
   I want to perform various actions on the McD app
   So that I can complete my orders successfully
-
+  
   Scenario: Verify login with valid Mobile Number and OTP
     Given   I open the Chrome browser
     When    I hit the URL "www.uat.mcdapp.co"
@@ -10,6 +10,13 @@ Feature: McD App User Functionality
     When I enter a valid mobile number and click verify
     And I enter the OTP and click verify
     Then I should land on the profile page
+
+  Scenario: validate empty Mobile Number
+    Given   I open the Chrome browser
+    When    I hit the URL "www.uat.mcdapp.co"
+    When  I am on the login page
+    When I leave mobile field empty and click verify
+    Then I verify error message
 
   Scenario: Verify that the profile page opens if incomplete
     Given I am on the login page
@@ -50,3 +57,4 @@ Feature: McD App User Functionality
   Scenario: Verify gross price matches total price on the cart page
     Given I have applied offers on the cart page
     Then the gross pric
+  
