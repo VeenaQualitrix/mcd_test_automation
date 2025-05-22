@@ -320,3 +320,16 @@ def step_validate_alignment(setup_platform):
                 setup_platform.save_screenshot(screenshot_name)
                 allure.attach.file(screenshot_name, name=f"Overlapping Elements {i}-{j}", attachment_type=allure.attachment_type.PNG)
                 assert not overlapping, f"❌ Elements at index {i} and {j} are overlapping"
+
+@when("I click on user profile icon")
+@allure.step("When I click on user profile icon")
+def click_on_profile_icon(setup_platform):
+    print("Clicking on user profile icon")
+    ProfilePage(setup_platform)
+
+@then('I verify profile page navigation')
+@allure.step("Then I verify profile page navigation")
+def verify_profile_page_navigation(setup_platform):
+    print("Verifying Profile Page Navigation")
+    Profile_Page = ProfilePage(setup_platform).profile_page_navigation()
+    assert Profile_Page, "Profile Page Is Not navigated"
