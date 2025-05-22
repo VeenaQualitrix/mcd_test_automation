@@ -283,9 +283,12 @@ Scenario: Verify that user update the name successfully
     Then   I verify profile page navigation
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
-    When   I edits the full name field with "Test User01" and clicks "Save Changes"
-    Then   I verify success message "Profile updated successfully" should be displayed
-    And    I verify updated name "John Doe" should be reflected on the profile
+    When   I edits the full name field with Test User01 and clicks Save Changes
+    Then   I verify home page navigation
+    And    I verify updated name should be reflected on the profile
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
 
 @TC_PP_02
 Scenario: Verify empty name field 
@@ -303,8 +306,11 @@ Scenario: Verify empty name field
     Then   I verify profile page navigation
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
-    When   I clear name field and clicks "Save Changes"
-    Then   I verify error message "Name cannot be empty" should be displayed
+    When   I clear name field
+    Then   I verify error message Please enter valid full name should be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
 
 @TC_PP_03
 Scenario: Validate invalid characters in name field 
@@ -322,5 +328,8 @@ Scenario: Validate invalid characters in name field
     Then   I verify profile page navigation
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
-    When   I clear name field and clicks "Save Changes"
-    Then   I verify error message "Name cannot be empty" should be displayed
+    When   I clear name field and clicks Save Changes
+    Then   I verify error message Name must contain only letters should be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
