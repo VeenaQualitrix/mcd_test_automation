@@ -9,9 +9,6 @@ from pages.address_page import AddressPage
 from pages.view_cart_page import ViewCartPage
 from pages.juspay_page import JuspayPage
 from conftest import readPreReqJson
-from selenium.webdriver.common.keys import Keys
-from tests.features import environment
-import pyperclip
 import allure
 
 scenarios('../features/Mcd_Test_Cases.feature')

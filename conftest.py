@@ -1,6 +1,5 @@
 
 
-# import time
 import allure
 
 import pytest
@@ -8,14 +7,6 @@ from appium import webdriver as androidDriver
 from appium.webdriver.appium_service import AppiumService
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-# from requests.auth import HTTPDigestAuth
-# import re
-# import urllib3
-# import wget
-# import logging
-# from src.app.application import Application
-# from appium.webdriver.common.appiumby import AppiumBy
-# from appium.webdriver.webdriver import AppiumOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
@@ -34,16 +25,6 @@ import signal
 import json
 import stat
 
-import requests
-from urllib3.util.retry import Retry
-
-session = requests.Session()
-retry = Retry(
-    total=5,
-    backoff_factor=1,
-    status_forcelist=[429, 500, 502, 503, 504, 401],
-)
-
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -57,7 +38,6 @@ def pytest_addoption(parser):
     parser.addoption("--roku_ip", action="store")
     parser.addoption("--rokuUser", action="store")
     parser.addoption("--rokuPass", action="store")
-    parser.addoption("--screenShotToggle", default=True, action="store")
     parser.addoption("--roku_webdriver_host", default="localhost", action="store")
     parser.addoption("--webDriverAgentUrl", action="store")
     
@@ -252,29 +232,10 @@ def pytest_runtest_makereport(item, call):
                 print("app killed====lets relaunch")
                 driver.activate_app(readConstants("current_app_package"))
                 print("app killed====lets relaunch")
-                allure.attach(screenshot, name="screenshot", attachment_type=AttachmentType.JPG)
+                allure.attach(screenshot, name="screenshot", attachment_type=AttachmentType.PNG)
                 time.sleep(5)
             if isinstance(driver, str):
                 print("its roku report")    
-
-        # Make sure the setup_platform fixture is called
-        mode = 'a' if os.path.exists('failures') else 'w'
-        try:
-            with open('failures', mode) as f:
-                print("reach as scenrio is failed")
-                if driver:  
-                    if isinstance(driver, webdriver):
-                        print("secnario is failed so trying to kill app and relaunch " ,readConstants("current_app_package"))
-                        driver.terminate_app(readConstants("current_app_package"))
-                        time.sleep(2)
-                        print("app killed====lets relaunch")
-                        driver.activate_app(readConstants("current_app_package"))
-                        print("app killed====lets relaunch")
-                        allure.attach(screenshot, name="screenshot", attachment_type=AttachmentType.PNG)
-                        time.sleep(5)
-                    
-        except Exception as e:
-            print('Fail to take screen-shot:', e)
 
 
 consecutive_failure_abort = "False"

@@ -9,8 +9,6 @@ from pages.address_page import AddressPage
 from pages.view_cart_page import ViewCartPage
 from pages.juspay_page import JuspayPage
 from conftest import readPreReqJson
-from selenium.webdriver.common.keys import Keys
-import pyperclip
 import allure
 
 scenarios('../features/Mcd_Sanity_Validations.feature')
@@ -258,9 +256,3 @@ def verify_order_placed_successfully(setup_platform):
     print("Verifying Order Placed Successfully")
     order_placed = JuspayPage(setup_platform).verify_order_placed_success_message()
     assert order_placed, "Order Is Not Placed Successfully"
-
-@when("I leave mobile field empty and click verify")
-@allure.step("When I leave mobile field empty and click verify")
-def leave_mobile_field_empty_and_click_verify(setup_platform):
-    print("Please enter Mobile number")
-    LoginPage(setup_platform).leave_mobile_field_empty()

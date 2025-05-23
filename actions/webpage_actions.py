@@ -60,7 +60,7 @@ class WebAppActions:
         element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((by, value))
         )
-        actual_text = element.get_attribute("text")
+        actual_text = element.text
         return expected_text in actual_text
 
     def click_button(self, locator_type, locator_value):
@@ -113,17 +113,6 @@ class WebAppActions:
         except Exception:
             print("Element not found")
             return None
-        '''
-    def wait_for_element(self, locator, value, timeout=30):
-        try:
-            return WebDriverWait(self.driver, timeout).until(
-            EC.presence_of_element_located((locator, value))
-        )
-        except TimeoutException:
-            raise Exception(f"Timeout: Element with locator ({locator}, {value}) not found.")
-        except NoSuchElementException:
-            raise Exception(f"NoSuchElementException: Element ({locator}, {value}) not found.")
-            '''
 
     def quit_Driver(self):
         self.driver.quit()  
