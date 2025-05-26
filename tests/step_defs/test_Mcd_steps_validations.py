@@ -320,3 +320,48 @@ def step_validate_alignment(setup_platform):
                 setup_platform.save_screenshot(screenshot_name)
                 allure.attach.file(screenshot_name, name=f"Overlapping Elements {i}-{j}", attachment_type=allure.attachment_type.PNG)
                 assert not overlapping, f"❌ Elements at index {i} and {j} are overlapping"
+
+@when("I click on user profile icon")
+@allure.step("When I click on user profile icon")
+def click_on_profile_icon(setup_platform):
+    print("Clicking on user profile icon")
+    ProfilePage(setup_platform).click_profile_icon()
+
+@then('I verify profile page navigation')
+@allure.step("Then I verify profile page navigation")
+def verify_profile_page_navigation(setup_platform):
+    print("Verifying Profile Page Navigation")
+    Profile_Page = ProfilePage(setup_platform).profile_page_navigation()
+    assert Profile_Page, "Profile Page Is Not navigated"
+
+@when("I click on edit profile icon")
+@allure.step("When I click on edit profile icon")
+def click_on_edit_profile_icon(setup_platform):
+    print("Clicking on edit profile icon")
+    ProfilePage(setup_platform).click_edit_profile_icon()
+
+@when("I edits the full name field with Test User01 and clicks Save Changes")
+@allure.step("When I edits the full name field with Test User01 and clicks Save Changes")
+def edit_name_and_click_save(setup_platform):
+    print("verify edits the full name field with Test User01 and clicks Save Changes")
+    ProfilePage(setup_platform).edit_name_and_save()
+
+@then("I verify updated name should be reflected on the profile")
+@allure.step("When I verify updated name should be reflected on the profile")
+def profile_updated_name_display(setup_platform):
+    print("verify updated name should be reflected on the profile")
+    Profile_Page = ProfilePage(setup_platform).verify_updated_profile_name()
+    assert Profile_Page, "The updated name should not be reflected"
+
+@when("I clear name field")
+@allure.step("When I clear name field")
+def Clear_name_field(setup_platform):
+    print("verify clearing the name field")
+    ProfilePage(setup_platform).Clear_name_field()
+
+@then('I verify error message Please enter valid full name should be displayed')
+@allure.step("Then I verify error message Please enter valid full name should be displayed")
+def verify_profile_name_field_error_message(setup_platform):
+    print("Verifying error message Please enter valid full name should be displayed")
+    Login_Page = LoginPage(setup_platform).empty_profile_name_error()
+    assert Login_Page, "Please enter valid full name"

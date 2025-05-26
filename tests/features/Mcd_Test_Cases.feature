@@ -267,3 +267,69 @@ Scenario Outline: Verify mobile field input limit
         |appURL|
         |https://www.uat.mcdapp.co|
 
+@TC_PP_01
+Scenario: Verify that user update the name successfully 
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I verify profile page navigation
+    When   I click on edit profile icon
+    Then   I verify user is on the profile edit page
+    When   I edits the full name field with Test User01 and clicks Save Changes
+    Then   I verify home page navigation
+    And    I verify updated name should be reflected on the profile
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_02
+Scenario: Verify empty name field 
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I verify profile page navigation
+    When   I click on edit profile icon
+    Then   I verify user is on the profile edit page
+    When   I clear name field
+    Then   I verify error message Please enter valid full name should be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_03
+Scenario: Validate invalid characters in name field 
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I verify profile page navigation
+    When   I click on edit profile icon
+    Then   I verify user is on the profile edit page
+    When   I clear name field and clicks Save Changes
+    Then   I verify error message Name must contain only letters should be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
