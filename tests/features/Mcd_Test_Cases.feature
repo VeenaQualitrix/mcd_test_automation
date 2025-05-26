@@ -328,8 +328,8 @@ Scenario: Validate invalid characters in name field
     Then   I verify profile page navigation
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
-    When   I clear name field and clicks Save Changes
-    Then   I verify error message Name must contain only letters should be displayed
+    When   I enter invalid characters in name field
+    Then   I verify error message Please enter valid full name should be displayed
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|

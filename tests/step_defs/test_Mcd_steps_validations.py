@@ -10,7 +10,6 @@ from pages.view_cart_page import ViewCartPage
 from pages.juspay_page import JuspayPage
 from conftest import readPreReqJson
 from selenium.webdriver.common.keys import Keys
-from tests.features import environment
 import pyperclip
 import allure
 
@@ -325,13 +324,13 @@ def step_validate_alignment(setup_platform):
 @allure.step("When I click on user profile icon")
 def click_on_profile_icon(setup_platform):
     print("Clicking on user profile icon")
-    ProfilePage(setup_platform).click_profile_icon()
+    ProfilePage(setup_platform).click_user_profile_icon()
 
 @then('I verify profile page navigation')
 @allure.step("Then I verify profile page navigation")
 def verify_profile_page_navigation(setup_platform):
     print("Verifying Profile Page Navigation")
-    Profile_Page = ProfilePage(setup_platform).profile_page_navigation()
+    Profile_Page = ProfilePage(setup_platform).verify_profile_page_navigation()
     assert Profile_Page, "Profile Page Is Not navigated"
 
 @when("I click on edit profile icon")
@@ -340,28 +339,41 @@ def click_on_edit_profile_icon(setup_platform):
     print("Clicking on edit profile icon")
     ProfilePage(setup_platform).click_edit_profile_icon()
 
+@then("I verify user is on the profile edit page")
+@allure.step("Then I verify user is on the profile edit page")
+def profile_edit_page(setup_platform):
+    print("verify user is on the profile edit page")
+    Profile_Page = ProfilePage(setup_platform).verify_profile_edit_page()
+    assert Profile_Page, "The user is not navigated to profile edit page"
+
 @when("I edits the full name field with Test User01 and clicks Save Changes")
 @allure.step("When I edits the full name field with Test User01 and clicks Save Changes")
 def edit_name_and_click_save(setup_platform):
     print("verify edits the full name field with Test User01 and clicks Save Changes")
-    ProfilePage(setup_platform).edit_name_and_save()
+    ProfilePage(setup_platform).edit_profile_name()
 
 @then("I verify updated name should be reflected on the profile")
-@allure.step("When I verify updated name should be reflected on the profile")
+@allure.step("Then I verify updated name should be reflected on the profile")
 def profile_updated_name_display(setup_platform):
-    print("verify updated name should be reflected on the profile")
-    Profile_Page = ProfilePage(setup_platform).verify_updated_profile_name()
-    assert Profile_Page, "The updated name should not be reflected"
+    updated_name = ProfilePage(setup_platform).updated_profile_name()
+    print(f"Updated name found: {updated_name}")
+    assert updated_name == "Test User01", f"The updated name was expected to be 'Test User01', but got '{updated_name}'"
 
 @when("I clear name field")
 @allure.step("When I clear name field")
 def Clear_name_field(setup_platform):
     print("verify clearing the name field")
-    ProfilePage(setup_platform).Clear_name_field()
+    ProfilePage(setup_platform).clear_profile_name_field()
 
 @then('I verify error message Please enter valid full name should be displayed')
 @allure.step("Then I verify error message Please enter valid full name should be displayed")
 def verify_profile_name_field_error_message(setup_platform):
     print("Verifying error message Please enter valid full name should be displayed")
-    Login_Page = LoginPage(setup_platform).empty_profile_name_error()
-    assert Login_Page, "Please enter valid full name"
+    Profile_Page = ProfilePage(setup_platform).profile_name_field_empty_error()
+    assert Profile_Page, "Please enter valid full name"
+
+@when("I enter invalid characters in name field")
+@allure.step("When I enter invalid characters in name field")
+def enter_invalid_char_in_name_field(setup_platform):
+    print("verify entering invalid characters in name field")
+    ProfilePage(setup_platform).enter_invalid_char_in_name_field()
