@@ -121,8 +121,17 @@ def load_capabilities(config_name):
         config = json.load(config_file)
         # print('reading full config file ', config)
     return config.get(config_name, {})
+'''
+def readConstants(constant_key):
+    # Get directory of the current file
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    constants_path = os.path.join(script_dir, '..', 'util', 'constants.json')
+    constants_path = os.path.abspath(constants_path)
 
-
+    with open(constants_path) as constant_file:
+        constant_value = json.load(constant_file)
+    return constant_value.get(constant_key)
+'''
 def readConstants(constant_key):
     project_root = os.getcwd()
     constants_path = os.path.join(project_root, 'util', 'constants.json')
@@ -130,6 +139,7 @@ def readConstants(constant_key):
         costant_value = json.load(constant_file)
         # print('reading full config file ', config)
     return costant_value.get(constant_key)
+
 
 
 def readPreReqJson(prereqFileName, constant_key):

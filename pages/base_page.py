@@ -13,6 +13,9 @@ class BasePage:
         self.actions.launch_browser_url(url)
         print("Opened McD Website")
 
+    
     def launch_application(self, appURL):
         self.actions.launch_browser_url(appURL)
         print("Opened McD Website")
+
+    

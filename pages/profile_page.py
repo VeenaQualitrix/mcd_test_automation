@@ -4,11 +4,14 @@ import time
 
 locators = {
     "PERSONAL_HEADER_DETAILS": (By.XPATH, "//div[contains(text(), 'Personal Details')]"),
+    "USER_PROFILE_LOGO": (By.XPATH, "//h2[@class = 'avatar__logo-initial-txt']"),
+    "PROFILE_PAGE_LOGO": (By.XPATH, "//img[@class = 'profile-page__logo']"),
     "USER_NAME": (By.XPATH, "//input[@placeholder='Enter your full name here']"),
     "MOBILE_NUMBER": (By.XPATH, "//input[@mds-profile-edit-input-mblno]"),
     "EMAIL_ID": (By.XPATH, "//input[@placeholder='Enter Your Email ID here']"),
     "DATE_OF_BIRTH": (By.XPATH, "//input[@placeholder='Click here to select']"),
-    "SUBMIT_BUTTON": (By.XPATH, "//button[contains(text(), 'Save Changes')]")
+    "SUBMIT_BUTTON": (By.XPATH, "//button[contains(text(), 'Save Changes')]"),
+    "PROFILE_EDIT_ICON": (By.XPATH, "//img[@class = 'profile-page__link-btn']"),
     }
 
 
@@ -17,7 +20,15 @@ class ProfilePage(BasePage):
     def verify_profile_page_reached(self):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['PERSONAL_HEADER_DETAILS'])
+    
+    def get_element_value(self, locator_key):
+        element = self.actions.wait_for_element(*locators[locator_key])
+        if element is None:
+          raise Exception(f"{locator_key} element not found.")
+        return element.get_attribute("value")
 
+    
+    '''
     def verify_profile_page_is_incomplete_after_login(self):
         profile_details = []
         user_name = self.actions.wait_for_element(*locators['USER_NAME'])
@@ -34,6 +45,29 @@ class ProfilePage(BasePage):
             return True
         else:
             return False
+    '''
+
+    def verify_profile_page_is_incomplete_after_login(self):
+       def get_element_value(field_name):
+        """Fetch the value of an element safely, or raise if not found."""
+        element = self.actions.wait_for_element(*locators[field_name])
+        if element is None:
+            raise Exception(f"{field_name} element not found on the page.")
+        return element.get_attribute("value")
+
+    # Fetch all profile values using the helper
+       profile_details = [
+        get_element_value('USER_NAME'),
+        get_element_value('MOBILE_NUMBER'),
+        get_element_value('EMAIL_ID'),
+        get_element_value('DATE_OF_BIRTH')
+    ]
+
+       print("Profile details:", profile_details)
+
+    # Return True if any field is empty or None (i.e., profile is incomplete)
+       return any(value in ("", None) for value in profile_details)
+
 
     def add_profile_details(self):
         self.actions.enter_text(*locators['USER_NAME'], "User01")
