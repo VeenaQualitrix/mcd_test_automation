@@ -34,11 +34,12 @@ locators = {
     "DOB_FIELD_ICON": (By.XPATH, "//img[@title = 'ic-calender']"),
     "COLOR_BLIND_FRIENDLY_TEXT": (By.XPATH, "//div[contains(text(), ' Use Colour Blind Friendly ')]"),
     "TOGGLE_BUTTON": (By.XPATH, "(//input[@type = 'checkbox'])[1]"),
-     "TOGGLE_BUTTON_COLOR_SCHEME_PAGE": (By.XPATH, "(//input[@type = 'checkbox'])[2]"),
+    "TOGGLE_BUTTON_COLOR_SCHEME_PAGE": (By.XPATH, "(//input[@type = 'checkbox'])[2]"),
     "COLOR_SCHEME": (By.XPATH, "//div[@class = 'bottom-sheet']"),
     "COLOR_BLIND_BACK_BUTTON": (By.XPATH, "//img[@class = 'address-header__back-btn']"),
     "SELECT_COLOR_BLIND_RADIO_BUTTON": (By.XPATH, "//div[@class = 'bottom-sheet__radio']"),
-     "COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON": (By.XPATH, "//div[@class ='color-correction__para']"),
+    "COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON": (By.XPATH, "//div[@class ='color-correction']"),
+    "TOGGLE_BUTTON_IN_ON_MODE": (By.XPATH, "//label[@class='v1 v1--active']"),
     }
 
 
@@ -321,7 +322,6 @@ class ProfilePage(BasePage):
 
 
     def switch_toggle_button(self):
-    # Scroll to and click the first toggle
         element = self.driver.find_element(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
         self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
@@ -336,29 +336,33 @@ class ProfilePage(BasePage):
         # Select radio button
         select_radio = self.driver.find_element(*locators['SELECT_COLOR_BLIND_RADIO_BUTTON'])
         ActionChains(self.driver).move_to_element(select_radio).click().perform()
+        time.sleep(5)
 
         # Confirm text shows up
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
         assert self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT']), "Color blind mode ON text not visible"
         print("Color blind mode is ON.")
+        time.sleep(5)
         toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
         ActionChains(self.driver).move_to_element(toggle_button).click().perform()
-        time.sleep(2)
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
+        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON_COLOR_SCHEME_PAGE'])
+        ActionChains(self.driver).move_to_element(toggle_button).click().perform()
+        time.sleep(5)
     
         # Verify toggle is off
         is_off = not self.actions.is_element_displayed(*locators['TOGGLE_BUTTON'])
         assert is_off, "Toggle button is still ON"
         print("Toggle button is OFF")
+        time.sleep(5)
 
 
     def color_scheme(self):
-        self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
-        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
-        ActionChains(self.driver).move_to_element(toggle_button).click().perform()
-        element = self.driver.find_element(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
         time.sleep(2)
+        return self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
+        
         
     def color_blind_mode_On_and_reload_page(self):
         element = self.driver.find_element(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
@@ -366,22 +370,32 @@ class ProfilePage(BasePage):
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
         toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
         ActionChains(self.driver).move_to_element(toggle_button).click().perform()
-        self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
-        self.actions.click_button(*locators['TOGGLE_BUTTON'])
-        self.actions.click_button(*locators['SELECT_COLOR_BLIND_RADIO_BUTTON'])
-        time.sleep(2)
+        color_scheme = self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
+        print(color_scheme)
+        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON_COLOR_SCHEME_PAGE'])
+        ActionChains(self.driver).move_to_element(toggle_button).click().perform()
+        select_radio = self.driver.find_element(*locators['SELECT_COLOR_BLIND_RADIO_BUTTON'])
+        ActionChains(self.driver).move_to_element(select_radio).click().perform()
+        time.sleep(5)
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
+        assert self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT']), "Color blind mode ON text not visible"
         print("Color blind mode is ON.")
         self.driver.refresh()
-        WebDriverWait(self.driver, 10).until(
-        EC.presence_of_element_located(locators['COLOR_BLIND_FRIENDLY_TEXT'])
-    )
-        print("Page reloaded. Element still present — preference may be retained.")
+        time.sleep(10)
+         # Wait for page to reload and element to reappear
+        element_after_reload = self.driver.find_element(*locators['DATE_OF_BIRTH'])
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element_after_reload)
+        self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON'])
+        # Check if toggle is still ON
+        is_on = self.actions.is_element_displayed(*locators['TOGGLE_BUTTON_IN_ON_MODE'])
+        assert is_on, "Toggle button is OFF"
+        print("Toggle button is ON")
     
 
     def verify_color_blind_preference_retained(self):
         time.sleep(2)
-        return self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON'])
+        return self.actions.is_element_displayed(*locators['TOGGLE_BUTTON_IN_ON_MODE'])
 
     def make_changes_and_refresh_page(self, user_data_store):
         # Save current values before changing
