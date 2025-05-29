@@ -299,5 +299,10 @@ def updateConstantFile(contantKey, ConstantValue):
     costant_value[contantKey] = ConstantValue
     with open(constants_path, "w") as constant_file:
         json.dump(costant_value, constant_file, indent=4) 
+
+@pytest.fixture
+def user_data_store():
+    """Fixture to store user input temporarily across steps."""
+    return {}
     
 

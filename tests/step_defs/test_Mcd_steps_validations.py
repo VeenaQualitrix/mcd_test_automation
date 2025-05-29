@@ -377,3 +377,158 @@ def verify_profile_name_field_error_message(setup_platform):
 def enter_invalid_char_in_name_field(setup_platform):
     print("verify entering invalid characters in name field")
     ProfilePage(setup_platform).enter_invalid_char_in_name_field()
+
+
+@when("I edits email address and clicks Save Changes")
+@allure.step("When I edits email address and clicks Save Changes")
+def edit_email_address_and_click_save(setup_platform):
+    print("verify edits email address and clicks Save Changes")
+    ProfilePage(setup_platform).edit_email_address()
+
+@then("I verify updated email address should be reflected on the profile")
+@allure.step("Then I verify updated email address should be reflected on the profile")
+def profile_updated_email_display(setup_platform):
+    updated_email = ProfilePage(setup_platform).updated_email_address()
+    print(f"Updated name found: {updated_email}")
+    assert updated_email == "testuser11@gmail.com", f"The updated email was expected to be 'testuser11@gmail.com', but got '{updated_email}'"
+
+@when("I enter incorrect email format in email field")
+@allure.step("When I enter incorrect email format in email field")
+def enter_incorrect_email_in_email_field(setup_platform):
+    print("verify entering an incorrect email format in email field")
+    ProfilePage(setup_platform).enter_incorrect_email_format_in_email_field()
+
+@then('I verify error message enter valid email address should be displayed')
+@allure.step("Then I verify error message enter valid email address should be displayed")
+def verify_incorrect_email_error(setup_platform):
+    print("Verifying error message enter valid email address should be displayed")
+    Profile_Page = ProfilePage(setup_platform).incorrect_email_error()
+    assert Profile_Page, "Please enter valid email address"
+
+@when("I selects a new valid date of birth and clicks Save Changes")
+@allure.step("When I selects a new valid date of birth and clicks Save Changes")
+def edit_date_of_birth_and_click_save(setup_platform):
+    print("verify selecting a new valid date of birth and clicks Save Changes")
+    ProfilePage(setup_platform).edit_date_of_birth()
+
+@then('I verify updated date of birth should be reflected on the profile')
+@allure.step("Then I verify updated date of birth should be reflected on the profile")
+def verify__updated_date_of_birth(setup_platform):
+    updated_date_of_birth = ProfilePage(setup_platform).updated_date_of_birth()
+    print(f"Updated name found: {updated_date_of_birth}")
+    assert updated_date_of_birth == "20/05/2025", f"The updated date of birth was expected to be '20/05/2025', but got '{updated_date_of_birth}'"
+
+@when("I enter a future date in the date of birth field")
+@allure.step("When I enter a future date in the date of birth field")
+def enter_future_date_of_birth(setup_platform):
+    print("verify entering a future date in the date of birth field")
+    ProfilePage(setup_platform).enter_future_date_of_birth()
+
+@then('I verify user are unable to select future Date of birth')
+@allure.step("Then I verify user are unable to select future Date of birth")
+def verify_future_dob_disabled(setup_platform):
+    print("Verifying user are unable to select future Date of birth")
+    Profile_Page = ProfilePage(setup_platform).verify_future_dob_disabled()
+    assert Profile_Page, "future date should not be selectable"
+
+@when("I click change picture link")
+@allure.step("When I click change picture link")
+def click_change_picture_link(setup_platform):
+    print("verify clicking change picture link")
+    ProfilePage(setup_platform).click_change_picture_link()
+
+@then('I verify upload pop up opens with file selection option')
+@allure.step("Then I verify upload pop up opens with file selection option")
+def verify_upload_file_pop_up(setup_platform):
+    print("Verifying upload pop up opens with file selection option")
+    Profile_Page = ProfilePage(setup_platform).verify_file_upload_pop_up()
+    assert Profile_Page, "File upload pop up should not be displayed"
+
+@then('I verify the Save button should be disabled')
+@allure.step("Then I verify the Save button should be disabled")
+def verify_save_button_disabled(setup_platform):
+    print("Verifying the Save button should be disabled")
+    is_disabled = ProfilePage(setup_platform).check_save_changes_button_disabled()
+    assert is_disabled, "The save button should be disabled"
+
+@when("I Check icon presence near each field")
+@allure.step("When I Check icon presence near each field")
+def check_icons_presence(setup_platform):
+    print("verify Checking icon presence near each field")
+    ProfilePage(setup_platform).check_icon_presence_near_each_field()
+
+@then('I verify the Correct icons for name, phone, email, DOB')
+@allure.step("Then I verify the Correct icons for name, phone, email, DOB")
+def verify_correct_icons(setup_platform):
+    print("Verifying the Correct icons for name, phone, email, DOB")
+    ProfilePage(setup_platform).verify_correct_icons()
+
+@when("I switch toggle on/off and observe UI")
+@allure.step("When I switch toggle on/off and observe UI")
+def check_switch_toggle(setup_platform):
+    print("verify switch toggle on/off and observe UI")
+    ProfilePage(setup_platform).switch_toggle_button()
+
+@then('I verify Color scheme updates to accessible version page should be displayed')
+@allure.step("Then I verify Color scheme updates to accessible version page should be displayed")
+def verify_color_scheme(setup_platform):
+    print("Verifying Color scheme updates to accessible version page should be displayed")
+    Profile_Page = ProfilePage(setup_platform).color_scheme()
+    assert Profile_Page, "The color scheme should be displayed"
+
+@when("I switch toggle to make color blind mode on and reload page")
+@allure.step("When I switch toggle to make color blind mode on and reload page")
+def switch_toggle_to_On_and_reload(setup_platform):
+    print("verify switch toggle to make color blind mode on and reload page")
+    ProfilePage(setup_platform).color_blind_mode_On_and_reload_page()
+
+@then('I verify preference retained after refresh')
+@allure.step("Then I verify preference retained after refresh")
+def verify_preference_retained_after_refresh(setup_platform):
+    print("Verifying preference retained after refresh")
+    Profile_Page = ProfilePage(setup_platform).verify_color_blind_preference_retained()
+    assert Profile_Page, "The color scheme should not be displayed"
+
+@when("I make changes and refresh browser")
+@allure.step("When I make changes and refresh browser")
+def make_changes_and_refresh_page(setup_platform, user_data_store):
+    print("verify make changes and refresh browser")
+    ProfilePage(setup_platform).make_changes_and_refresh_page(user_data_store)
+
+
+@then('I verify page reloads with old saved data')
+def step_verify_old_data_loaded_after_refresh(setup_platform, user_data_store):
+    print("Verifying page reloads with old saved data")
+    ProfilePage(setup_platform).verify_data_is_not_saved_after_refresh(user_data_store)
+    
+
+@when("I click on any item to add into a cart")
+
+def step_click_add_item(setup_platform):
+    ProfilePage(setup_platform).add_item_in_cart()
+
+@then("I verify items details pop up opened successfully")
+def step_verify_item_popup(setup_platform):
+    assert ProfilePage(setup_platform).verify_items_details_popup(), "Item detail popup not displayed"
+
+
+@when("I click on next")
+def step_click_next(setup_platform):
+    ProfilePage(setup_platform).click_next_button()
+
+@when("I click on Add to cart option")
+def step_click_add_to_cart(setup_platform):
+    ProfilePage(setup_platform).click_add_to_cart()
+
+@then("I verify selected item get added into a cart")
+def step_verify_cart(setup_platform):
+    ProfilePage(setup_platform).verify_item_added_in_cart()
+
+@when("I click on add address")
+def step_click_add_address(setup_platform):
+    ProfilePage(setup_platform).click_add_address_arrow()
+
+@then("I verify user redirected to login/signup prompt")
+def step_verify_login_prompt(setup_platform):
+    assert ProfilePage(setup_platform).verify_redirect_to_login_or_signup_page(), "Login prompt not displayed"
+
