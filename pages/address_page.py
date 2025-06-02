@@ -12,7 +12,18 @@ locators = {
         "HOUSE_NUMBER": (By.XPATH, "//input[@placeholder='*House / Flat No.']"),
         "SAVE_ADDRESS": (By.XPATH, "//button[contains(@class, 'bottom-sheet__cta')]"),
         "ADDED_ADDRESS": (By.XPATH, "//div[contains(@class, 'address__row-2')]/div[contains(text(), '{}')]"),
-        "ADDRESS_SELECTED": (By.XPATH, "//div[contains(@class, 'txt-ellipsis')][contains(text(), '{}')]")
+        "ADDRESS_SELECTED": (By.XPATH, "//div[contains(@class, 'txt-ellipsis')][contains(text(), '{}')]"),
+        "ADD_ITEM": (By.XPATH, "//div[contains(@class, 'menu__title') and contains(normalize-space(), 'McVeggie Burger')]/following::div[contains(@class, 'add-to-cart')][1]"),
+        "ITEM_DETAIL_PAGE": (By.XPATH, "//h5[contains(text(), ' Customise Your McVeggie Burger ')]"),
+        "CLICK_NEXT": (By.XPATH, "//button[contains(text(), 'Next')]"),
+        "CLICK_ADD_TO_CART": (By.XPATH, "//button[contains(text(), 'Add to Cart')]"),
+        "CART_ICON": (By.XPATH, "//img[@class = 'toolbar-desktop__icon']"),
+        "YOUR_ORDER": (By.XPATH, "//h1[contains(text(), ' Your Order')]"),
+        "ADDED_ITEM_DISPLAY_IN_CART": (By.XPATH, "//h4[contains(text(), ' McVeggie Burger ')]"),
+        "ADDRESS_ARROW": (By.XPATH, "//img[@alt = 'ic-arrow-down']"),
+        "LOGIN_PROMPT": (By.XPATH, "//div[contains(text(), ' Log In / Sign Up to Continue ')]"),
+        "LOGIN_FROM_CHECKOUT_PAGE": (By.XPATH, "//button[contains(text(), 'Log In / Sign Up to Continue')]"),
+
     }
 
 
@@ -57,5 +68,38 @@ class AddressPage(BasePage):
             return self.actions.is_element_displayed(locators['ADDRESS_SELECTED'][0], locators['ADDRESS_SELECTED'][1].format("987"))
         else:
             return False
+        
 
+    def add_item_in_cart(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ADD_ITEM'])
+        self.actions.click_button(*locators['ADD_ITEM'])
+
+    def verify_items_details_popup(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['ITEM_DETAIL_PAGE'])
+    
+    def click_next_button(self):
+        self.actions.is_element_displayed(*locators['CLICK_NEXT'])
+        self.actions.click_button(*locators['CLICK_NEXT'])
+        time.sleep(2)
+
+    def click_add_to_cart(self):
+        self.actions.is_element_displayed(*locators['CLICK_ADD_TO_CART'])
+        self.actions.click_button(*locators['CLICK_ADD_TO_CART'])
+        time.sleep(2)
+
+    def verify_item_added_in_cart(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['YOUR_ORDER'])
+        self.actions.is_element_displayed(*locators['ADDED_ITEM_DISPLAY_IN_CART'])
+
+    def click_add_address_arrow(self):
+        self.actions.is_element_displayed(*locators['ADDRESS_ARROW'])
+        self.actions.click_button(*locators['ADDRESS_ARROW'])
+        time.sleep(2)
+
+    def verify_redirect_to_login_or_signup_page(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['LOGIN_PROMPT'])
 
