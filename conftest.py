@@ -1,5 +1,4 @@
 
-
 # import time
 import allure
 
@@ -304,5 +303,3 @@ def updateConstantFile(contantKey, ConstantValue):
 def user_data_store():
     """Fixture to store user input temporarily across steps."""
     return {}
-    
-
