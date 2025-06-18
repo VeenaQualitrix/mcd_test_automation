@@ -195,7 +195,7 @@ class LoginPage(BasePage):
         time.sleep(5)
         if self.actions.is_element_displayed(*locators['MOBILE_NUMBER_INPUT_FIELD']):
             return self.driver.find_element(*locators['MOBILE_NUMBER_INPUT_FIELD'])
-        return None  # or raise an Exception
+        return None  
 
     def inspect_referral_link(self):
         if self.actions.is_element_displayed(*locators['REFERRAL_CODE_LINK']):

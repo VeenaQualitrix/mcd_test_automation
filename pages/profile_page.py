@@ -11,6 +11,7 @@ import time
 locators = {
     "PERSONAL_HEADER_DETAILS": (By.XPATH, "//div[contains(text(), 'Personal Details')]"),
     "USER_PROFILE_ICON": (By.XPATH, "//h2[@class = 'avatar__logo-initial-txt']"),
+    "PROFILE_ICON": (By.XPATH, "//img[@title = 'View Profile']"),
     "PROFILE_PAGE_LOGO": (By.XPATH, "//img[@class = 'profile-page__logo']"),
     "USER_NAME": (By.XPATH, "//input[@placeholder='Enter your full name here']"),
     "MOBILE_NUMBER": (By.XPATH, "//input[@mds-profile-edit-input-mblno]"),
@@ -40,6 +41,11 @@ locators = {
     "SELECT_COLOR_BLIND_RADIO_BUTTON": (By.XPATH, "//div[@class = 'bottom-sheet__radio']"),
     "COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON": (By.XPATH, "//div[@class ='color-correction']"),
     "TOGGLE_BUTTON_IN_ON_MODE": (By.XPATH, "//label[@class='v1 v1--active']"),
+    "PROFILE_NAME": (By.XPATH, "//div[@class = 'bio__name']"),
+    "PROFILE_MOBILE": (By.XPATH, "//div[@class = 'bio__mobile']"),
+    "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
+    "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
+    "MCDELIVERY_ICON": (By.XPATH, "//img[@alt = 'logo']"),
     }
 
 
@@ -424,3 +430,40 @@ class ProfilePage(BasePage):
 
         assert current_name == user_data_store["original_name"], f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
         assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
+
+    def Verify_current_profile_info(self, user_data_store):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['PROFILE_ICON'])
+        self.actions.click_button(*locators['PROFILE_ICON'])
+        time.sleep(2)
+        user_data_store["original_name"] = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
+        user_data_store["original_mobile"] = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
+        user_data_store["original_email"] = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
+        print("Captured profile info: ")
+        print(user_data_store)
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MCDELIVERY_ICON'])
+        self.actions.click_button(*locators['MCDELIVERY_ICON'])
+
+    def Verify_profile_info_remian_unchanged(self, user_data_store):
+        time.sleep(2)
+        current_name = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
+        current_mobile = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
+        current_email = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
+
+        assert current_name == user_data_store["original_name"], f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
+        assert current_mobile == user_data_store["original_name"], f"Expected name: {user_data_store['original_mobile']}, but got: {current_name}"
+        assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
+        print(" Profile info remains unchanged after switching business model.")
+
+    def verify_profile_page_navigation_after_switching_model(self):
+        self.actions.is_element_displayed(*locators['PROFILE_ICON'])
+        self.actions.click_button(*locators['PROFILE_ICON'])
+        time.sleep(3)
+        return self.actions.is_element_displayed(*locators['PROFILE_PAGE_LOGO'])
+    
+    def Click_save_changes_on_profile_details_page(self):
+        self.actions.is_element_displayed(*locators['SUBMIT_BUTTON'])
+        time.sleep(5)
+        self.actions.click_button(*locators["SUBMIT_BUTTON"])
+
