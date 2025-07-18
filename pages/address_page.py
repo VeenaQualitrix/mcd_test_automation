@@ -8,6 +8,7 @@ locators = {
         "ADD_NEW": (By.XPATH, "//span[contains(text(), 'Add new')]"),
         "SEARCH_BUTTON": (By.XPATH, "//span[@class='searchbar__placeholder']"),
         "SEARCH_INPUT_FIELD": (By.XPATH, "//input[@class='searchbar__input']"),
+        "SEARCH_NEXT_INPUT_FIELD": (By.XPATH, "//div[@class ='searchbar__mock-input']"),
         "SEARCH_RESULTS": (By.XPATH, "//div[@class='search-result__item']"),
         "SELECT_ADDRESS": (By.XPATH, "//div[contains(text(), '{}')]"),
         "CONFIRM_LOCATION": (By.XPATH, "//button[contains(text(), 'Confirm Location')]"),
@@ -15,13 +16,6 @@ locators = {
         "SAVE_ADDRESS": (By.XPATH, "//button[contains(@class, 'bottom-sheet__cta')]"),
         "ADDED_ADDRESS": (By.XPATH, "//div[contains(@class, 'address__row-2')]/div[contains(text(), '{}')]"),
         "ADDRESS_SELECTED": (By.XPATH, "//div[contains(@class, 'txt-ellipsis')][contains(text(), '{}')]"),
-        "ADD_ITEM": (By.XPATH, "//div[contains(@class, 'menu__title') and contains(normalize-space(), 'McVeggie Burger')]/following::div[contains(@class, 'add-to-cart')][1]"),
-        "ITEM_DETAIL_PAGE": (By.XPATH, "//h5[contains(text(), ' Customise Your McVeggie Burger ')]"),
-        "CLICK_NEXT": (By.XPATH, "//button[contains(text(), 'Next')]"),
-        "CLICK_ADD_TO_CART": (By.XPATH, "//button[contains(text(), 'Add to Cart')]"),
-        "CART_ICON": (By.XPATH, "//img[@class = 'toolbar-desktop__icon']"),
-        "YOUR_ORDER": (By.XPATH, "//h1[contains(text(), ' Your Order')]"),
-        "ADDED_ITEM_DISPLAY_IN_CART": (By.XPATH, "//h4[contains(text(), ' McVeggie Burger ')]"),
         "ADDRESS_ARROW": (By.XPATH, "//img[@alt = 'ic-arrow-down']"),
         "LOGIN_PROMPT": (By.XPATH, "//div[contains(text(), ' Log In / Sign Up to Continue ')]"),
         "LOGIN_FROM_CHECKOUT_PAGE": (By.XPATH, "//button[contains(text(), 'Log In / Sign Up to Continue')]"),
@@ -38,8 +32,6 @@ locators = {
         "CLICK_BACK_BUTTON" : (By.XPATH, "//img[@class= 'bottom-sheet__back-icon']"),
         "CLICK_BACK_BUTTON_FROM_SELECT_LOCATION" : (By.XPATH, "//img[@alt='ic-arrow-left-primary']"),
         "FIRST_ADDRESS" : (By.XPATH, "//span[contains(text(), 'Kasturba Road')]"),
-        "ADD_ITEM_TO_CART" : (By.XPATH, "/div[contains(@class, 'menu__title') and normalize-space(text())='{burger_name}']"
-            "/following::div[contains(@class, 'add-to-cart')][1]"),
         "SELECT_DELIVERY_ADDRESS_HEADLINE" : (By.XPATH, "//div[@class = 'bottom-sheet__row']"),
         "ADDRESS_SELECTED_AFTER_DELETION": (By.XPATH, "//div[contains(@class, 'txt-ellipsis')]"),
         "ADDRESS_EDIT_ICON" : (By.XPATH, "(//img[@title = 'ic-edit'])[1]"),
@@ -52,7 +44,10 @@ locators = {
         "SELECT_WORK_TAG" : (By.XPATH, " //div[contains(text(), 'Work')]"),
         "VERIFY_WORK_TAG_NEXT_ADDRESS" : (By.XPATH, " //div[contains(@class, 'address__title') and normalize-space(text())='Work']/following::div[@class='address__row-2']/div[contains(text(), 'AKTU')]"),
         "SELECT_HOME_TAG" : (By.XPATH, " (//div[contains(text(), ' Home ')])[2]"),
-        "VERIFY_HOME_TAG_NEXT_ADDRESS" : (By.XPATH, "//div[contains(@class, 'address__title') and normalize-space(text())='Home']/following::div[@class='address__row-2']/div[contains(text(), 'Vipul greens')]") 
+        "VERIFY_HOME_TAG_NEXT_ADDRESS" : (By.XPATH, "//div[contains(@class, 'address__title') and normalize-space(text())='Home']/following::div[@class='address__row-2']/div[contains(text(), 'Vipul greens')]"),
+        "ADD_NEW_ADDRESS" : (By.XPATH, "  //div[contains(text(), 'Add new address')]"),
+        "ADDED_ADDRESS_FROM_LIST" : (By.XPATH, " //div[contains(@class, 'address__title') and contains(normalize-space(.), '{}')]"),
+        
     }
 
 
@@ -99,43 +94,6 @@ class AddressPage(BasePage):
         else:
             return False
         
-
-    def add_item_in_cart(self):
-        time.sleep(2)
-        print("Attempting to display and click 'Add Item' button.")
-        self.actions.is_element_displayed(*locators['ADD_ITEM'])
-        self.actions.click_button(*locators['ADD_ITEM'])
-        print("'Add Item' button clicked.")
-
-    def verify_items_details_popup(self):
-        time.sleep(5)
-        print("Verifying item details popup is displayed.")
-        return self.actions.is_element_displayed(*locators['ITEM_DETAIL_PAGE'])
-
-    def click_next_button(self):
-        print("Checking and clicking 'Next' button.")
-        self.actions.is_element_displayed(*locators['CLICK_NEXT'])
-        self.actions.click_button(*locators['CLICK_NEXT'])
-        print("'Next' button clicked.")
-        time.sleep(2)
-
-    def click_add_to_cart(self):
-        print("Checking and clicking 'Add to Cart' button.")
-        self.actions.is_element_displayed(*locators['CLICK_ADD_TO_CART'])
-        self.actions.click_button(*locators['CLICK_ADD_TO_CART'])
-        print("'Add to Cart' button clicked.")
-        time.sleep(2)
-
-    def verify_item_added_in_cart(self):
-        time.sleep(5)
-        print("Opening cart to verify item.")
-        self.actions.is_element_displayed(*locators['CART_ICON'])
-        self.actions.click_button(*locators['CART_ICON'])
-        print("Cart icon clicked.")
-        self.actions.is_element_displayed(*locators['YOUR_ORDER'])
-        self.actions.is_element_displayed(*locators['ADDED_ITEM_DISPLAY_IN_CART'])
-        print("Item is displayed in cart.")
-
 
     def verify_redirect_to_login_or_signup_page(self):
         time.sleep(5)
@@ -296,10 +254,11 @@ class AddressPage(BasePage):
         self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bengaluru")
         time.sleep(5)
         self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Bengaluru"))
-        first_result = WebDriverWait(self.driver,20 ).until(
-    EC.element_to_be_clickable(locators["FIRST_ADDRESS"])
-)
-        first_result.click()
+        time.sleep(10)
+        self.actions.is_element_displayed(*locators['FIRST_ADDRESS'])
+        self.actions.click_button(*locators['FIRST_ADDRESS'])
+        print("First address clicked.")
+        
 
     def verify_browse_menu(self):
         time.sleep(5)
@@ -325,7 +284,7 @@ class AddressPage(BasePage):
         WebDriverWait(self.driver, 10).until(
              EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
         )
-        self.actions.click_button(*locators['SELECT_ADDRESS_FROM_LIST'])
+        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Marathahalli village, HAL Airport road"))
         print("Address from list clicked")
 
        
@@ -432,18 +391,18 @@ class AddressPage(BasePage):
         self.actions.click_button(*locators['ADD_NEW'])
         self.actions.click_button(*locators['SEARCH_BUTTON'])
         time.sleep(5)
-        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Lucknow")
+        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Dadar west")
         time.sleep(5)
         self.actions.click_button(*locators['SEARCH_BUTTON'])
         time.sleep(5)
-        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Lucknow"))
+        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Dadar west"))
         time.sleep(3)
         self.actions.is_element_displayed(*locators['CONFIRM_LOCATION'])
         self.actions.click_button(*locators["CONFIRM_LOCATION"])
         print("Clicked Confirm Location Button")
         time.sleep(5)
         self.actions.wait_for_element(*locators['HOUSE_NUMBER'])
-        self.actions.enter_text(*locators['HOUSE_NUMBER'], "AKTU, sector 46")
+        self.actions.enter_text(*locators['HOUSE_NUMBER'], "123")
         time.sleep(5)
         self.actions.click_button(*locators["SELECT_WORK_TAG"])
         print("Work tag selected")
@@ -475,6 +434,312 @@ class AddressPage(BasePage):
     def verify_tag_next_to_address_after_editing_address(self):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['VERIFY_HOME_TAG_NEXT_ADDRESS'])
+    
+    def verify_address_list_before_logout_the_application(self, user_data_store):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        user_data_store["original_addresses"] = []
+
+        scrollable_container = self.driver.execute_script("""
+            let divs = document.querySelectorAll('div');
+            for (let div of divs) {
+                if (div.scrollHeight > div.clientHeight) {
+                    return div;
+                }
+            }
+            return null;
+        """)
+
+        if not scrollable_container:
+            raise Exception(" Scrollable container not found")
+
+        for address in ["Vipul greens, Lucknow", "Dadar west", "Marathahalli village"]:
+            try:
+                # Try scrolling and finding element multiple times
+                found = False
+                for _ in range(5):
+                    try:
+                        address_element = self.driver.find_element(
+                            locators['ADDED_ADDRESS'][0],
+                            locators['ADDED_ADDRESS'][1].format(address)
+                        )
+                        # Scroll the container to the element
+                        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", address_element)
+                        time.sleep(0.5)
+                        found = True
+                        break
+                    except Exception:
+                        # Scroll a bit down each time if not found
+                        self.driver.execute_script("arguments[0].scrollTop += 200;", scrollable_container)
+                        time.sleep(0.3)
+
+                if not found:
+                    print(f" Could not find address: {address}")
+                    continue
+
+                address_title = address_element.text.strip()
+                user_data_store["original_addresses"].append(address_title)
+                print(f" Captured address: {address_title}")
+
+            except Exception as e:
+                print(f" Error while capturing address '{address}': {e}")
+                time.sleep(2)
+        self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
+
+    def verify_previously_saved_address_should_visible_after_logs_in(self, user_data_store):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        for expected_address in user_data_store["original_addresses"]:
+            # Build the XPath with the expected address
+            by, value = locators['ADDED_ADDRESS']
+            formatted_xpath = value.format(expected_address)
+
+            try:
+                # Wait for element to be present 
+                address_element = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((by, formatted_xpath))
+                )
+
+                # Scroll into view 
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", address_element)
+                time.sleep(1) 
+
+                # Validate
+                actual_text = address_element.text.strip()
+                assert expected_address in actual_text, f"Expected '{expected_address}', but found '{actual_text}'"
+
+                print(f"[PASS] Address '{expected_address}' is visible.")
+            except Exception as e:
+                print(f"[FAIL] Address '{expected_address}' not found. Error: {e}")
+                raise
+
+
+    def select_first_address_from_list(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        scrollable_container = self.driver.execute_script("""
+            let divs = document.querySelectorAll('div');
+            for (let div of divs) {
+                if (div.scrollHeight > div.clientHeight) {
+                    return div;
+                }
+            }
+            return null;
+        """)
+
+        if not scrollable_container:
+            raise Exception("Scrollable container not found")
+
+        addresses = ["Vipul greens"]
+
+        for address in addresses:
+            try:
+                found = False
+                for _ in range(5):
+                    try:
+                        address_element = self.driver.find_element(
+                            locators['ADDED_ADDRESS'][0],
+                            locators['ADDED_ADDRESS'][1].format(address)
+                        )
+                        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", address_element)
+                        time.sleep(0.5)
+                        found = True
+                        break
+                    except Exception:
+                        self.driver.execute_script("arguments[0].scrollTop += 200;", scrollable_container)
+                        time.sleep(0.3)
+
+                if found:
+                    address_text = address_element.text.strip()
+                    print(f"Captured address: {address_text}")
+                    address_element.click()
+                    return  # Stop after clicking the first found address
+
+                else:
+                    print(f"Could not find address: {address}")
+
+            except Exception as e:
+                print(f"Error while processing address '{address}': {e}")
+                time.sleep(2)
+
+    def select_another_address_from_list(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        scrollable_container = self.driver.execute_script("""
+            let divs = document.querySelectorAll('div');
+            for (let div of divs) {
+                if (div.scrollHeight > div.clientHeight) {
+                    return div;
+                }
+            }
+            return null;
+        """)
+
+        if not scrollable_container:
+            raise Exception("Scrollable container not found")
+
+        addresses = [" Dadar west "]
+
+        for address in addresses:
+            try:
+                found = False
+                for _ in range(5):
+                    try:
+                        address_element = self.driver.find_element(
+                            locators['ADDED_ADDRESS'][0],
+                            locators['ADDED_ADDRESS'][1].format(address)
+                        )
+                        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", address_element)
+                        time.sleep(0.5)
+                        found = True
+                        break
+                    except Exception:
+                        self.driver.execute_script("arguments[0].scrollTop += 200;", scrollable_container)
+                        time.sleep(0.3)
+
+                if found:
+                    address_text = address_element.text.strip()
+                    print(f"Captured address: {address_text}")
+                    address_element.click()
+                    return  # Stop after clicking the first found address
+
+                else:
+                    print(f"Could not find address: {address}")
+
+            except Exception as e:
+                print(f"Error while processing address '{address}': {e}")
+                time.sleep(2)
+
+
+    def delete_all_addresses(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        while True:
+            # Fetch all visible delete icons
+            delete_buttons = self.driver.find_elements(*locators['ADDRESS_DELETE_ICON'])
+            print(f"DEBUG: Found {len(delete_buttons)} delete icons.")
+
+            if not delete_buttons:
+                print("No more addresses to delete.")
+                break
+
+            print(f"Found {len(delete_buttons)} addresses. Deleting...")
+
+            try:
+                # Scroll to and click the first delete button
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", delete_buttons[0])
+                time.sleep(0.5)
+                delete_buttons[0].click()
+                print("Delete icon clicked")
+
+                # Wait for the delete confirmation popup and confirm deletion
+                WebDriverWait(self.driver, 5).until(
+                    EC.visibility_of_element_located(locators['ADDRESS_DELETE_POP_UP_HEADER'])
+                )
+                self.driver.find_element(*locators['CLICK_YES_ON_ADDRESS_DELETE_POP_UP']).click()
+                print("Clicked on YES option on address delete pop up")
+
+                # Wait briefly for the UI to refresh before next iteration
+                time.sleep(2)
+
+            except Exception as e:
+                print(f"Error deleting address: {e}")
+                break
+
+    def verify_add_new_address_prompt_visible(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['ADD_NEW_ADDRESS'])
+        print("Clicked on Add new address")
+
+
+    def select_address_from_list(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        scrollable_container = self.driver.execute_script("""
+            let divs = document.querySelectorAll('div');
+            for (let div of divs) {
+                if (div.scrollHeight > div.clientHeight) {
+                    return div;
+                }
+            }
+            return null;
+        """)
+
+        if not scrollable_container:
+            raise Exception("Scrollable container not found")
+
+        addresses = ["Aurangabad Mukundwadi"]
+
+        for address in addresses:
+            try:
+                found = False
+                for _ in range(5):
+                    try:
+                        address_element = self.driver.find_element(
+                            locators['ADDED_ADDRESS'][0],
+                            locators['ADDED_ADDRESS'][1].format(address)
+                        )
+                        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", address_element)
+                        time.sleep(0.5)
+                        found = True
+                        break
+                    except Exception:
+                        self.driver.execute_script("arguments[0].scrollTop += 200;", scrollable_container)
+                        time.sleep(0.3)
+
+                if found:
+                    address_text = address_element.text.strip()
+                    print(f"Captured address: {address_text}")
+                    address_element.click()
+                    return  # Stop after clicking the first found address
+
+                else:
+                    print(f"Could not find address: {address}")
+
+            except Exception as e:
+                print(f"Error while processing address '{address}': {e}")
+                time.sleep(2)
+
+    def select_address_from_listed_address(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADLINE'])
+        )
+
+        # Locate the address element directly using the formatted locator
+        address_element = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((
+                locators['ADDED_ADDRESS_FROM_LIST'][0],
+                locators['ADDED_ADDRESS_FROM_LIST'][1].format("Dadar west")
+            ))
+        )
+
+        # Optionally print the text to confirm
+        address_text = address_element.text.strip()
+        print(f"Captured address: {address_text}")
+
+        # Click the address
+        address_element.click()
+
+
+
+
+
+
+
+
+        
         
 
         

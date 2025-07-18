@@ -7,5 +7,8 @@
     "special_characters_in_mobile_field": "98765@32102",
     "Referral_code": "12345678",
     "mobile_number_11_digits": "77777777777",
-    "edit_user_name": "Testuser01"
+    "edit_user_name": "Testuser01",
+    "Expired_Promo" : "GB100",
+    "Coupon_code" : "freedelivery@199",
+    "Flat10_Coupon_code" : "FLAT10"
 }

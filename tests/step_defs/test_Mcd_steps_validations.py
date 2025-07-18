@@ -7,6 +7,7 @@ from pages.view_page import ViewPage
 from pages.profile_page import ProfilePage
 from pages.address_page import AddressPage
 from pages.view_cart_page import ViewCartPage
+from pages.offer_page import OfferPage
 from pages.juspay_page import JuspayPage
 from conftest import readPreReqJson
 from selenium.webdriver.common.keys import Keys
@@ -87,7 +88,7 @@ def enter_the_otp_and_click_verify(setup_platform):
     LoginPage(setup_platform).enter_otp(otp)
 
 @when("I click save changes on profile details page")
-@allure.step("When I eclick save changes on profile details page")
+@allure.step("When I click save changes on profile details page")
 def lick_save_changes_on_profile_page(setup_platform):
     print("click save changes on profile details page")
     ProfilePage(setup_platform).Click_save_changes_on_profile_details_page()
@@ -512,27 +513,27 @@ def step_verify_old_data_loaded_after_refresh(setup_platform, user_data_store):
 @when("I click on any item to add into a cart")
 @allure.step("When I click on any item to add into a cart")
 def step_click_add_item(setup_platform):
-    AddressPage(setup_platform).add_item_in_cart()
+    HomePage(setup_platform).add_item_in_cart()
 
 @then("I verify items details pop up opened successfully")
 @allure.step("When I verify items details pop up opened successfully")
 def step_verify_item_popup(setup_platform):
-    assert AddressPage(setup_platform).verify_items_details_popup(), "Item detail popup not displayed"
+    assert HomePage(setup_platform).verify_items_details_popup(), "Item detail popup not displayed"
 
 @when("I click on next")
 @allure.step("When I click on next")
 def step_click_next(setup_platform):
-    AddressPage(setup_platform).click_next_button()
+    HomePage(setup_platform).click_next_button()
 
 @when("I click on Add to cart option")
 @allure.step("When I click on Add to cart option")
 def step_click_add_to_cart(setup_platform):
-    AddressPage(setup_platform).click_add_to_cart()
+    HomePage(setup_platform).click_add_to_cart()
 
 @then("I verify selected item get added into a cart")
 @allure.step("When I verify selected item get added into a cart")
 def step_verify_cart(setup_platform):
-    AddressPage(setup_platform).verify_item_added_in_cart()
+    HomePage(setup_platform).verify_item_added_in_cart()
 
 @when("I click on add address in home page")
 @allure.step("When I click on add address in home page")
@@ -1022,4 +1023,729 @@ def edit_address_and_select_tag(setup_platform):
 def verify_home_tag_display_next_to_address(setup_platform):
     print("Verifying the tag should be displayed next to the address name after editing address")
     AddressPage(setup_platform).verify_tag_next_to_address_after_editing_address()
+
+@when("I selects the first address from the address list")
+@allure.step("When I selects the first address from the address list")
+def select_first_address_from_list(setup_platform):
+    print("selects the first address from the address list")
+    AddressPage(setup_platform).select_first_address_from_list()
+
+@then("I verify restaurant list should update based on the first address location")
+@allure.step("Then I verify restaurant list should update based on the first address location")
+def verify_restaurant_list_update_based_on_first_address(setup_platform):
+    print("Verifying restaurant list should update based on the first address location")
+    HomePage(setup_platform).verify_error_message_for_undeliverable_address()
+
+@when("I selects the second address from the address list")
+@allure.step("When I selects the second address from the address list")
+def select_second_address_from_list(setup_platform):
+    print("selects the second address from the address list")
+    AddressPage(setup_platform).select_another_address_from_list()
+
+@then("I verify restaurant list should update based on the second address location")
+@allure.step("Then I verify restaurant list should update based on the second address location")
+def verify_restaurant_list_update_based_on_second_address(setup_platform):
+    print("Verifying restaurant list should update based on the second address location")
+    HomePage(setup_platform).verify_address_selected_and_restaurant_updated_accordingly()
+
+@when("I verify address list before logout of the application")
+@allure.step("When I verify address list before logout of the application")
+def verify_address_list_before_logout(setup_platform, user_data_store):
+    print("verify address list before logout of the application")
+    AddressPage(setup_platform).verify_address_list_before_logout_the_application(user_data_store)
+
+@when("I logs out of the application")
+@allure.step("When I logs out of the application")
+def verify_logout_of_the_application(setup_platform):
+    print("logs out of the application")
+    ProfilePage(setup_platform).Click_log_out_on_profile_details_page()
+
+@then("I verify previously saved addresses should be retained and visible")
+@allure.step("Then I verify previously saved addresses should be retained and visible")
+def verify_previously_saved_address_should_visible(setup_platform, user_data_store):
+    print("Verifying previously saved addresses should be retained and visible")
+    AddressPage(setup_platform).verify_previously_saved_address_should_visible_after_logs_in(user_data_store)
+
+@when("I delete all addresses")
+@allure.step("When I delete all addresses")
+def verify_delete_all_addresses(setup_platform):
+    print("delete all addresses")
+    AddressPage(setup_platform).delete_all_addresses()
+
+@then("I verify the address list should be empty and the Add Address prompt should be visible")
+@allure.step("Then I verify the address list should be empty and the Add Address prompt should be visible")
+def verify_address_prompt_visible(setup_platform):
+    print("Verifying the address list should be empty and the Add Address prompt should be visible")
+    AddressPage(setup_platform).verify_add_new_address_prompt_visible()
+
+
+@when("I click on 'Add +' for the customizable item")
+@allure.step("When I click on 'Add +' for the customizable item")
+def click_add_button(setup_platform):
+    print("Add+ button clicked")
+    HomePage(setup_platform).add_item_in_cart()
+
+@then("I verify the customization options should appear before adding the item to the cart")
+@allure.step("When I verify the customization options should appear before adding the item to the cart")
+def step_verify_item_popup(setup_platform):
+    print("Verifying the customization options should appear before adding the item to the cart")
+    assert HomePage(setup_platform).verify_items_details_popup(), "Item detail popup not displayed"
+
+@when("I add 2 to 3 different available items to the cart")
+@allure.step("When I add 2 to 3 different available items to the cart")
+def add_multiple_items_to_the_cart(setup_platform):
+    print("add 2 to 3 different available items to the cart")
+    HomePage(setup_platform).add_multiple_items_to_cart()
+
+@when("I navigate to the cart")
+@allure.step("When I navigate to the cart")
+def Navigate_to_cart(setup_platform):
+    print("navigate to the cart")
+    HomePage(setup_platform).navigate_to_cart()
+
+@then("I verify all added items should be listed in the cart with correct price and quantities")
+@allure.step("When I verify all added items should be listed in the cart with correct price and quantities")
+def verify_all_item_added_with_correct_price(setup_platform):
+    print("Verifying all added items should be listed in the cart with correct price and quantities")
+    ViewCartPage(setup_platform).verify_multiple_products_in_cart_with_correct_price()
     
+@when("I user views the price of a menu item")
+@allure.step("When I user views the price of a menu item")
+def verify_price_displayed_for_items(setup_platform):
+    print("user views the price of a menu item")
+    HomePage(setup_platform).verify_price_is_visible_for_items()
+
+@when("I user adds the item to the cart")
+@allure.step("When I user adds the item to the cart")
+def Add_single_item_to_the_cart(setup_platform):
+    print("user adds the item to the cart")
+    HomePage(setup_platform).add_single_item_in_cart()
+
+
+@then("I verify the item price should be correctly displayed in the cart")
+@allure.step("When I verify the item price should be correctly displayed in the cart")
+def verify_product_price_in_the_cart(setup_platform):
+    print("verify the item price should be correctly displayed in the cart")
+    assert ViewCartPage(setup_platform).verify_product_price_is_displayed_correct_in_cart(), "product price is not displayed correctly in cart"
+
+
+@then("I verify the price in the cart should match the menu price")
+@allure.step("When I verify the price in the cart should match the menu price")
+def verify_product_price_in_the_cart_match_with_menu_price(setup_platform):
+    print("verify the price in the cart should match the menu price")
+    ViewCartPage(setup_platform).verify_price_in_cart_matches_menu_price()
+
+@when("I Click back button from select location page")
+@allure.step("When I Click back button from select location page")
+def Click_back_button_from_select_location_page(setup_platform):
+    print("Click back button from select location page")
+    HomePage(setup_platform).Click_back_button_from_select_location_page()
+
+@when("I user is on the menu page and sees an item marked as 'Sold out'")
+@allure.step("When I user is on the menu page and sees an item marked as 'Sold out'")
+def Verify_display_item_marked_as_sold_out(setup_platform):
+    print("user is on the menu page and sees an item marked as 'Sold out'")
+    HomePage(setup_platform).Verify_display_item_marked_as_sold_out()
+
+@then("I verify the item should not be clickable and unable to add to cart")
+@allure.step("When I verify the item should not be clickable and unable to add to cart")
+def verify_sold_out_item_not_clickable(setup_platform):
+    print("verify the item should not be clickable and unable to add to cart")
+    HomePage(setup_platform).verify_sold_out_item_not_clickable()
+
+@when("I selects the address from the address list")
+@allure.step("When I selects the address from the address list")
+def select_address_from_list(setup_platform):
+    print("selects the address from the address list")
+    AddressPage(setup_platform).select_address_from_list()
+
+@when("I selects the '3Pc Meals' category under menu")
+@allure.step("When I selects the '3Pc Meals' category under menu")
+def select_3PC_meal_under_menu(setup_platform):
+    print("selects the '3Pc Meals' category under menu")
+    HomePage(setup_platform).select_3PC_meal_under_menu()
+
+@then("I verify all items under the '3Pc Meals' category should be displayed")
+@allure.step("When I verify all items under the '3Pc Meals' category should be displayed")
+def verify_display_of_3PC_meal_category(setup_platform):
+    print("verify all items under the '3Pc Meals' category should be displayed")
+    HomePage(setup_platform).verify_display_of_3PC_meal_category()
+
+@when("I select any product from the '3Pc Meals' category and click on Add to cart")
+@allure.step("When I select any product from the '3Pc Meals' category and click on Add to cart")
+def select_product_from_3PC_meals_category(setup_platform):
+    print("select any product from the '3Pc Meals' category and click on Add to cart")
+    HomePage(setup_platform).select_product_from_3PC_meals_category()
+
+@then("I verify the product added in cart")
+@allure.step("When I verify the product added in cart")
+def verify_product_added_in_cart(setup_platform):
+    print("verify the product added in cart")
+    HomePage(setup_platform).verify_product_added_in_cart()
+
+@when("I clicks on the 'Customize' button")
+@allure.step("When I clicks on the 'Customize' button")
+def click_customised(setup_platform):
+    print("clicks on the 'Customize' button")
+    ViewCartPage(setup_platform).Click_customise()
+
+@when("I selects or removes items from the customization options")
+@allure.step("When I selects or removes items from the customization options")
+def Add_or_remove_items_on_customise_page(setup_platform):
+    print("selects or removes items from the customization options")
+    ViewCartPage(setup_platform).Add_or_remove_items_on_customise_page()
+
+@then("I verify the customized item should be added to the cart with selected preferences")
+@allure.step("When I verify the customized item should be added to the cart with selected preferences")
+def Verify_customisation_text_after_adding_or_removing_items(setup_platform):
+    print("verify the customized item should be added to the cart with selected preferences")
+    ViewCartPage(setup_platform).Verify_customisation_text_after_adding_or_removing_items()
+
+@then("I verify the added items in cart")
+@allure.step("When I verify the added items in cart")
+def Verify_items_in_cart(setup_platform):
+    print("verify the added items in cart")
+    ViewCartPage(setup_platform).Verify_items_in_cart()
+
+@when("I clicks the 'Remove' button for an item")
+@allure.step("When I clicks the 'Remove' button for an item")
+def Click_remove_to_decrease_cart_item(setup_platform):
+    print("clicks the 'Remove' button for an item")
+    ViewCartPage(setup_platform).decrease_cart_item()
+
+@then("I verify the selected item should be removed from the cart")
+@allure.step("When I verify the selected item should be removed from the cart")
+def Verify_selected_items_removed_from_cart(setup_platform):
+    print("verify the selected item should be removed from the cart")
+    ViewCartPage(setup_platform).Verify_selected_items_removed_from_cart()
+
+
+@then("I verify the single item in cart")
+@allure.step("When I verify the single item in cart")
+def Verify_single_item_in_cart(setup_platform):
+    print("verify the single item in cart")
+    ViewCartPage(setup_platform).Verify_single_item_in_cart()
+
+@when("I clicks the 'Add' button for an item")
+@allure.step("When I clicks the 'Add' button for an item")
+def Click_add_to_increase_cart_item(setup_platform):
+    print("clicks the 'Add' button for an item")
+    ViewCartPage(setup_platform).increase_cart_item()
+
+@then("I verify the Quantity updates correctly")
+@allure.step("When I verify the Quantity updates correctly")
+def verify_item_quantity(setup_platform):
+    print("Verifying quantity updated correctly")
+    ViewCartPage(setup_platform).verify_item_quantity()
+
+@then("I verify the total payable amount should be displayed")
+@allure.step("When I verify the total payable amount should be displayed")
+def Verify_total_payable_amount_is_displayed_in_cart_page(setup_platform):
+    print("verify the total payable amount should be displayed")
+    ViewCartPage(setup_platform).Verify_total_payable_amount_is_displayed_in_cart_page()
+
+@then("I verify the cart icon doesn not appear on the homepage if the cart is empty")
+@allure.step("When I verify the cart icon doesn not appear on the homepage if the cart is empty")
+def verify_cart_icon_does_not_appear_if_cart_is_empty(setup_platform):
+    print("verify the cart icon doesn not appear on the homepage if the cart is empty")
+    HomePage(setup_platform).verify_cart_icon_does_not_appear_if_cart_is_empty()
+
+@then("I verify total payable amount")
+@allure.step("When I verify total payable amount")
+def get_total_payable_amount(setup_platform):
+    print("verify total payable amount")
+    ViewCartPage(setup_platform).get_total_payable_amount()
+
+@then("I verify total price recalculates")
+@allure.step("When I verify total price recalculates")
+def verify_total_amount_recalculates(setup_platform):
+    print("verify total price recalculates")
+    ViewCartPage(setup_platform).print_total_payable_amount()
+
+@when("I click on the 'Clear All' button")
+@allure.step("When I click on the 'Clear All' button")
+def Click_Clear_all_option(setup_platform):
+    print("click on the 'Clear All' button")
+    ViewCartPage(setup_platform).Clear_all()
+
+@when("I click the '-' button beside the item until the quantity becomes 0")
+@allure.step("When I click the '-' button beside the item until the quantity becomes 0")
+def Remove_cart_item_until_the_quantity_becomes_zero(setup_platform):
+    print("click the '-' button beside the item until the quantity becomes 0")
+    ViewCartPage(setup_platform).Remove_cart_item_until_the_quantity_becomes_zero()
+
+@then("I verify the item should be removed from the cart and pop up appears")
+@allure.step("When I verify the item should be removed from the cart and pop up appears")
+def Cart_delete_pop_up(setup_platform):
+    print("verify the item should be removed from the cart and pop up appears")
+    HomePage(setup_platform).Cart_delete_pop_up()
+
+@when("I add the random item to the cart")
+@allure.step("When I add the random item to the cart")
+def add_random_item_in_cart(setup_platform):
+    print("add the random item to the cart")
+    HomePage(setup_platform).add_random_item_in_cart()
+
+@when("I refresh the page")
+@allure.step("When I refresh the page")
+def Refresh_the_page(setup_platform):
+    print("refresh the page")
+    ViewCartPage(setup_platform).Refresh_the_page()
+
+@then("I verify the cart should retain the previously added items")
+@allure.step("When I verify the cart should retain the previously added items")
+def cart_retained_the_previously_added_item(setup_platform):
+    print("verify the cart should retain the previously added items")
+    ViewCartPage(setup_platform).cart_retained_the_previously_added_item()
+
+@then("I verify checkbox and link visible")
+@allure.step("When I verify checkbox and link visible")
+def verify_checkbox_and_charity_link_visible(setup_platform):
+    print("verify checkbox and link visible")
+    ViewCartPage(setup_platform).verify_checkbox_and_charity_link_visible()
+
+@then("I verify Info opens about the charity")
+@allure.step("When I verify Info opens about the charity")
+def verify_charity_info_pop_up(setup_platform):
+    print("verify Info opens about the charity")
+    ViewCartPage(setup_platform).verify_charity_info_pop_up()
+
+@when("I click on 'Know More' link")
+@allure.step("When I click on 'Know More' link")
+def click_know_more_link(setup_platform):
+    print("click on 'Know More' link")
+    ViewCartPage(setup_platform).click_know_more_link()
+
+@when("I clicks the charity donation checkbox to opt-in")
+@allure.step("When I clicks the charity donation checkbox to opt-in")
+def click_charity_checkbox(setup_platform):
+    print("clicks the charity donation checkbox to opt-in")
+    ViewCartPage(setup_platform).verify_charity_checkbox_is_selected()
+
+@then("I verify ₹3 should be added to the total payable amount")
+@allure.step("When I verify ₹3 should be added to the total payable amount")
+def verify_Donation_amount_added_in_payable_amount(setup_platform):
+    print("verify ₹3 should be added to the total payable amount")
+    ViewCartPage(setup_platform).verify_Donation_amount_added_in_payable_amount()
+
+@then("I verify the charity donation option is visible and selected")
+@allure.step("When I verify the charity donation option is visible and selected")
+def verify_charity_checkbox_is_selected(setup_platform):
+    print("verify the charity donation option is visible and selected")
+    ViewCartPage(setup_platform).verify_charity_checkbox_is_selected()
+
+@when("I unchecks the charity donation checkbox")
+@allure.step("When I unchecks the charity donation checkbox")
+def uncheck_charity_checkbox(setup_platform):
+    print("unchecks the charity donation checkbox")
+    ViewCartPage(setup_platform).uncheck_charity_checkbox()
+
+@then("I verify ₹3 should be removed from the total payable amount")
+@allure.step("When I verify ₹3 should be removed from the total payable amount")
+def verify_donation_amount_removed_from_payable_amount(setup_platform):
+    print("verify ₹3 should be removed from the total payable amount")
+    ViewCartPage(setup_platform).verify_donation_amount_removed_from_payable_amount()
+
+@then("I verify 'View All' link visible")
+@allure.step("When I verify 'View All' link visible")
+def verify_view_all_link_visible(setup_platform):
+    print("verify 'View All' link visible")
+    ViewCartPage(setup_platform).verify_view_all_link_visible()
+
+@when("I click on 'View All' link")
+@allure.step("When I click on 'View All' link")
+def click_view_all_link(setup_platform):
+    print("click on 'View All' link")
+    ViewCartPage(setup_platform).click_view_all_link()
+
+@then("I verify the user should be redirected to a page displaying all available offers")
+@allure.step("When I verify the user should be redirected to a page displaying all available offers")
+def verify_user_redirected_to_offers_page(setup_platform):
+    print("verify the user should be redirected to a page displaying all available offers")
+    ViewCartPage(setup_platform).verify_user_redirected_to_offers_page()
+
+@when("I reviews all prices in the order summary")
+@allure.step("When I reviews all prices in the order summary")
+def review_prices_in_order_summary(setup_platform):
+    print("reviews all prices in the order summary")
+    ViewCartPage(setup_platform).review_prices_in_order_summary()
+
+@then("I verify each price should be prefixed with the ₹ symbol")
+@allure.step("When I verify each price should be prefixed with the ₹ symbol")
+def verify_all_prices_prefixed_with_currency_symbol(setup_platform):
+    print("verify each price should be prefixed with the ₹ symbol")
+    ViewCartPage(setup_platform).verify_all_prices_prefixed_with_currency_symbol()
+
+@when("I checks the price breakdown on the right side of the page")
+@allure.step("When I checks the price breakdown on the right side of the page")
+def verify_prices_breakdown_in_order_summary(setup_platform):
+    print("checks the price breakdown on the right side of the page")
+    ViewCartPage(setup_platform).verify_prices_breakdown_in_order_summary()
+
+@then("I veverify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+@allure.step("When I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+def verify_display_of_charges_and_total_amount_in_order_summary(setup_platform):
+    print("verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+    ViewCartPage(setup_platform).verify_display_of_charges_and_total_amount_in_order_summary()
+
+@when("I enter the expired promo code and click search")
+@allure.step("When I enter the expired promo code and click search")
+def enter_expired_promo_code_and_click_search(setup_platform):
+    Expired_Promo = readPreReqJson("test_data", "Expired_Promo")
+    print("enter the expired promo code and click search")
+    ViewCartPage(setup_platform).enter_expired_promo_code_and_click_search(Expired_Promo)
+
+@when("I click on offer Apply button and select button")
+@allure.step("When I click on offer Apply button and select button")
+def click_offer_apply_and_select_button(setup_platform):
+    print("click on offer Apply button and select button")
+    ViewCartPage(setup_platform).click_offer_apply_and_select_button()
+
+@then("I verify a message should be displayed indicating that the code is invalid or expired")
+@allure.step("When I verify a message should be displayed indicating that the code is invalid or expired")
+def verify_promo_expired_message(setup_platform):
+    print("verify a message should be displayed indicating that the code is invalid or expired")
+    ViewCartPage(setup_platform).verify_promo_expired_message()
+
+@then("I verify item name in cart")
+@allure.step("When I verify item name in cart")
+def Verify_item_name_in_cart(setup_platform):
+    print("verify item name in cart")
+    ViewCartPage(setup_platform).Verify_item_name_in_cart()
+
+@when("I click on 'Add Delivery Instructions'")
+@allure.step("When I click on 'Add Delivery Instructions'")
+def click_add_delivery_instructions(setup_platform):
+    print("click on 'Add Delivery Instructions'")
+    ViewCartPage(setup_platform).click_add_delivery_instructions()
+
+@when("I enters special notes in the instructions field")
+@allure.step("When I enters special notes in the instructions field")
+def enter_notes_in_instructions_field(setup_platform):
+    print("enters special notes in the instructions field")
+    ViewCartPage(setup_platform).enter_notes_in_instructions_field()
+
+@then("I verify the instructions field should accept the input")
+@allure.step("When I verify the instructions field should accept the input")
+def verify_instructions_field_input(setup_platform):
+    print("verify the instructions field should accept the input")
+    ViewCartPage(setup_platform).verify_instructions_field_input()
+
+@when("I enters special characters in the instructions field")
+@allure.step("When I enters special characters in the instructions field")
+def enter_special_char_in_instructions_field(setup_platform):
+    print("enters special characters in the instructions field")
+    ViewCartPage(setup_platform).enter_special_char_in_instructions_field()
+
+@then("I verify the special characters should accepted in instructions field")
+@allure.step("When I verify the special characters should accepted in instructions field")
+def verify_special_char_accepted_as_input_in_instructions_field(setup_platform):
+    print("verify the special characters should accepted in instructions field")
+    ViewCartPage(setup_platform).verify_special_char_accepted_as_input_in_instructions_field()
+
+@then("I verify subtotal for a single added item")
+@allure.step("When I verify subtotal for a single added item")
+def verify_sub_total_for_single_added_item(setup_platform):
+    print("verify subtotal for a single added item")
+    ViewCartPage(setup_platform).verify_sub_total_for_single_added_item()
+
+@when("I add item from recommendation")
+@allure.step("When I add item from recommendation")
+def add_item_from_recommendation(setup_platform):
+    print("add item from recommendation")
+    ViewCartPage(setup_platform).add_item_from_recommendation()
+
+@when("I Scroll to top of the page")
+@allure.step("When I Scroll to top of the page")
+def scroll_to_top(setup_platform):
+    print("Scroll to top of the page")
+    ViewCartPage(setup_platform).scroll_to_top()
+
+@then("I verify subtotal for all added items")
+@allure.step("When I verify subtotal for all added items")
+def verify_sub_total_for_all_added_item(setup_platform):
+    print("verify subtotal for all added items")
+    ViewCartPage(setup_platform).verify_sub_total_for_all_added_item()
+
+@when("I Check CGST and SGST breakdown")
+@allure.step("When I Check CGST and SGST breakdown")
+def verify_cgst_and_sgst_breakdown_in_order_summary(setup_platform):
+    print("Check CGST and SGST breakdown")
+    ViewCartPage(setup_platform).verify_cgst_and_sgst_breakdown_in_order_summary()
+
+@then("I verify tax percentage should be calculated accurately")
+@allure.step("When I verify tax percentage should be calculated accurately")
+def verify_tax_percentage_calculation(setup_platform):
+    print("verify tax percentage should be calculated accurately")
+    ViewCartPage(setup_platform).verify_tax_percentage_calculation()
+
+@then("I verify the estimated delivery time displayed below the delivery address")
+@allure.step("When I verify the estimated delivery time displayed below the delivery address")
+def verify_estimated_delivery_time(setup_platform):
+    print("verify the estimated delivery time displayed below the delivery address")
+    ViewCartPage(setup_platform).verify_estimated_delivery_time()
+
+@when("I selects the address from the listed addres")
+@allure.step("When I selects the address from the listed addres")
+def select_address_from_listed_address(setup_platform):
+    print("selects the address from the listed addres")
+    AddressPage(setup_platform).select_address_from_listed_address()
+
+@when("I apply the first promo code")
+@allure.step("When I apply the first promo code")
+def Select_first_promo_code(setup_platform):
+    print("apply the first promo code")
+    OfferPage(setup_platform).Select_first_promo_code()
+
+@then("I verify that the offer is applied and click on 'Change Offer'")
+@allure.step("When I verify that the offer is applied and click on 'Change Offer'")
+def verify_applied_offer_and_click_change_offer(setup_platform):
+    print("verify that the offer is applied and click on 'Change Offer'")
+    ViewCartPage(setup_platform).verify_applied_offer_and_click_change_offer()
+
+@when("I apply the second promo code")
+@allure.step("When I apply the second promo code")
+def Select_second_promo_code(setup_platform):
+    print("apply the second promo code")
+    OfferPage(setup_platform).Select_second_promo_code()
+
+@then("I verify that the first offer is removed and the second offer is displayed")
+@allure.step("When I verify that the first offer is removed and the second offer is displayed")
+def verify_first_offer_is_removed_and_the_second_offer_is_displayed(setup_platform):
+    print("verify that the first offer is removed and the second offer is displayed")
+    ViewCartPage(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+@then("I verify total amount from order summary")
+@allure.step("When I verify total amount from order summary")
+def get_total_amount_from_order_summary(setup_platform):
+    print("verify total amount from order summary")
+    ViewCartPage(setup_platform).get_total_amount_from_order_summary()
+
+@when("I capture the total amount before applying the promo")
+@allure.step("When I capture the total amount before applying the promo")
+def capture_total_before_promo(setup_platform):
+    ViewCartPage(setup_platform).step_capture_total_before_applying_promo()
+
+@then("I verify the discount should be clearly shown and deducted in the order summary")
+@allure.step("When I verify the discount should be clearly shown and deducted in the order summary")
+def verify_discount_prices_in_order_summary(setup_platform):
+    print("verify the discount should be clearly shown and deducted in the order summary")
+    ViewCartPage(setup_platform).verify_discount_is_applied_correctly()
+
+@then("I verify sub total includes delivery charge")
+@allure.step("When I verify sub total includes delivery charge")
+def verify_subtotal_includes_handling_charges(setup_platform):
+    print("verify sub total includes delivery charge")
+    ViewCartPage(setup_platform).verify_subtotal_includes_handling_charges()
+
+@when("I click on homepage search icon")
+@allure.step("When I click on homepage search icon")
+def click_on_search_icon_on_home_page(setup_platform):
+    print("click on homepage search icon")
+    HomePage(setup_platform).click_on_search_icon_on_home_page()
+
+@then("I verify search menu page navigation")
+@allure.step("When I verify search menu page navigation")
+def verify_navigate_to_menu_search_page(setup_platform):
+    print("verify search menu page navigation")
+    HomePage(setup_platform).verify_navigate_to_menu_search_page()
+
+@when("I enters 'Fries' in the search bar")
+@allure.step("When I enters 'Fries' in the search bar")
+def click_on_menu_search_icon_and_enter_fries(setup_platform):
+    print("enters 'Fries' in the search bar")
+    HomePage(setup_platform).click_on_menu_search_icon_and_enter_fries()
+
+@then("I verify the search results should display items matching 'Fries'")
+@allure.step("When I verify the search results should display items matching 'Fries'")
+def verify_search_result_display_fries_menu_items(setup_platform):
+    print("verify the search results should display items matching 'Fries'")
+    HomePage(setup_platform).verify_search_result_display_fries_menu_items()
+
+@when("I clicks the search button without typing anything")
+@allure.step("When I clicks the search button without typing anything")
+def click_search_with_empty_input(setup_platform):
+    print("clicks the search button without typing anything")
+    HomePage(setup_platform).click_search_with_empty_input()
+
+@then("I verify no action should be taken and prompt is displayed")
+@allure.step("When I verify no action should be taken and prompt is displayed")
+def verify_prompt_display(setup_platform):
+    print("verify no action should be taken and prompt is displayed")
+    HomePage(setup_platform).verify_prompt_display()
+
+@when("I enters '$%^#' in the search bar")
+@allure.step("When I enters '$%^#' in the search bar")
+def enter_non_existance_menu_and_click_search(setup_platform):
+    print("enters '$%^#' in the search bar")
+    HomePage(setup_platform).enter_non_existance_menu_and_click_search()
+
+@then("I verify 'No matching items found' message is displayed")
+@allure.step("When I verify 'No matching items found' message is displayed")
+def verify_message_when_items_not_found(setup_platform):
+    print("verify 'No matching items found' message is displayed")
+    HomePage(setup_platform).verify_message_when_items_not_found()
+
+@then("I verify the placeholder text should be displayed as 'Search here'")
+@allure.step("When I verify the placeholder text should be displayed as 'Search here'")
+def verify_placeholder_shows_search_here(setup_platform):
+    print("verify the placeholder text should be displayed as 'Search here'")
+    HomePage(setup_platform).verify_placeholder_shows_search_here()
+
+@when("I clears the search input")
+@allure.step("When I clears the search input")
+def clear_search_input_field(setup_platform):
+    print("clears the search input")
+    HomePage(setup_platform).clear_search_input_field()
+
+@then("I verify Default view restored and no filters should be applied")
+@allure.step("When I verify Default view restored and no filters should be applied")
+def verify_default_view_restored(setup_platform):
+    print("verify Default view restored and no filters should be applied")
+    HomePage(setup_platform).verify_prompt_display()
+
+@when("I clicks the 'Veg' filter button")
+@allure.step("When I clicks the 'Veg' filter button")
+def click_veg_filter(setup_platform):
+    print("clicks the 'Veg' filter button")
+    HomePage(setup_platform).click_veg_filter()
+
+@then("I verify only Veg items should be displayed in the menu")
+@allure.step("When I verify only Veg items should be displayed in the menu")
+def verify_display_of_veg_items(setup_platform):
+    print("verify only Veg items should be displayed in the menu")
+    HomePage(setup_platform).verify_display_of_veg_items()
+
+@when("I clicks the 'Non-Veg' filter button")
+@allure.step("When I clicks the 'Non-Veg' filter button")
+def click_non_veg_filter(setup_platform):
+    print("clicks the 'Non-Veg' filter button")
+    HomePage(setup_platform).click_non_veg_filter()
+
+@then("I verify only Non-Veg items should be displayed in the menu")
+@allure.step("When I verify only Non-Veg items should be displayed in the menu")
+def verify_display_of_non_veg_items(setup_platform):
+    print("verify only Non-Veg items should be displayed in the menu")
+    HomePage(setup_platform).verify_display_of_non_veg_items()
+
+@when("I clicks the close icon of 'Veg' filter button")
+@allure.step("When I clicks the close icon of 'Veg' filter button")
+def click_close_icon_on_veg_filter(setup_platform):
+    print("clicks the close icon of 'Veg' filter button")
+    HomePage(setup_platform).click_close_icon_on_veg_filter()
+
+@then("I verify the default view should be restored")
+@allure.step("When I verify the default view should be restored")
+def verify_default_view_should_restored(setup_platform):
+    print("verify the default view should be restored")
+    HomePage(setup_platform).verify_prompt_display()
+
+@when("I search for 'Burger'")
+@allure.step("When I search for 'Burger'")
+def search_for_burger_item(setup_platform):
+    print("search for 'Burger'")
+    HomePage(setup_platform).search_for_burger_item()
+
+@when("I add a 'Burger' item to the cart")
+@allure.step("When I add a 'Burger' item to the cart")
+def add_burger_item(setup_platform):
+    print("add a 'Burger' item to the cart")
+    HomePage(setup_platform).add_burger_item()
+
+@then("I verify the search results for 'Burger' should still be displayed")
+@allure.step("When I verify the search results for 'Burger' should still be displayed")
+def verify_burger_search_result_persist_post_add(setup_platform):
+    print("verify the search results for 'Burger' should still be displayed")
+    HomePage(setup_platform).verify_burger_search_result_persist_post_add()
+
+@then("I verify item added to the cart and quantity updated")
+@allure.step("When I verify item added to the cart and quantity updated")
+def Verify_item_and_quantity_in_cart(setup_platform):
+    print("verify item added to the cart and quantity updated")
+    ViewCartPage(setup_platform).Verify_item_and_quantity_in_cart()
+
+@when("I refresh the page")
+@allure.step("When I refresh the page")
+def Refresh_the_page(setup_platform):
+    print("refresh the page")
+    ViewCartPage(setup_platform).Refresh_the_page()
+
+@then("I verify only Veg Burger items should be displayed in the menu")
+@allure.step("When I verify only Veg Burger items should be displayed in the menu")
+def verify_display_of_veg_burger_items(setup_platform):
+    print("verify only Veg Burger items should be displayed in the menu")
+    HomePage(setup_platform).verify_display_of_veg_items()
+
+@then("I verify the input box for entering the coupon code should be visible and accept text input")
+@allure.step("When I verify the input box for entering the coupon code should be visible and accept text input")
+def verify_input_box_for_entering_coupon_code_visible_and_functional(setup_platform):
+    Coupon_code= readPreReqJson("test_data", "Coupon_code")
+    print("verify the input box for entering the coupon code should be visible and accept text input")
+    OfferPage(setup_platform).verify_input_box_for_entering_coupon_code_visible_and_functional(Coupon_code)
+
+@when("I user enters a valid coupon code 'FLAT10' into the input box")
+@allure.step("When I user enters a valid coupon code 'FLAT10' into the input box")
+def enter_a_Flat10_coupon_code_into_the_input_box(setup_platform):
+    Flat10_Coupon_code= readPreReqJson("test_data", "Flat10_Coupon_code")
+    print("enters a valid coupon code 'FLAT10' into the input box")
+    OfferPage(setup_platform).enter_a_Flat10_coupon_code_into_the_input_box(Flat10_Coupon_code)
+
+@then("I verify an offer card with the code 'FLAT10' should appear")
+@allure.step("When I verify an offer card with the code 'FLAT10' should appear")
+def verify_flat10_offer_card_visible(setup_platform):
+    print("verify an offer card with the code 'FLAT10' should appear")
+    OfferPage(setup_platform).verify_flat10_offer_card_visible()
+
+@when("I enters a valid coupon code into the input box")
+@allure.step("When I enters a valid coupon code into the input box")
+def enter_a_Flat10_coupon_code_into_the_input_box(setup_platform):
+    Coupon_code= readPreReqJson("test_data", "Coupon_code")
+    print("enters a valid coupon code into the input box")
+    OfferPage(setup_platform).verify_input_box_for_entering_coupon_code_visible_and_functional(Coupon_code)
+
+@then("I verify each offer card should displays code, description, Show More link, and Apply button")
+@allure.step("When I verify each offer card should displays code, description, Show More link, and Apply button")
+def verify_offer_card_displays_correctly(setup_platform):
+    print("verify each offer card should displays code, description, Show More link, and Apply button")
+    OfferPage(setup_platform).verify_offer_card_displays_correctly()
+
+@when("I enters a valid coupon code and clicks on the Apply button")
+@allure.step("When I enters a valid coupon code and clicks on the Apply button")
+def enter_coupon_code_and_click_apply_button(setup_platform):
+    print("enters a valid coupon code and clicks on the Apply button")
+    OfferPage(setup_platform).enter_coupon_code_and_click_apply_button()
+
+@then("I verify selected coupon should be applied to the current cart")
+@allure.step("When I verify selected coupon should be applied to the current cart")
+def verify_applied_offer_displays_in_cart(setup_platform):
+    print("verify selected coupon should be applied to the current cart")
+    ViewCartPage(setup_platform).verify_applied_offer_displays_in_cart()
+
+@when("I enters a valid coupon code 'FLAT10' and clicks on the Apply button")
+@allure.step("When I enters a valid coupon code 'FLAT10' and clicks on the Apply button")
+def enter_Flat10_coupon_code_click_apply_button(setup_platform):
+    Flat10_Coupon_code= readPreReqJson("test_data", "Flat10_Coupon_code")
+    print("enters a valid coupon code 'FLAT10' and clicks on the Apply button")
+    OfferPage(setup_platform).enter_Flat10_coupon_code_click_apply_button(Flat10_Coupon_code)
+
+@then("I verify a warning should appear with the message 'Promo not applied'")
+@allure.step("When I verify a warning should appear with the message 'Promo not applied'")
+def verify_coupon_restriction_message(setup_platform):
+    print("verify a warning should appear with the message 'Promo not applied'")
+    OfferPage(setup_platform).verify_coupon_restriction_message()
+
+@then("I verify the discount should be successfully applied")
+@allure.step("When I verify the discount should be successfully applied")
+def verify_discount_prices_in_order_summary(setup_platform):
+    print("verify the discount should be successfully applied")
+    view_cart = ViewCartPage(setup_platform)
+    view_cart.step_capture_total_before_applying_promo() 
+    view_cart.verify_discount_is_applied_correctly()
+
+@then("I verify new coupon should override the previous one")
+@allure.step("When I verify new coupon should override the previous one")
+def verify_new_coupon_override_the_previous_one(setup_platform):
+    print("verify new coupon should override the previous one")
+    ViewCartPage(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+

@@ -11,7 +11,7 @@ import time
 locators = {
     "PERSONAL_HEADER_DETAILS": (By.XPATH, "//div[contains(text(), 'Personal Details')]"),
     "USER_PROFILE_ICON": (By.XPATH, "//h2[@class = 'avatar__logo-initial-txt']"),
-    "PROFILE_ICON": (By.XPATH, "//img[@title = 'View Profile']"),
+    "PROFILE_ICON": (By.XPATH, "//div[@title = 'View Profile']"),
     "PROFILE_PAGE_LOGO": (By.XPATH, "//img[@class = 'profile-page__logo']"),
     "USER_NAME": (By.XPATH, "//input[@placeholder='Enter your full name here']"),
     "MOBILE_NUMBER": (By.XPATH, "//input[@mds-profile-edit-input-mblno]"),
@@ -46,6 +46,7 @@ locators = {
     "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
     "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
     "MCDELIVERY_ICON": (By.XPATH, "//img[@alt = 'logo']"),
+    "LOG_OUT_BUTTON": (By.XPATH, "//div[contains(text(), 'Logout')]"),
     }
 
 
@@ -432,7 +433,7 @@ class ProfilePage(BasePage):
         assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
 
     def Verify_current_profile_info(self, user_data_store):
-        time.sleep(2)
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['PROFILE_ICON'])
         self.actions.click_button(*locators['PROFILE_ICON'])
         time.sleep(2)
@@ -464,6 +465,13 @@ class ProfilePage(BasePage):
     
     def Click_save_changes_on_profile_details_page(self):
         self.actions.is_element_displayed(*locators['SUBMIT_BUTTON'])
-        time.sleep(5)
+        time.sleep(2)
         self.actions.click_button(*locators["SUBMIT_BUTTON"])
+
+    def Click_log_out_on_profile_details_page(self):
+        log_out_button = self.driver.find_element(*locators["LOG_OUT_BUTTON"])
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", log_out_button)
+        time.sleep(10)
+        log_out_button.click()
+        print("Log out button clicked")
 

@@ -16,4 +16,4 @@ class ViewPage(BasePage):
  
     def click_on_login_or_sign_up_button(self):
         self.actions.click_button(*locators['LOGIN_BUTTON'])
-        print("Clicked Profile Icon On Home Page")
+        print("Clicked Login button")

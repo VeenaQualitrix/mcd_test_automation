@@ -781,16 +781,6 @@ Scenario: Ensure selected model persists during session
         |appURL|
         |https://www.uat.mcdapp.co|
 
-
-@TC_BM_012
-Scenario: Verify default business model on first visit
-    Given  I open the Chrome browser
-    When   I hit the URL
-    Then   I verify website opened successfully
-    And    I verify “McDelivery” should be selected by default
-        |appURL|
-        |https://www.uat.mcdapp.co|
-
 @TC_BM_013
 Scenario: Check location permission prompt for “On the Go” or “Dine-In”
     Given  I open the Chrome browser
@@ -799,6 +789,16 @@ Scenario: Check location permission prompt for “On the Go” or “Dine-In”
     When   I click the business model dropdown
     And    I select “On the Go” or “Dine-In” without granting location access
     Then   I verify a prompt should appear requesting location permission
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+
+@TC_BM_012
+Scenario: Verify default business model on first visit
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    And    I verify “McDelivery” should be selected by default
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -837,6 +837,7 @@ Scenario: Verify model selection persists across tabs (same session)
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click the business model dropdown
     And    I select Take Away option from dropdown
@@ -867,6 +868,7 @@ Scenario: Verify Switching models does not alter profile information
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     And    I verify the user notes their current profile information
     When   I click the business model dropdown
@@ -887,6 +889,7 @@ Scenario: Verify Switching between models updates the UI layout appropriately
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click the business model dropdown
     And    I select the first model
@@ -937,6 +940,7 @@ Scenario: Verify adding a new delivery address
     And    I select address from search results
     Then   I verify address is added and selected
     And    I verify restaurant list should be refreshed accordingly
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 @TC_AD_003
@@ -957,6 +961,7 @@ Scenario: Verify editing an existing address
     And    I modifies the address details and click save button
     Then   I verify updated address is shown in the address list
     And    I verify restaurant are updated based on the modified address
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 @TC_AD_004
@@ -976,6 +981,29 @@ Scenario: Verify deleting an existing address
     And    I verify address list shown
     And    I click the delete icon next to an address
     Then   I verify address removed from list
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_AD_005
+Scenario: Ensure address selection updates nearby restaurant list
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I selects the first address from the address list
+    Then   I verify restaurant list should update based on the first address location
+    When   I click on add address in home page
+    And    I selects the second address from the address list
+    Then   I verify restaurant list should update based on the second address location
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 @TC_AD_006
@@ -996,6 +1024,7 @@ Scenario: Validate empty address cannot be saved
     Then   I verify user redirected to address fill in details page
     When   I leave mandatory field empty and click save address
     Then   I verify that the address not saved and validation error should be displayed
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 @TC_AD_007
@@ -1014,6 +1043,7 @@ Scenario: Verify "Near" location shown under each address
     When   I click on add address in home page
     And    I verify address list displayed
     Then   I verify each address should display a Near label with its location description
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 @TC_AD_008
@@ -1033,6 +1063,7 @@ Scenario: Ensure scroll functionality works if many addresses are saved
     And    I verify address list displayed
     And    I scrolls through the address list
     Then   I verify all saved addresses should be accessible via scrolling
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 @TC_AD_010
@@ -1051,6 +1082,7 @@ Scenario: Verify error handling for invalid or undeliverable address
     When   I click on add address in home page
     And    I enters an undeliverable pin code or area manually
     Then   I verify an error message should be displayed saying Delivery not available at this address
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 
@@ -1068,6 +1100,7 @@ Scenario: Default address selection on login
     And    I click save changes on profile details page
     Then   I verify home page navigation
     Then   I verify the most recently used address should be auto-selected
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 
@@ -1087,6 +1120,38 @@ Scenario: Ensure “Add New” opens address entry popup or page
     When   I click on add address in home page
     And    I click on add new button and click confirm location
     Then   I verify address entry popup or page should be displayed
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_AD_013
+Scenario: Ensure Address list remains consistent after logout and login
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I verify address list before logout of the application
+    When   I click on user profile icon
+    Then   I verify profile page navigation
+    When   I logs out of the application
+    And    I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    Then   I verify previously saved addresses should be retained and visible
+        |appURL|
         |https://www.uat.mcdapp.co|
 
 
@@ -1110,6 +1175,954 @@ Scenario: Verify user can tag an address as "Home", "Work", etc.
     When   I edits an address and select a tag
     And    I click on add address in home page
     Then   I verify the tag should be displayed next to the address name after editing address
+        |appURL|
         |https://www.uat.mcdapp.co|
+
+@TC_AD_017
+Scenario: Verify behavior when all addresses are deleted
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I delete all addresses
+    Then   I verify the address list should be empty and the Add Address prompt should be visible
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_003 @testmcd1
+Scenario: Check customization option availability
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on 'Add +' for the customizable item
+    Then   I verify the customization options should appear before adding the item to the cart
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_004 @testmcd1
+Scenario: Add multiple items to cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I add 2 to 3 different available items to the cart
+    And    I navigate to the cart
+    Then   I verify all added items should be listed in the cart with correct price and quantities
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_006 @testmcd1
+Scenario: Ensure menu item prices are correctly displayed and reflected in cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user views the price of a menu item
+    And    I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the item price should be correctly displayed in the cart
+    And    I verify the price in the cart should match the menu price
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_007 @testmcd1
+Scenario: Prevent adding items marked as sold out
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I selects the second address from the address list
+    And    I Click back button from select location page
+    And    I user is on the menu page and sees an item marked as 'Sold out'
+    Then   I verify the item should not be clickable and unable to add to cart
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_010 
+Scenario: View 3Pc Meals
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I selects the address from the address list
+    And    I Click back button from select location page
+    And    I selects the '3Pc Meals' category under menu
+    Then   I verify all items under the '3Pc Meals' category should be displayed
+    When   I select any product from the '3Pc Meals' category and click on Add to cart 
+    Then   I verify the product added in cart
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_016 @testmcd1
+Scenario: Customize burger before adding to cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on 'Add +' for the customizable item
+    And    I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I clicks on the 'Customize' button
+    And    I selects or removes items from the customization options
+    Then   I verify the customized item should be added to the cart with selected preferences
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_024 @testmcd1
+Scenario: Remove item from the cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I add 2 to 3 different available items to the cart
+    And    I navigate to the cart
+    Then   I verify the added items in cart
+    When   I clicks the 'Remove' button for an item
+    Then   I verify the selected item should be removed from the cart
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_025 @testmcd1
+Scenario: Update item quantity in cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I clicks the 'Add' button for an item
+    And    I clicks the 'Add' button for an item
+    And    I clicks the 'Remove' button for an item
+    Then   I verify the Quantity updates correctly
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_026 @testmcd1
+Scenario: Check total price calculation
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I add 2 to 3 different available items to the cart
+    And    I navigate to the cart
+    Then   I verify the total payable amount should be displayed
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_ORDER_029 @testmcd1
+Scenario: Validate cart icon does not appear on the homepage if the cart is empty
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    And    I verify the cart icon doesn not appear on the homepage if the cart is empty
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_002 @testmcd1
+Scenario: Update item quantity
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify total payable amount
+    When   I clicks the 'Add' button for an item
+    And    I clicks the 'Add' button for an item
+    And    I clicks the 'Remove' button for an item
+    Then   I verify the Quantity updates correctly
+    And    I verify total price recalculates
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_003 @testmcd1
+Scenario: Verify clear cart when items are already in cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on the 'Clear All' button
+    Then   I verify home page navigation
+    And    I verify the cart icon doesn not appear on the homepage if the cart is empty
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_009 @testmcd1
+Scenario: Prompt user to log in before proceeding with order
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on login/signup prompt from checkout
+    Then   I verify login page navigation from checkout page
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_015 @testmcd1
+Scenario: Redirect user to login when attempting checkout without being logged in
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on login/signup prompt from checkout
+    Then   I verify login page navigation from checkout page
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_016 @testmcd1
+Scenario: Remove item from cart by decreasing quantity to zero
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click the '-' button beside the item until the quantity becomes 0
+    Then   I verify the item should be removed from the cart and pop up appears
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_020 @testmcd1
+Scenario: Verify cart persists after browser refresh
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I add the random item to the cart
+    And    I refresh the page
+    Then   I verify the cart should retain the previously added items
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_010 @testmcd1
+Scenario: Verify 'Know More' for charity donation
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    And    I verify checkbox and link visible
+    When   I click on 'Know More' link
+    Then   I verify Info opens about the charity
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_011 @testmcd1
+Scenario: Select charity donation checkbox
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    And    I verify checkbox and link visible
+    When   I clicks the charity donation checkbox to opt-in
+    Then   I verify ₹3 should be added to the total payable amount
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_012 @testmcd1
+Scenario: Uncheck charity donation checkbox
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    And    I verify checkbox and link visible
+    When   I clicks the charity donation checkbox to opt-in
+    Then   I verify the charity donation option is visible and selected
+    When   I unchecks the charity donation checkbox
+    Then   I verify ₹3 should be removed from the total payable amount
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_013 @testmcd1
+Scenario: View all available offers
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    And    I verify 'View All' link visible
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_014 @testmcd1
+Scenario: Ensure currency symbol is correctly shown for all price components
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I reviews all prices in the order summary
+    Then   I verify each price should be prefixed with the ₹ symbol
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_005 @testmcd1
+Scenario: Validate total price breakdown in order summary
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I checks the price breakdown on the right side of the page
+    Then   I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_025 @testmcd1
+Scenario: Validate behavior with an expired promo code
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enter the expired promo code and click search
+    And    I click on offer Apply button and select button
+    Then   I verify a message should be displayed indicating that the code is invalid or expired
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_028 @testmcd1
+Scenario: Ensure guest checkout not allowed
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on login/signup prompt from checkout
+    Then   I verify login page navigation from checkout page
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_001 @testmcd1
+Scenario: Validate cart contains correct item details
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify item name in cart
+    And    I verify total payable amount
+    And    I verify the Quantity updates correctly
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_006 @testmcd1
+Scenario: Add Delivery Instructions on Checkout Page
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on 'Add Delivery Instructions'
+    And    I enters special notes in the instructions field
+    Then   I verify the instructions field should accept the input
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_029 @testmcd1
+Scenario: Add special characters in delivery instruction
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on 'Add Delivery Instructions'
+    And    I enters special characters in the instructions field
+    Then   I verify the special characters should accepted in instructions field
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_022 @testmcd1
+Scenario: Update quantity for multiple items in cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I add 2 to 3 different available items to the cart
+    And    I navigate to the cart
+    Then   I verify all added items should be listed in the cart with correct price and quantities
+    And    I verify total payable amount
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_007 @newtestmcd1
+Scenario: Validate subtotal after all additions
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify subtotal for a single added item
+    When   I add item from recommendation
+    Then   I verify subtotal for all added items
+    When   I click on the 'Clear All' button
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_008 @testmcd1
+Scenario: Validate tax calculation in cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I Check CGST and SGST breakdown
+    Then   I verify tax percentage should be calculated accurately
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_019 @testmcd1
+Scenario: Validate estimated delivery time visibility
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I selects the address from the listed addres
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify the estimated delivery time displayed below the delivery address
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_021 @newtestmcd1
+Scenario: Apply Multiple Promo Codes
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I apply the first promo code
+    Then   I verify that the offer is applied and click on 'Change Offer'
+    When   I apply the second promo code
+    Then   I verify that the first offer is removed and the second offer is displayed
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_023 @newtestmcd1
+Scenario: Display applied offer discount in the order summary
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify total amount from order summary
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I apply the first promo code
+    Then   I verify the discount should be clearly shown and deducted in the order summary
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_CO_026 @newtestmcd1
+Scenario: Check total with delivery charges added
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify sub total includes delivery charge
+    When   I click on the 'Clear All' button
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+
+@TC_SM_001 @newtestmcd1
+Scenario Outline: Search for an existing menu item
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I enters 'Fries' in the search bar
+    Then I verify the search results should display items matching 'Fries'
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_002 @newtestmcd1
+Scenario Outline: Search for an non-existing menu item
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I enters '$%^#' in the search bar
+    Then I verify 'No matching items found' message is displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+
+@TC_SM_003 @newtestmcd1
+Scenario Outline: User attempts to search with empty input
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I clicks the search button without typing anything
+    Then I verify no action should be taken and prompt is displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_004 @newtestmcd1
+Scenario Outline: Filter menu items by Veg option
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I clicks the 'Veg' filter button
+    Then I verify only Veg items should be displayed in the menu
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_005 @newtestmcd1
+Scenario Outline: Filter menu items by Non-Veg option
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I clicks the 'Non-Veg' filter button
+    Then I verify only Non-Veg items should be displayed in the menu
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_006 @newtestmcd1
+Scenario Outline: Search Burger while Veg filter is active
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I clicks the 'Veg' filter button
+    And  I search for 'Burger'
+    Then I verify only Veg Burger items should be displayed in the menu
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_007 @newtestmcd1
+Scenario Outline: Clear search and reset filters
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I enters 'Fries' in the search bar
+    Then I verify the search results should display items matching 'Fries'
+    When I clears the search input
+    Then I verify Default view restored and no filters should be applied
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_008 @newtestmcd1
+Scenario Outline: Add item to cart from search result
+    Given  I open the Chrome browser
+    When   I launch <appURL>
+    Then   I verify website opened successfully
+    When   I click on homepage search icon
+    Then   I verify search menu page navigation
+    When   I search for 'Burger'
+    And    I add a 'Burger' item to the cart
+    And    I navigate to the cart
+    Then   I verify item added to the cart and quantity updated
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_009 @newtestmcd1
+Scenario Outline: Search term and results persist after adding an item to the cart
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I search for 'Burger'
+    And  I add a 'Burger' item to the cart
+    Then I verify the search results for 'Burger' should still be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+
+@TC_SM_013 @newtestmcd1
+Scenario Outline: Verify placeholder text in search input
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    And  I verify the placeholder text should be displayed as 'Search here'
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_015 @newtestmcd1
+Scenario Outline: Toggle Veg filter on and off
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I clicks the 'Veg' filter button
+    And  I clicks the close icon of 'Veg' filter button
+    Then I verify the default view should be restored
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_017 @newtestmcd1
+Scenario Outline: Search persists after page reload
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I click on homepage search icon
+    Then I verify search menu page navigation
+    When I search for 'Burger'
+    And  I refresh the page
+    Then I verify the default view should be restored
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_SM_018 
+Scenario Outline: Product Search from Excel/CSV Data
+    Given I open the Chrome browser
+    When I launch <appURL>
+    Then I verify website opened successfully
+    When I reads the list of product names from the Excel/CSV file
+    And  I searches for each product from the file
+    Then I verify user should see the complete list of products as expected from the Excel/CSV data
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_001 @newtestmcd1
+Scenario: Verify offer page input field is visible and functional
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    And    I verify the input box for entering the coupon code should be visible and accept text input
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_002 @newtestmcd1
+Scenario: Validate manual coupon entry and search
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I user enters a valid coupon code 'FLAT10' into the input box
+    Then   I verify an offer card with the code 'FLAT10' should appear
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_003 @newtestmcd1
+Scenario: Validate manual coupon entry and search
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enters a valid coupon code into the input box
+    Then   I verify each offer card should displays code, description, Show More link, and Apply button
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_004 @newtestmcd1
+Scenario: Verify Apply offer coupon functionality
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enters a valid coupon code and clicks on the Apply button
+    Then   I verify selected coupon should be applied to the current cart
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_005 @newtestmcd1
+Scenario: Validate cart value restrictions
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enters a valid coupon code 'FLAT10' and clicks on the Apply button
+    Then   I verify a warning should appear with the message 'Promo not applied'
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_006 @newtestmcd1
+Scenario: Validate cart value eligibility for coupon application
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I capture the total amount before applying the promo
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enters a valid coupon code and clicks on the Apply button
+    Then   I verify the discount should be successfully applied
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_008 @newtestmcd1
+Scenario: Validate one coupon per order policy
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I apply the first promo code
+    Then   I verify that the offer is applied and click on 'Change Offer'
+    When   I apply the second promo code
+    Then   I verify new coupon should override the previous one
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_009 @newtestmcd1
+Scenario: Validate expired or inactive coupon codes
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on any item to add into a cart
+    Then   I verify items details pop up opened successfully
+    When   I click on next
+    And    I click on Add to cart option
+    Then   I verify selected item get added into a cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enter the expired promo code and click search
+    And    I click on offer Apply button and select button
+    Then   I verify a message should be displayed indicating that the code is invalid or expired
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_010 @newtestmcd1
+Scenario: Verify applied offer is reflected in order summary
+
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I capture the total amount before applying the promo
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I enters a valid coupon code and clicks on the Apply button
+    Then   I verify the discount should be successfully applied
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+
+
+
+
+
 
 

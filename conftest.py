@@ -28,6 +28,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os
 from pathlib import Path
 import time
+import pandas as pd
 import zipfile
 import signal
 
@@ -138,6 +139,17 @@ def readPreReqJson(prereqFileName, constant_key):
     with open(data_file_path, 'r', encoding='utf-8') as constant_file:
         costant_value = json.load(constant_file)
     return costant_value.get(constant_key)
+
+def readExcelColumn(excel_file_name, sheet_name=0, column_name="Product Name"):
+    # Get project root and construct the full path to the Excel file
+    project_root = os.getcwd()
+    excel_file_path = os.path.join(project_root, 'util', excel_file_name + '.xlsx')
+
+    # Read Excel file using pandas
+    df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
+
+    # Return non-empty values from the specified column as a list
+    return df[column_name].dropna().tolist()
 
 
 

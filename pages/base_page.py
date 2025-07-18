@@ -11,6 +11,7 @@ class BasePage:
     def open_mcd_website(self):
         url = readConstants("APP_URL")
         self.actions.launch_browser_url(url)
+        self.driver.maximize_window() 
         print("Opened McD Website")
 
     def launch_application(self, appURL):
