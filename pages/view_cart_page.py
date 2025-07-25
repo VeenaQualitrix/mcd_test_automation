@@ -44,7 +44,6 @@ locators = {
         "DONATION": (By.XPATH, " //h2[@class='total-charge__paybletext' and normalize-space()='Donation']"),
         "DONATION_AMOUNT": (By.XPATH, " //h2[contains(text(), ' ₹ 3.00 ')]"),
         "DONATE_CHECKBOX_UNCHECKED": (By.XPATH, " //div[@class = 'cart-page__donateuncheckbox']"),
-        "OFFERS_PAGE": (By.XPATH, "   //h1[contains(text(), 'Offers For You')]"),
         "SUB_TOTAL": (By.XPATH, "   //h2[contains(text(), ' Sub Total ')]"),
         "SUB_TOTAL_PRICE": (By.XPATH, "//div[@class='total-charge__rowstyle' and .//h2[normalize-space()='Sub Total']]//h2[contains(normalize-space(), '₹')]"),
         "HANDLING_CHARGES": (By.XPATH, " //h2[contains(text(), ' Handling Charges ')]"),
@@ -73,6 +72,8 @@ locators = {
         "APPLIED_SECOND_OFFER_NAME": (By.XPATH, "//span[contains(text(), 'Freedelivery+Free product')]"),
         "CART_ITEM": (By.XPATH, "//h4[normalize-space()='McAloo Tikki Burger']/ancestor::div[contains(@class, 'menu__primary')]"),
         "QUANTITY_COUNT": (By.XPATH, "(//div[contains(@class, 'menu__title') and contains(normalize-space(), 'McAloo Tikki Burger')]/following::div[contains(@class, 'add-to-cart__count')])[1]"),
+        "PROCEED_TO_PAY": (By.XPATH, "//button[contains(text(), 'Pay ₹')]"),
+        "YOUR_ORDER": (By.XPATH, "//h1[contains(text(), ' Your Order')]"),
         
     }
 
@@ -404,11 +405,6 @@ class ViewCartPage(BasePage):
         print("View all link is displayed")
         self.actions.click_button(*locators['VIEW_ALL'])
         print("View all link is clicked")
-
-    def verify_user_redirected_to_offers_page(self):
-        time.sleep(5)
-        self.actions.is_element_displayed(*locators['OFFERS_PAGE'])
-        print("ALL available offers is displayed")
 
     def review_prices_in_order_summary(self):
         prices = {}
@@ -830,6 +826,13 @@ class ViewCartPage(BasePage):
         print("offer applied text is displayed")
         self.actions.is_element_displayed(*locators['APPLIED_OFFER_NAME'])
         print("Freedelivery@199 offer name is displayed")
+        time.sleep(2)
+        self.Clear_all()
+
+    def verify_user_redirected_to_cart_page(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['YOUR_ORDER'])
+        print("Your order text is displayed in cart")
         time.sleep(2)
         self.Clear_all()
     

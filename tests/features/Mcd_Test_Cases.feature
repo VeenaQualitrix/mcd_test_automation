@@ -390,13 +390,14 @@ Scenario: update date of birth successfully
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
     When   I selects a new valid date of birth and clicks Save Changes
-    Then   I verify home page navigation
+    Then   I verify date of birth update to today's date
     And    I verify updated date of birth should be reflected on the profile
     Examples:
         |appURL|
@@ -2118,6 +2119,597 @@ Scenario: Verify applied offer is reflected in order summary
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
+
+@TC_OFFER_011 @newtestmcd2
+Scenario: Validate UI Responsiveness for Offer Page
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    And    I window is resized
+    Then   I verify the offer layout should adapt responsively to the screen size
+    And    I verify all buttons and interactive elements should remain functional
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_012 @newtestmcd2
+Scenario: Validate Offer Tags on Product Cards
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    When   I user enters a valid coupon code 'FLAT10' into the input box
+    Then   I verify the offer tags such as 'FLAT 10 OFF' should be clearly visible
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OFFER_013 @newtestmcd2
+Scenario: Verify multiple offers are shown in a scrollable  or paginated if many exists
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on 'View All' link
+    Then   I verify the user should be redirected to a page displaying all available offers
+    And    I verify the offers should appear in a scrollable or paginated format without any visual breakage
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_001 @newtestmcd2
+Scenario: Verify redirection to payment page after placing an order
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I selects the address from the listed addres
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_002 @newtestmcd2
+Scenario: Verify display of order summary
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on add address in home page
+    And    I selects the address from the listed addres
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    And    I verify gross price and total price are same
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_003 @newtestmcd2
+Scenario: Verify available payment methods on the payment page
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    And    I verify all supported payment methods should be listed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_005 @newtestmcd2
+Scenario: Validate incorrect UPI ID
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    When   I selects UPI as the payment method
+    And    I enters an invalid UPI ID and clicks the Pay button
+    Then   I verify an error message should be displayed saying 'Invalid UPI ID'
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_007 @newtestmcd2
+Scenario: Validate card details input with invalid information
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    When   I selects Card as the payment method
+    And    I enters an invalid card number and clicks the Pay button
+    Then   I verify a validation error message should be displayed 
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_009 @newtestmcd2
+Scenario: Select Cash on Delivery Payment Option
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    When   I selects Cash on Delivery as the payment method
+    And    I click the 'Proceed To Pay' button
+    Then   I verify a confirmation message should be displayed saying 'Pay at Door'
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_011 @newtestmcd2
+Scenario: Validate navigation from Payment Page to Cart
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    When   I clicks the 'Back to Cart' button
+    Then   I verify the user should be redirected to the cart page
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PAY_013 @newtestmcd2
+Scenario: Verify secure payment indicators on payment screen
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    And    I verify security indicators should be visible
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_001 @newtestmcd2
+Scenario: Verify that the user is able to view order history
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify order history should be displayed on the screen
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_002 @newtestmcd2
+Scenario: Navigate to Post-Payment Page from Order History
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify order history should be displayed on the screen
+    When   I click on 'Order Tracking'
+    Then   I verify the user should be navigated to the post-payment page
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_003 @newtestmcd2
+Scenario: Validate that the order status is reflected in each order card
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify user should be able to see the order status displayed on each order card
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_004 @newtestmcd2
+Scenario: Validate that the order status matches in order tracking on the post-payment page
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I click on 'Order Tracking' for completed order
+    Then   I verify the completed order status on the post-payment page should match the status displayed on the order card
+    When   I click on 'Order Tracking' for cancelled order
+    Then   I verify the cancelled order status on the post-payment page should match the status displayed on the order card
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_005 @newtestmcd2
+Scenario: Verify that the user is able to view order history cards with Business model name
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify each order card should display the respective Business model name
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_006 @newtestmcd2
+Scenario: Verify that the page scrolls up and down to display order history
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I user scrolls down the page
+    Then   I verify the page should move down and display additional order history
+    When   I user scrolls up the page
+    Then   I verify the page should move up and show previous order history
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_007 @newtestmcd2
+Scenario: Verify that the Help button is only visible for McDelivery orders
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify the Help button should be visible only for orders placed via McDelivery
+    And    I verify the Help button should not be visible for orders from other business models (BM)
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_008 @newtestmcd2
+Scenario: Verify that User is able to submit a complaint or feedback via Help
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I user adds the item to the cart
+    And    I navigate to the cart
+    Then   I verify the single item in cart
+    When   I click on add address from checkout page
+    And    I selects the address from the listed addres
+    And    I click on pay button in view cart page
+    Then   I verify user should be redirected to the payment page successfully
+    When   I selects Cash on Delivery as the payment method
+    And    I click the 'Proceed To Pay' button
+    Then   I verify a confirmation message should be displayed saying 'Pay at Door'
+    When   I click on back button on post payment page
+    And    I click on view icon
+    And    I click on 'My Orders'
+    And    I selects a latest order and clicks on 'Help'
+    Then   I verify a user should be able to to give feedback and raise a complaint
+    And    I verify raise a complaint pop up should be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_OH_009 @newtestmcd2
+Scenario: Verify that User cannot raise a complaint after 2 hours of order
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I selects an order older than 2 hours and clicks on Help button
+    Then   I verify a pop-up message should appear saying 'Order active hours ended'
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_001 @newtestmcd2
+Scenario: Verify that User is able to view all purchased products in order details
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I click on 'Order Tracking' for completed order
+    Then   I verify 'Your Order Details' section should be displayed
+    And    I verify all products included in the order should be visible to the user
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_002 @newtestmcd2
+Scenario: Verify that User is able to download the invoice from order tracking
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I click on 'Order Tracking' for completed order
+    Then   I verify 'Your Order Details' section should be displayed
+    When   I clicks on 'Invoice'
+    Then   I verify invoice should be downloaded and saved on the device
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_003 @newtestmcd2
+Scenario: Verify the presence of an order number on the confirmation page
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify order number should be displayed
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_004 @newtestmcd2
+Scenario: Verify store name are shown correctly
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    Then   I verify the store name should be visible
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_005 @newtestmcd2
+Scenario: Verify that the complete delivery address is shown correctly
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I click on 'Order Tracking'
+    Then   I verify the complete delivery address should be shown
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+@TC_PP_006 @newtestmcd2
+Scenario: verify the order status progress bar on the order tracking page
+    Given  I open the Chrome browser
+    When   I hit the URL
+    Then   I verify website opened successfully
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I click on view icon
+    And    I click on 'My Orders'
+    And    I click on 'Order Tracking'
+    Then   I verify the status bar should be visible
+    Examples:
+        |appURL|
+        |https://www.uat.mcdapp.co|
+
+
 
 
 

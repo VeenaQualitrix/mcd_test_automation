@@ -9,6 +9,7 @@ from pages.address_page import AddressPage
 from pages.view_cart_page import ViewCartPage
 from pages.offer_page import OfferPage
 from pages.juspay_page import JuspayPage
+from pages.order_tracking_page import OrderTrackingPage
 from conftest import readPreReqJson
 from selenium.webdriver.common.keys import Keys
 import pyperclip
@@ -418,12 +419,17 @@ def edit_date_of_birth_and_click_save(setup_platform):
     print("verify selecting a new valid date of birth and clicks Save Changes")
     ProfilePage(setup_platform).edit_date_of_birth()
 
+@then("I verify date of birth update to today's date")
+@allure.step("When I verify date of birth update to today's date")
+def date_of_birth_update_today_date(setup_platform, context):
+    print("verify date of birth update to today's date")
+    ProfilePage(setup_platform).update_dob_today(context)
+
 @then('I verify updated date of birth should be reflected on the profile')
 @allure.step("Then I verify updated date of birth should be reflected on the profile")
-def verify__updated_date_of_birth(setup_platform):
-    updated_date_of_birth = ProfilePage(setup_platform).updated_date_of_birth()
-    print(f"Updated name found: {updated_date_of_birth}")
-    assert updated_date_of_birth == "20/05/2025", f"The updated date of birth was expected to be '20/05/2025', but got '{updated_date_of_birth}'"
+def verify__updated_date_of_birth(setup_platform, context):
+    print("verify date of birth update to today's date")
+    ProfilePage(setup_platform).verify_updated_date_of_birth(context)
 
 @when("I enter a future date in the date of birth field")
 @allure.step("When I enter a future date in the date of birth field")
@@ -1362,7 +1368,7 @@ def click_view_all_link(setup_platform):
 @allure.step("When I verify the user should be redirected to a page displaying all available offers")
 def verify_user_redirected_to_offers_page(setup_platform):
     print("verify the user should be redirected to a page displaying all available offers")
-    ViewCartPage(setup_platform).verify_user_redirected_to_offers_page()
+    OfferPage(setup_platform).verify_user_redirected_to_offers_page()
 
 @when("I reviews all prices in the order summary")
 @allure.step("When I reviews all prices in the order summary")
@@ -1747,5 +1753,295 @@ def verify_discount_prices_in_order_summary(setup_platform):
 def verify_new_coupon_override_the_previous_one(setup_platform):
     print("verify new coupon should override the previous one")
     ViewCartPage(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+@then("I verify the offer tags such as 'FLAT 10 OFF' should be clearly visible")
+@allure.step("When I verify the offer tags such as 'FLAT 10 OFF' should be clearly visible")
+def verify_flat10_Off_tag_visible(setup_platform):
+    print("verify the offer tags such as 'FLAT 10 OFF' should be clearly visible")
+    OfferPage(setup_platform).verify_flat10_offer_card_visible()
+
+@then("I verify the offers should appear in a scrollable or paginated format without any visual breakage")
+@allure.step("When I verify the offers should appear in a scrollable or paginated format without any visual breakage")
+def verify_offers_page_should_be_scrollable_if_many_offer_exists(setup_platform):
+    print("verify the offers should appear in a scrollable or paginated format without any visual breakage")
+    OfferPage(setup_platform).verify_offers_page_should_be_scrollable_if_many_offer_exists()
+
+@when("I window is resized")
+@allure.step("When I window is resized")
+def on_window_resize(setup_platform):
+    print("window is resized")
+    OfferPage(setup_platform).window_resize()
+
+@then("I verify the offer layout should adapt responsively to the screen size")
+@allure.step("When I verify the offer layout should adapt responsively to the screen size")
+def verify_offer_layout_adapt_resize_window(setup_platform):
+    print("verify the offer layout should adapt responsively to the screen size")
+    OfferPage(setup_platform).verify_user_redirected_to_offers_page()
+
+@then("I verify all buttons and interactive elements should remain functional")
+@allure.step("When I verify all buttons and interactive elements should remain functional")
+def verify_all_buttons_are_functional_and_displays_correctly(setup_platform):
+    print("verify all buttons and interactive elements should remain functional")
+    OfferPage(setup_platform).verify_all_buttons_are_functional_and_displays_correctly()
+
+@when("I click on pay button in view cart page")
+@allure.step("When I click on pay button in view cart page")
+def click_on_pay_button_in_view_cart_page(setup_platform):
+    print("Clicking on pay button in view cart page")
+    ViewCartPage(setup_platform).click_on_pay_button_in_view_cart_page()
+
+@then("I verify user should be redirected to the payment page successfully")
+@allure.step("Then I verify user should be redirected to the payment page successfully")
+def verify_payment_page_is_displayed(setup_platform):
+    print("Verifying Payment Page Is Displayed")
+    juspay_page_reached = JuspayPage(setup_platform).verify_juspay_page_is_reached()
+    assert juspay_page_reached, "Juspay Page Is Not Reached After Clicking On Pay Button"
+
+@then("I verify gross price and total price are same")
+@allure.step("Then I verify gross price and total price are same")
+def verify_gross_price_and_total_price_are_same(setup_platform):
+    print("Verifying Gross Price And Total Price Are Same In View Cart Page")
+    price_match = ViewCartPage(setup_platform).verify_gross_price_and_total_price_are_same()
+    assert price_match, "Gross Price And Total Price Are Not Same"
+
+@then("I verify all supported payment methods should be listed")
+@allure.step("Then I verify all supported payment methods should be listed")
+def verify_all_supported_payment_method_is_displayed(setup_platform):
+    print("verify all supported payment methods should be listed")
+    JuspayPage(setup_platform).verify_all_supported_payment_method_is_displayed()
+
+@when("I selects UPI as the payment method")
+@allure.step("When I selects UPI as the payment method")
+def click_on_pay_button_in_view_cart_page(setup_platform):
+    print("selects UPI as the payment method")
+    JuspayPage(setup_platform).select_upi_payment_method()
+
+@when("I enters an invalid UPI ID and clicks the Pay button")
+@allure.step("When I enters an invalid UPI ID and clicks the Pay button")
+def enter_invalid_upi_id(setup_platform):
+    print("enters an invalid UPI ID and clicks the Pay button")
+    JuspayPage(setup_platform).enter_invalid_upi_id()
+
+@then("I verify an error message should be displayed saying 'Invalid UPI ID'")
+@allure.step("Then I verify an error message should be displayed saying 'Invalid UPI ID'")
+def verify_invalid_upi_error_message(setup_platform):
+    print("verify an error message should be displayed saying 'Invalid UPI ID'")
+    JuspayPage(setup_platform).verify_invalid_upi_error_message()
+
+@when("I clicks the 'Back to Cart' button")
+@allure.step("When I clicks the 'Back to Cart' button")
+def click_back_button_from_payment_page(setup_platform):
+    print("clicks the 'Back to Cart' button")
+    JuspayPage(setup_platform).click_back_button_from_payment_page()
+
+@then("I verify the user should be redirected to the cart page")
+@allure.step("Then I verify the user should be redirected to the cart page")
+def verify_user_redirected_to_cart_page(setup_platform):
+    print("verify the user should be redirected to the cart page")
+    ViewCartPage(setup_platform).verify_user_redirected_to_cart_page()
+
+@when("I selects Cash on Delivery as the payment method")
+@allure.step("When I selects Cash on Delivery as the payment method")
+def select_cod_payment_method(setup_platform):
+    print("selects Cash on Delivery as the payment method")
+    JuspayPage(setup_platform).select_cod_payment_method()
+
+@when("I click the 'Proceed To Pay' button")
+@allure.step("When I click the 'Proceed To Pay' button")
+def click_proceed_to_pay_button(setup_platform):
+    print("click the 'Proceed To Pay' button")
+    JuspayPage(setup_platform).click_proceed_to_pay_button()
+
+@then("I verify a confirmation message should be displayed saying 'Pay at Door'")
+@allure.step("Then I verify a confirmation message should be displayed saying 'Pay at Door'")
+def verify_order_condirmation_is_displayed(setup_platform):
+    print("verify a confirmation message should be displayed saying 'Pay at Door'")
+    OrderTrackingPage(setup_platform).verify_order_condirmation_is_displayed()
+
+@then("I verify security indicators should be visible")
+@allure.step("Then I verify security indicators should be visible")
+def verify_secure_payment_label(setup_platform):
+    print("verify security indicators should be visible")
+    JuspayPage(setup_platform).verify_secure_payment_label()
+
+@when("I click on 'My Orders'")
+@allure.step("When I click on 'My Orders'")
+def click_on_my_orders(setup_platform):
+    print("click on 'My Orders'")
+    ViewPage(setup_platform).click_on_my_orders()
+
+@then("I verify order history should be displayed on the screen")
+@allure.step("Then I verify order history should be displayed on the screen")
+def verify_order_history_page_is_displayed(setup_platform):
+    print("verify order history should be displayed on the screen")
+    OrderTrackingPage(setup_platform).verify_order_history_page_is_displayed()
+
+@when("I click on 'Order Tracking'")
+@allure.step("When I click on 'Order Tracking'")
+def click_on_order_tracking_button(setup_platform):
+    print("click on 'Order Tracking'")
+    OrderTrackingPage(setup_platform).click_on_track_order()
+
+@then("I verify the user should be navigated to the post-payment page")
+@allure.step("Then I verify the user should be navigated to the post-payment page")
+def verify_user_navigated_to_post_payment_page(setup_platform):
+    print("verify the user should be navigated to the post-payment page")
+    OrderTrackingPage(setup_platform).verify_user_navigated_to_post_payment_page()
+
+@then("I verify user should be able to see the order status displayed on each order card")
+@allure.step("Then I verify user should be able to see the order status displayed on each order card")
+def verify_display_of_order_status_on_each_card(setup_platform):
+    print("verify user should be able to see the order status displayed on each order card")
+    OrderTrackingPage(setup_platform).verify_display_of_order_status_on_each_card()
+
+@when("I click on 'Order Tracking' for completed order")
+@allure.step("When I click on 'Order Tracking' for completed order")
+def click_on_completed_order_tracking(setup_platform):
+    print("click on 'Order Tracking' for completed order")
+    OrderTrackingPage(setup_platform).click_on_completed_order_tracking()
+
+@then("I verify the completed order status on the post-payment page should match the status displayed on the order card")
+@allure.step("Then I verify the completed order status on the post-payment page should match the status displayed on the order card")
+def verify_completed_order_status_on_post_payment_page(setup_platform):
+    print("verify the completed order status on the post-payment page should match the status displayed on the order card")
+    OrderTrackingPage(setup_platform).verify_completed_order_status_on_post_payment_page()
+
+@when("I click on 'Order Tracking' for cancelled order")
+@allure.step("When I click on 'Order Tracking' for cancelled order")
+def click_on_cancelled_order_tracking(setup_platform):
+    print("click on 'Order Tracking' for cancelled order")
+    OrderTrackingPage(setup_platform).click_on_cancelled_order_tracking()
+
+@then("I verify the cancelled order status on the post-payment page should match the status displayed on the order card")
+@allure.step("Then I verify the cancelled order status on the post-payment page should match the status displayed on the order card")
+def verify_cancelled_order_status_on_post_payment_page(setup_platform):
+    print("verify the cancelled order status on the post-payment page should match the status displayed on the order card")
+    OrderTrackingPage(setup_platform).verify_cancelled_order_status_on_post_payment_page()
+
+@then("I verify each order card should display the respective Business model name")
+@allure.step("Then I verify each order card should display the respective Business model name")
+def verify_each_order_card_display_BM_name(setup_platform):
+    print("verify each order card should display the respective Business model name")
+    OrderTrackingPage(setup_platform).verify_each_order_card_display_BM_name()
+
+@when("I user scrolls down the page")
+@allure.step("When I user scrolls down the page")
+def scroll_down_the_page_on_order_history_page(setup_platform):
+    print("user scrolls down the page")
+    OrderTrackingPage(setup_platform).scroll_down_the_page_on_order_history_page()
+
+@then("I verify the page should move down and display additional order history")
+@allure.step("Then I verify the page should move down and display additional order history")
+def verify_display_of_addition_order_history(setup_platform):
+    print("verify the page should move down and display additional order history")
+    OrderTrackingPage(setup_platform).verify_display_of_addition_order_history()
+
+@when("I user scrolls up the page")
+@allure.step("When I user scrolls up the page")
+def scroll_up_the_page_on_order_history_page(setup_platform):
+    print("user scrolls up the page")
+    OrderTrackingPage(setup_platform).scroll_up_the_page_on_order_history_page()
+
+@then("I verify the page should move up and show previous order history")
+@allure.step("Then I verify the page should move up and show previous order history")
+def verify_display_of_previous_order_history(setup_platform):
+    print("verify the page should move up and show previous order history")
+    OrderTrackingPage(setup_platform).verify_display_of_previous_order_history()
+
+@then("I verify the Help button should be visible only for orders placed via McDelivery")
+@allure.step("Then I verify the Help button should be visible only for orders placed via McDelivery")
+def verify_help_button_visible_only_for_order_placed_via_Mcdelivery(setup_platform):
+    print("verify the Help button should be visible only for orders placed via McDelivery")
+    OrderTrackingPage(setup_platform).verify_help_button_visible_only_for_order_placed_via_Mcdelivery()
+
+@then("I verify the Help button should not be visible for orders from other business models (BM)")
+@allure.step("Then I verify the Help button should not be visible for orders from other business models (BM)")
+def verify_help_button_not_visible_for_other_BM_models(setup_platform):
+    print("verify the Help button should not be visible for orders from other business models (BM)")
+    OrderTrackingPage(setup_platform).verify_help_button_not_visible_for_other_BMs()
+
+@when("I selects an order older than 2 hours and clicks on Help button")
+@allure.step("When I selects an order older than 2 hours and clicks on Help button")
+def select_an_older_order_and_click_on_Help_button(setup_platform):
+    print("selects an order older than 2 hours and clicks on Help button")
+    OrderTrackingPage(setup_platform).select_an_older_order_and_click_on_Help_button()
+
+@then("I verify a pop-up message should appear saying 'Order active hours ended'")
+@allure.step("Then I verify a pop-up message should appear saying 'Order active hours ended'")
+def verify_time_exceeded_pop_up_is_displayed(setup_platform):
+    print("verify a pop-up message should appear saying 'Order active hours ended'")
+    OrderTrackingPage(setup_platform).verify_time_exceeded_pop_up_is_displayed()
+
+@when("I click on back button on post payment page")
+@allure.step("When I click on back button on post payment page")
+def click_on_back_button_on_post_payment_page(setup_platform):
+    print("click on back button on post payment page")
+    OrderTrackingPage(setup_platform).click_on_back_button_on_post_payment_page()
+
+@when("I selects a latest order and clicks on 'Help'")
+@allure.step("When I selects a latest order and clicks on 'Help'")
+def select_latest_order_and_click_on_Help_button(setup_platform):
+    print("selects a latest order and clicks on 'Help'")
+    OrderTrackingPage(setup_platform).select_latest_order_and_click_on_Help_button()
+
+@then("I verify a user should be able to to give feedback and raise a complaint")
+@allure.step("Then I verify a user should be able to to give feedback and raise a complaint")
+def verify_user_able_to_give_a_feedback(setup_platform):
+    print("verify a user should be able to to give feedback and raise a complaint")
+    OrderTrackingPage(setup_platform).verify_user_able_to_give_a_feedback()
+
+@then("I verify raise a complaint pop up should be displayed")
+@allure.step("Then I verify raise a complaint pop up should be displayed")
+def verify_complaint_raised_pop_up(setup_platform):
+    print("verify raise a complaint pop up should be displayed")
+    OrderTrackingPage(setup_platform).verify_complaint_raised_pop_up()
+
+@then("I verify 'Your Order Details' section should be displayed")
+@allure.step("Then I verify 'Your Order Details' section should be displayed")
+def verify_your_order_details_section_is_displayed(setup_platform):
+    print("verify 'Your Order Details' section should be displayed")
+    OrderTrackingPage(setup_platform).verify_your_order_details_section_is_displayed()
+
+@then("I verify all products included in the order should be visible to the user")
+@allure.step("Then I verify all products included in the order should be visible to the user")
+def verify_menu_details_is_displayed(setup_platform):
+    print("verify all products included in the order should be visible to the user")
+    OrderTrackingPage(setup_platform).verify_menu_details_is_displayed()
+
+@when("I clicks on 'Invoice'")
+@allure.step("When I clicks on 'Invoice'")
+def click_on_invoice_to_download(setup_platform):
+    print("clicks on 'Invoice'")
+    OrderTrackingPage(setup_platform).click_on_invoice_to_download()
+
+@then("I verify invoice should be downloaded and saved on the device")
+@allure.step("Then I verify invoice should be downloaded and saved on the device")
+def verify_invoice_downloaded(setup_platform):
+    print("verify invoice should be downloaded and saved on the device")
+    OrderTrackingPage(setup_platform).step_verify_invoice_downloaded()
+
+@then("I verify order number should be displayed")
+@allure.step("Then I verify order number should be displayed")
+def verify_order_number_is_displayed(setup_platform):
+    print("verify order number should be displayed")
+    OrderTrackingPage(setup_platform).verify_order_number_is_displayed()
+
+@then("I verify the store name should be visible")
+@allure.step("Then I verify the store name should be visible")
+def verify_store_name_is_displayed(setup_platform):
+    print("verify the store name should be visible")
+    OrderTrackingPage(setup_platform).verify_store_name_is_displayed()
+
+@then("I verify the complete delivery address should be shown")
+@allure.step("Then I verify the complete delivery address should be shown")
+def verify_complete_address_is_displayed(setup_platform):
+    print("verify the complete delivery address should be shown")
+    OrderTrackingPage(setup_platform).verify_complete_address_is_displayed()
+
+@then("I verify the status bar should be visible")
+@allure.step("Then I verify the status bar should be visible")
+def verify_status_bar_is_displayed(setup_platform):
+    print("verify the status bar should be visible")
+    OrderTrackingPage(setup_platform).verify_status_bar_is_displayed()
 
 

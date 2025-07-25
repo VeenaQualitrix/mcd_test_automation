@@ -16,7 +16,7 @@ locators = {
     "USER_NAME": (By.XPATH, "//input[@placeholder='Enter your full name here']"),
     "MOBILE_NUMBER": (By.XPATH, "//input[@mds-profile-edit-input-mblno]"),
     "EMAIL_ID": (By.XPATH, "//input[@placeholder='Enter Your Email ID here']"),
-    "DATE_OF_BIRTH": (By.XPATH, "//input[@placeholder='Click here to select']"),
+    "DATE_OF_BIRTH": (By.XPATH, " //label[contains(text(), 'Select Your Date of Birth')] "),
     "SUBMIT_BUTTON": (By.XPATH, "//button[contains(text(), 'Save Changes')]"),
     "PROFILE_EDIT_ICON": (By.XPATH, "//img[@class = 'profile-page__link-btn']"),
     "PROFILE_EDIT_PAGE": (By.XPATH, "//div[@class = 'profile-edit-page__header ion-hide-lg-down']"),
@@ -24,7 +24,7 @@ locators = {
     "EMPTY_PROFILE_NAME_FIELD_ERROR": (By.XPATH, "//label[contains(text(), 'Please enter valid full name')]"),
     "UPDATED_EMAIL_ADDRESS": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
     "INCORRECT_EMAIL_FORMAT": (By.XPATH, "//label[contains(text(), 'Please enter valid Email ID')]"),
-    "UPDATED_DATE_OF_BIRTH": (By.XPATH, "//input[@type='text']"),
+    "DATE_OF_BIRTH_TEXTFIELD": (By.XPATH, "//input[@placeholder='Click here to select']"),
     "DATE_PICKER": (By.XPATH, "//span[contains(text(), 'Choose DOB')]"),
     "SELECT_BUTTON": (By.XPATH, "//button[contains(text(), 'Select')]"),
     "CHANGE_PICTURE_LINK": (By.XPATH, "//div[contains(text(), ' Change Picture ')]"),
@@ -194,52 +194,58 @@ class ProfilePage(BasePage):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['INCORRECT_EMAIL_FORMAT'])
     
+
     def edit_date_of_birth(self):
-        element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+        time.sleep(5)
+        date_of_birth = self.driver.find_element(*locators["DATE_OF_BIRTH"])
+        self.driver.execute_script("arguments[0].scrollIntoView();", date_of_birth)
+        self.actions.is_element_displayed(*locators['DATE_OF_BIRTH'])
+        print("Date of birth section is displayed")
+        
         time.sleep(2)
-        self.actions.click_button(*locators['DATE_OF_BIRTH'])
-        # Locate the frame element first, then switch to it
+        self.actions.click_button(*locators['DATE_OF_BIRTH_TEXTFIELD'])
+
         self.actions.is_element_displayed(*locators['DATE_PICKER'])
         print("Calendar appeared")
 
-        handles = self.driver.window_handles
-        size = len(handles)
-        parent_handle = self.driver.current_window_handle
-        for x in range(size):
-            if handles[x] != parent_handle:
-                self.driver.switch_to.window(handles[x])
-                print(self.driver.title)
-
-        # Get today's date
         today = datetime.now()
-        day_str = str(today.day)
+        day_str = str(int(today.strftime('%d')))  # Removes leading zero
+        formatted_dob = today.strftime("%d/%m/%Y")
 
-        # Select today's date by visible text
+        # Use attribute-based XPath (more reliable)
+        date_xpath = (By.XPATH, f"//button[contains(@class, 'calendar-day') and @data-day='{day_str}']")
+
+        print(f"[DEBUG] Selecting today's date: {day_str}")
+        print(f"[DEBUG] XPath: {date_xpath[1]}")
+        print("[DEBUG] Calendar DOM:")
+        print(self.driver.find_element(*locators["DATE_PICKER"]).get_attribute("outerHTML"))
+
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, f"//*[text()='{day_str}']"))
-)
+            EC.element_to_be_clickable(date_xpath)
+        )
+        self.driver.find_element(*date_xpath).click()
 
-        # Now find and click it
-        date_cell = self.driver.find_element(By.XPATH, f"//*[text()='{day_str}']")
-        date_cell.click()
         self.actions.click_button(*locators["SELECT_BUTTON"])
         time.sleep(2)
+
+        return formatted_dob
+
+    
+    def update_dob_today(setup_platform, context):
+        dob = ProfilePage(setup_platform).edit_date_of_birth()
+        context["DATE_OF_BIRTH_TEXTFIELD"] = dob  # Store for later verification
+
         
+    def verify_updated_date_of_birth(setup_platform, context):
+        expected_dob = context.get("DATE_OF_BIRTH_TEXTFIELD")
+        assert expected_dob is not None, "Expected date of birth was not set in context"
 
+        actual_dob = ProfilePage(setup_platform).verify_updated_date_of_birth()
+        print(f"Expected DOB: {expected_dob} | Actual DOB: {actual_dob}")
 
-    def updated_date_of_birth(self):
-        self.actions.is_element_displayed(*locators['USER_PROFILE_ICON'])
-        time.sleep(10)
-        self.actions.click_button(*locators['USER_PROFILE_ICON'])
-        element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        time.sleep(2)
-
-        if self.actions.is_element_displayed(*locators['UPDATED_DATE_OF_BIRTH']):
-            return self.driver.find_element(*locators['UPDATED_DATE_OF_BIRTH']).text
-        else:
-            return None
+        assert actual_dob == expected_dob, (
+            f"Expected date of birth '{expected_dob}' does not match actual '{actual_dob}'"
+        )
         
     def enter_future_date_of_birth(self):
         element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
@@ -250,7 +256,7 @@ class ProfilePage(BasePage):
             EC.visibility_of_element_located(*locators['DATE_PICKER'])
     )
         # Define the target future date
-        target_day = 20
+        target_day = 30
         target_month = "July"
         target_year = 2025
 
