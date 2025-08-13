@@ -64,3 +64,4 @@ wget
 wsproto
 zipp
 pyautogui
+pyperclip
