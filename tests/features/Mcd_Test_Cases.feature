@@ -1,26 +1,30 @@
 @McdRegression
 Feature: McD App Functionality
 
-@TC_Login_001 @sanity
+@TC_Login_001 @sanity01
 Scenario Outline: Verify login with valid Mobile Number and OTP
     Given I open the Chrome browser
-    When I launch <appURL>
-    Then I verify website opened successfully
-    When I click on view icon
-    Then I verify view page navigation
-    When I click on login or signup button
-    Then I verify login page navigation
-    When I enter a valid mobile number and click verify
-    And I enter the OTP and click verify
-    Then I verify home page navigation
+    When  I hit the URL
+    Then  I verify website opened successfully
+    When  I click on view icon
+    Then  I verify view page navigation
+    When  I click on login or signup button
+    Then  I verify login page navigation
+    When  I enter a valid mobile number and click verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home page navigation
+    When  I click on user profile icon
+    Then  I verify profile page navigation
+    And   I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_002
+@TC_LOGIN_002 @sanity01
 Scenario Outline: Verify referral code input
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -35,10 +39,10 @@ Scenario Outline: Verify referral code input
 
 
 
-@TC_LOGIN_003
+@TC_LOGIN_003 @sanity
 Scenario Outline: Validate empty mobile number
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -55,7 +59,7 @@ Scenario Outline: Validate empty mobile number
 @TC_LOGIN_004
 Scenario Outline: Validate short mobile number
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -70,7 +74,7 @@ Scenario Outline: Validate short mobile number
 @TC_LOGIN_005
 Scenario Outline: Validate alphabetic input in mobile field
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -85,7 +89,7 @@ Scenario Outline: Validate alphabetic input in mobile field
 @TC_LOGIN_006
 Scenario Outline: Verify referral code without entering mobile number
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -101,7 +105,7 @@ Scenario Outline: Verify referral code without entering mobile number
 @TC_LOGIN_007
 Scenario Outline: Verify mobile number with spaces
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -116,7 +120,7 @@ Scenario Outline: Verify mobile number with spaces
 @TC_LOGIN_008
 Scenario Outline: Verify mobile number with special characters
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -131,7 +135,7 @@ Scenario Outline: Verify mobile number with special characters
 @TC_LOGIN_009
 Scenario Outline: Verify UI alignment and presence of elements
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -149,7 +153,7 @@ Scenario Outline: Verify UI alignment and presence of elements
 @TC_LOGIN_010
 Scenario Outline: Verify referral link is clickable
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -164,7 +168,7 @@ Scenario Outline: Verify referral link is clickable
 @TC_LOGIN_011
 Scenario Outline: Validate "Verify Mobile" button is disabled initially
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -179,7 +183,7 @@ Scenario Outline: Validate "Verify Mobile" button is disabled initially
 @TC_LOGIN_012
 Scenario Outline: Verify navigation after successfully entetered a valid mobile number
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -194,7 +198,7 @@ Scenario Outline: Verify navigation after successfully entetered a valid mobile 
 @TC_LOGIN_013
 Scenario Outline: Verify terms and conditions link
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -209,7 +213,7 @@ Scenario Outline: Verify terms and conditions link
 @TC_LOGIN_014
 Scenario Outline: Enter exactly 10 digit valid mobile number
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -224,7 +228,7 @@ Scenario Outline: Enter exactly 10 digit valid mobile number
 @TC_LOGIN_015
 Scenario Outline: Enter 11 digits mobile number and verify
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -239,7 +243,7 @@ Scenario Outline: Enter 11 digits mobile number and verify
 @TC_LOGIN_016
 Scenario Outline: Verify clipboard paste into mobile field
     Given I open the Chrome browser
-    When I launch <appURL>
+    When I hit the URL
     Then I verify website opened successfully
     When I click on view icon
     Then I verify view page navigation
@@ -255,7 +259,7 @@ Scenario Outline: Verify clipboard paste into mobile field
 @TC_LOGIN_017
 Scenario Outline: Verify mobile field input limit
     Given  I open the Chrome browser
-    When   I launch <appURL>
+    When   I hit the URL
     Then   I verify website opened successfully
     When   I click on view icon
     Then   I verify view page navigation
@@ -278,14 +282,16 @@ Scenario: Verify that user update the name successfully
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
-    Then   I verify profile page navigation
+    Then   I verify profile page navigation 
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
     When   I edits the full name field with Test User01 and clicks Save Changes
     Then   I verify home page navigation
     And    I verify updated name should be reflected on the profile
+    And    I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
@@ -301,13 +307,18 @@ Scenario: Verify empty name field
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
-    Then   I verify profile page navigation
+    Then   I verify profile page navigation 
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
     When   I clear name field
     Then   I verify error message Please enter valid full name should be displayed
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
@@ -323,6 +334,7 @@ Scenario: Validate invalid characters in name field
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -330,6 +342,10 @@ Scenario: Validate invalid characters in name field
     Then   I verify user is on the profile edit page
     When   I enter invalid characters in name field
     Then   I verify error message Please enter valid full name should be displayed
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
@@ -345,6 +361,7 @@ Scenario: update email address
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -353,6 +370,7 @@ Scenario: update email address
     When   I edits email address and clicks Save Changes
     Then   I verify home page navigation
     And    I verify updated email address should be reflected on the profile
+    And    I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
@@ -368,6 +386,7 @@ Scenario: Validate incorrect email format
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -375,11 +394,15 @@ Scenario: Validate incorrect email format
     Then   I verify user is on the profile edit page
     When   I enter incorrect email format in email field
     Then   I verify error message enter valid email address should be displayed
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_PP_08
+@TC_PP_08 @newtestmcd2
 Scenario: update date of birth successfully
     Given  I open the Chrome browser
     When   I hit the URL
@@ -397,13 +420,13 @@ Scenario: update date of birth successfully
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
     When   I selects a new valid date of birth and clicks Save Changes
-    Then   I verify date of birth update to today's date
-    And    I verify updated date of birth should be reflected on the profile
+    Then   I verify updated date of birth should be reflected on the profile
+    And    I click on Logout button
     Examples:
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_PP_09
+@TC_PP_09 @newtestmcd2
 Scenario: validate future date of birth selection is not allowed
     Given  I open the Chrome browser
     When   I hit the URL
@@ -414,13 +437,17 @@ Scenario: validate future date of birth selection is not allowed
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
     When   I click on edit profile icon
     Then   I verify user is on the profile edit page
-    When   I enter a future date in the date of birth field
-    Then   I verify user are unable to select future Date of birth
+    And    I verify user are unable to select future Date of birth
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -435,6 +462,7 @@ Scenario: Verify Change Picture link opens photo upload
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -442,6 +470,10 @@ Scenario: Verify Change Picture link opens photo upload
     Then   I verify user is on the profile edit page
     When   I click change picture link
     Then   I verify upload pop up opens with file selection option
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -456,6 +488,7 @@ Scenario: Verify that the Save button is disabled when any mandatory field is em
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -463,6 +496,10 @@ Scenario: Verify that the Save button is disabled when any mandatory field is em
     Then   I verify user is on the profile edit page
     When   I clear name field
     Then   I verify the Save button should be disabled
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -477,6 +514,7 @@ Scenario: Verify Toggle color blind mode on/off
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -484,6 +522,10 @@ Scenario: Verify Toggle color blind mode on/off
     Then   I verify user is on the profile edit page
     When   I switch toggle on/off and observe UI
     Then   I verify Color scheme updates to accessible version page should be displayed
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         
 
 @TC_PP_13
@@ -497,6 +539,7 @@ Scenario: Verify color blind preference saved
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -504,6 +547,10 @@ Scenario: Verify color blind preference saved
     Then   I verify user is on the profile edit page
     When   I switch toggle to make color blind mode on and reload page
     Then   I verify preference retained after refresh
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -518,6 +565,7 @@ Scenario: Verify changes not get saved after refreshing page
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -525,6 +573,10 @@ Scenario: Verify changes not get saved after refreshing page
     Then   I verify user is on the profile edit page
     When   I make changes and refresh browser
     Then   I verify page reloads with old saved data
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -541,6 +593,7 @@ Scenario: Verify field icons are displayed correctly
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on user profile icon
     Then   I verify profile page navigation
@@ -548,6 +601,10 @@ Scenario: Verify field icons are displayed correctly
     Then   I verify user is on the profile edit page
     When   I Check icon presence near each field
     Then   I verify the Correct icons for name, phone, email, DOB
+    When   I click McDelivery icon
+    Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -578,7 +635,10 @@ Scenario: Verify Successful login redirects to “Add Address” screen
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -644,6 +704,7 @@ Scenario: verify adding address with missing mandatory fields
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on add address in home page
     And    I click on add new button and click confirm location
@@ -844,6 +905,8 @@ Scenario: Verify model selection persists across tabs (same session)
     And    I select Take Away option from dropdown
     And    I open a new tab in the same session
     Then   I verify the same business model should remain selected
+    When   I click on user profile icon
+    And    I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -876,6 +939,7 @@ Scenario: Verify Switching models does not alter profile information
     And    I verify user switches from one model to another
     And    I verify user navigates to the profile page
     Then   I verify the profile information should remain unchanged
+    And    I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -901,6 +965,8 @@ Scenario: Verify Switching between models updates the UI layout appropriately
     Then   I verify the page layout or menu should adapt to match the third model
     When   I select the fourth model
     Then   I verify the page layout or menu should adapt to match the fourth model
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -920,6 +986,8 @@ Scenario: verify selecting existing delivery address
     When   I click on add address in home page
     And    I user click on a listed address
     Then   I verify the address is selected and restaurant list should update accordingly
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -941,6 +1009,8 @@ Scenario: Verify adding a new delivery address
     And    I select address from search results
     Then   I verify address is added and selected
     And    I verify restaurant list should be refreshed accordingly
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -962,6 +1032,8 @@ Scenario: Verify editing an existing address
     And    I modifies the address details and click save button
     Then   I verify updated address is shown in the address list
     And    I verify restaurant are updated based on the modified address
+    When   I click on user profile icon
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
@@ -1895,7 +1967,7 @@ Scenario Outline: Toggle Veg filter on and off
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_SM_017 @newtestmcd1
+@TC_SM_017 @newtestmcd2
 Scenario Outline: Search persists after page reload
     Given I open the Chrome browser
     When I launch <appURL>
@@ -1921,7 +1993,7 @@ Scenario Outline: Product Search from Excel/CSV Data
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_001 @newtestmcd1
+@TC_OFFER_001 @newtestmcd2
 Scenario: Verify offer page input field is visible and functional
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1936,7 +2008,7 @@ Scenario: Verify offer page input field is visible and functional
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_002 @newtestmcd1
+@TC_OFFER_002 @newtestmcd2
 Scenario: Validate manual coupon entry and search
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1952,7 +2024,7 @@ Scenario: Validate manual coupon entry and search
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_003 @newtestmcd1
+@TC_OFFER_003 @newtestmcd2
 Scenario: Validate manual coupon entry and search
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1968,7 +2040,7 @@ Scenario: Validate manual coupon entry and search
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_004 @newtestmcd1
+@TC_OFFER_004 @newtestmcd2
 Scenario: Verify Apply offer coupon functionality
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1992,7 +2064,7 @@ Scenario: Verify Apply offer coupon functionality
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_005 @newtestmcd1
+@TC_OFFER_005 @newtestmcd2
 Scenario: Validate cart value restrictions
     Given  I open the Chrome browser
     When   I hit the URL
@@ -2016,7 +2088,7 @@ Scenario: Validate cart value restrictions
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_006 @newtestmcd1
+@TC_OFFER_006 @newtestmcd2
 Scenario: Validate cart value eligibility for coupon application
     Given  I open the Chrome browser
     When   I hit the URL
@@ -2041,7 +2113,7 @@ Scenario: Validate cart value eligibility for coupon application
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_008 @newtestmcd1
+@TC_OFFER_008 @newtestmcd2
 Scenario: Validate one coupon per order policy
     Given  I open the Chrome browser
     When   I hit the URL
@@ -2068,7 +2140,7 @@ Scenario: Validate one coupon per order policy
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_009 @newtestmcd1
+@TC_OFFER_009 @newtestmcd2
 Scenario: Validate expired or inactive coupon codes
     Given  I open the Chrome browser
     When   I hit the URL
@@ -2094,7 +2166,7 @@ Scenario: Validate expired or inactive coupon codes
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_OFFER_010 @newtestmcd1
+@TC_OFFER_010 @newtestmcd2
 Scenario: Verify applied offer is reflected in order summary
 
     Given  I open the Chrome browser

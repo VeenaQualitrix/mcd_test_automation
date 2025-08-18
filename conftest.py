@@ -5,9 +5,9 @@ import allure
 
 import pytest
 from appium import webdriver as androidDriver
+from appium.webdriver import Remote as AppiumRemote
 from appium.webdriver.appium_service import AppiumService
 from allure_commons.types import AttachmentType
-from selenium import webdriver
 # from requests.auth import HTTPDigestAuth
 # import re
 # import urllib3
@@ -20,10 +20,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 from selenium import webdriver as browserDriver
+from appium import webdriver as androidDriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 import os
 from pathlib import Path
@@ -151,7 +154,44 @@ def readExcelColumn(excel_file_name, sheet_name=0, column_name="Product Name"):
     # Return non-empty values from the specified column as a list
     return df[column_name].dropna().tolist()
 
+def start_appium_service_with_retry(port=4723, retries=3, delay=5):
+    appium_service = AppiumService()
+    for attempt in range(retries):
+        try:
+            print(f"Attempt {attempt + 1} to start Appium service on port {port}...")
+            appium_service.start(args=[f"--port={port}", "--log-level=debug"])
+            if appium_service.is_running:
+                print(f"Appium service started successfully on port {port}!")
+                return appium_service
+        except Exception as e:
+            print(f"Error starting Appium service: {e}")
+            time.sleep(delay)
 
+    # If all retries fail, kill the process on the port and try one last time
+    print(f"All {retries} retries failed. Checking and killing the process on port {port}.")
+    kill_process_on_port(port)
+    time.sleep(delay)  # Wait briefly before retrying
+    try:
+        appium_service.start(args=[f"--port={port}", "--log-level=debug"])
+        if appium_service.is_running:
+            print(f"Appium service started successfully on port {port} after killing the PID!")
+            return appium_service
+    except Exception as e:
+        print(f"Failed to start Appium service even after killing the process: {e}")
+        raise Exception("Unable to start Appium service.")
+
+
+def kill_process_on_port(port):
+    try:
+        # Use lsof to find the PID and kill it
+        result = os.popen(f"lsof -ti:{port}").read().strip()
+        if result:
+            print(f"Killing process with PID: {result} on port {port}.")
+            os.system(f"kill -9 {result}")
+        else:
+            print(f"No process found running on port {port}.")
+    except Exception as e:
+        print(f"Error killing process on port {port}: {e}")
 
 @pytest.fixture(scope="module", autouse=False)
 def setup_platform(env, request):
@@ -174,13 +214,14 @@ def setup_platform(env, request):
         print("Inside android")
         appium_service = AppiumService()
         appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
+        appium_service.start()
         if not appium_service.is_running:
             raise Exception("Appium server did not start!")
 
         capabilities = load_capabilities(currentPlatform)
-        appPath = os.path.abspath(os.getcwd())
+        #appPath = os.path.abspath(os.getcwd())
        
-        capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
+       # capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
         print('capabilities to load', capabilities)
         
         options = UiAutomator2Options().load_capabilities(capabilities)
@@ -190,18 +231,16 @@ def setup_platform(env, request):
         try:
             print("am i relunching app?=============================")
             driver = androidDriver.Remote("http://127.0.0.1:4723", options=options)
+            #driver = AppiumRemote("http://127.0.0.1:4723", options=options)
             print(" firetv driver started=====")
             print(" firetv driver started=  driver type ====", type(driver))
             driver.terminate_app(readConstants("current_app_package"))
             time.sleep(2)
-            driver.close
+            driver.close()
             # Launch (activate) the app again
             driver.activate_app(readConstants("current_app_package"))
             
             driver.implicitly_wait(10)
-        except Exception as e:
-            print("firetv appluanch error ===", e)
-    
         except Exception as e:
             print("firetv appluanch error ===", e)
 
@@ -316,5 +355,13 @@ def updateConstantFile(contantKey, ConstantValue):
 def user_data_store():
     """Fixture to store user input temporarily across steps."""
     return {}
+
+@pytest.fixture
+def context():
+    return {}
+
+
+
+
     
 

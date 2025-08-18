@@ -80,7 +80,6 @@ def enter_a_valid_mobile_number_and_click_verify(setup_platform):
     print("Entering Mobie Number")
     LoginPage(setup_platform).enter_mobile_number(mobile_number)
 
-
 @when("I enter the OTP and click verify")
 @allure.step("When I enter the OTP and click verify")
 def enter_the_otp_and_click_verify(setup_platform):
@@ -100,6 +99,13 @@ def verify_home_page_navigation(setup_platform):
     print("Verifying Home Page Navigation")
     Home_Page = HomePage(setup_platform).verify_website_header_banner()
     assert Home_Page, "Home Page Is Not Reached After Logged In"
+
+@then('I click on Logout button')
+@allure.step("Then I click on Logout button")
+def Click_log_out_on_profile_details_page(setup_platform):
+    print("click on Logout button")
+    ProfilePage(setup_platform).Click_log_out_on_profile_details_page()
+
 
 @when("I leave mobile field empty and click verify")
 @allure.step("When I leave mobile field empty and click verify")
@@ -415,21 +421,23 @@ def verify_incorrect_email_error(setup_platform):
 
 @when("I selects a new valid date of birth and clicks Save Changes")
 @allure.step("When I selects a new valid date of birth and clicks Save Changes")
-def edit_date_of_birth_and_click_save(setup_platform):
+def edit_date_of_birth_and_click_save(setup_platform, context):
     print("verify selecting a new valid date of birth and clicks Save Changes")
-    ProfilePage(setup_platform).edit_date_of_birth()
-
-@then("I verify date of birth update to today's date")
-@allure.step("When I verify date of birth update to today's date")
-def date_of_birth_update_today_date(setup_platform, context):
-    print("verify date of birth update to today's date")
-    ProfilePage(setup_platform).update_dob_today(context)
+    profile_page = ProfilePage(setup_platform)
+    dob = profile_page.edit_date_of_birth()  # returns formatted DOB string
+    context['dob'] = dob  # store dob in context for later steps
 
 @then('I verify updated date of birth should be reflected on the profile')
 @allure.step("Then I verify updated date of birth should be reflected on the profile")
 def verify__updated_date_of_birth(setup_platform, context):
-    print("verify date of birth update to today's date")
-    ProfilePage(setup_platform).verify_updated_date_of_birth(context)
+    dob = context.get('dob')
+    assert dob is not None, "DOB was not set in previous step"
+    print(f"Verifying date of birth update to today's date: Expected DOB = {dob}")
+
+    profile_page = ProfilePage(setup_platform)
+    actual_dob = profile_page.verify_updated_date_of_birth()
+    print(f"Actual DOB found on profile: {actual_dob}")
+    assert actual_dob == dob, f"Expected '{dob}', but got '{actual_dob}'"
 
 @when("I enter a future date in the date of birth field")
 @allure.step("When I enter a future date in the date of birth field")
@@ -441,8 +449,8 @@ def enter_future_date_of_birth(setup_platform):
 @allure.step("Then I verify user are unable to select future Date of birth")
 def verify_future_dob_disabled(setup_platform):
     print("Verifying user are unable to select future Date of birth")
-    Profile_Page = ProfilePage(setup_platform).verify_future_dob_disabled()
-    assert Profile_Page, "future date should not be selectable"
+    is_selectable = ProfilePage(setup_platform).verify_future_dob_disabled()
+    assert not is_selectable, "future date should not be selectable"
 
 @when("I click change picture link")
 @allure.step("When I click change picture link")
@@ -2043,5 +2051,11 @@ def verify_complete_address_is_displayed(setup_platform):
 def verify_status_bar_is_displayed(setup_platform):
     print("verify the status bar should be visible")
     OrderTrackingPage(setup_platform).verify_status_bar_is_displayed()
+
+@when("I click McDelivery icon")
+@allure.step("When I click McDelivery icon")
+def Click_on_mcdelivery_icon(setup_platform):
+    print("click McDelivery icon")
+    ViewCartPage(setup_platform).Click_on_mcdelivery_icon()
 
 

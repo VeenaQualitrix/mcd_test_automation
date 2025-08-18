@@ -25,3 +25,5 @@ class ViewPage(BasePage):
         print("My orders text is displayed")
         self.actions.click_button(*locators['MY_ORDERS'])
         print("Clicked My Orders button")
+
+    

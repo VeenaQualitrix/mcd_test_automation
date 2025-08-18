@@ -2,8 +2,10 @@ from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 import datetime
 from datetime import datetime, timedelta
 import time
@@ -44,13 +46,16 @@ locators = {
     "PROFILE_NAME": (By.XPATH, "//div[@class = 'bio__name']"),
     "PROFILE_MOBILE": (By.XPATH, "//div[@class = 'bio__mobile']"),
     "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
-    "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
     "MCDELIVERY_ICON": (By.XPATH, "//img[@alt = 'logo']"),
     "LOG_OUT_BUTTON": (By.XPATH, "//div[contains(text(), 'Logout')]"),
     }
 
 
 class ProfilePage(BasePage):
+
+    def __init__(self, driver):
+        super().__init__(driver)  # This calls BasePage.__init__ and sets up driver and actions
+        self.expected_dob = None
 
     def verify_profile_page_reached(self):
         time.sleep(5)
@@ -193,108 +198,87 @@ class ProfilePage(BasePage):
     def incorrect_email_error(self):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['INCORRECT_EMAIL_FORMAT'])
-    
 
     def edit_date_of_birth(self):
+        time.sleep(2)
+        date_of_birth = self.driver.find_element(*locators["DATE_OF_BIRTH"])
+        self.driver.execute_script("arguments[0].scrollIntoView();", date_of_birth)
+        self.actions.is_element_displayed(*locators['DATE_OF_BIRTH'])
+        print("[INFO] Date of birth section is displayed")
+
+        # Open the calendar/date picker
+        self.actions.click_button(*locators['DATE_OF_BIRTH_TEXTFIELD'])
+        self.actions.is_element_displayed(*locators['DATE_PICKER'])
+        print("[INFO] Calendar modal appeared")
+        
+        # Wait for ion-datetime to be visible
+        try:
+            ion_datetime = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "ion-datetime"))
+            )
+        except TimeoutException:
+            raise Exception("[ERROR] ion-datetime component not found within the modal.")
+
+        # Format today's date as 'YYYY-MM-DD'
+        today = datetime.now()
+        formatted_date = today.strftime("%Y-%m-%d")
+        formatted_dob = today.strftime("%d/%m/%Y")  # For assertion use later
+        print(f"[DEBUG] Setting ion-datetime value to {formatted_date}")
+
+        # Set value via JavaScript and trigger ionChange
+        self.driver.execute_script("""
+            arguments[0].value = arguments[1];
+            arguments[0].dispatchEvent(new Event('ionChange'));
+        """, ion_datetime, formatted_date)
+
+        time.sleep(1)  # Give time for UI to react
+
+        # Click the "Select" button
+        self.actions.click_button(*locators["SELECT_BUTTON"])
+        print("[INFO] Date selected and confirmed")
+
+        time.sleep(2)
+        return formatted_dob
+
+        
+    def verify_updated_date_of_birth(self):
+        # get actual DOB from UI
+        dob_element = self.driver.find_element(*locators['DATE_OF_BIRTH_TEXTFIELD'])
+
+        # Try to get 'value' attribute (common for inputs)
+        actual_dob = dob_element.get_attribute("value")
+
+        # If still empty, fallback to text()
+        if not actual_dob:
+            actual_dob = dob_element.text.strip()
+
+        print(f"[DEBUG] Actual DOB on profile (value or text): {actual_dob}")
+        return actual_dob
+        
+
+    def verify_future_dob_disabled(self):
         time.sleep(5)
         date_of_birth = self.driver.find_element(*locators["DATE_OF_BIRTH"])
         self.driver.execute_script("arguments[0].scrollIntoView();", date_of_birth)
         self.actions.is_element_displayed(*locators['DATE_OF_BIRTH'])
         print("Date of birth section is displayed")
-        
-        time.sleep(2)
+
+        # Open the calendar/date picker
         self.actions.click_button(*locators['DATE_OF_BIRTH_TEXTFIELD'])
-
         self.actions.is_element_displayed(*locators['DATE_PICKER'])
-        print("Calendar appeared")
+        print("Calendar modal appeared")
+        time.sleep(5)
 
-        today = datetime.now()
-        day_str = str(int(today.strftime('%d')))  # Removes leading zero
-        formatted_dob = today.strftime("%d/%m/%Y")
-
-        # Use attribute-based XPath (more reliable)
-        date_xpath = (By.XPATH, f"//button[contains(@class, 'calendar-day') and @data-day='{day_str}']")
-
-        print(f"[DEBUG] Selecting today's date: {day_str}")
-        print(f"[DEBUG] XPath: {date_xpath[1]}")
-        print("[DEBUG] Calendar DOM:")
-        print(self.driver.find_element(*locators["DATE_PICKER"]).get_attribute("outerHTML"))
-
-        WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(date_xpath)
-        )
-        self.driver.find_element(*date_xpath).click()
-
-        self.actions.click_button(*locators["SELECT_BUTTON"])
-        time.sleep(2)
-
-        return formatted_dob
-
-    
-    def update_dob_today(setup_platform, context):
-        dob = ProfilePage(setup_platform).edit_date_of_birth()
-        context["DATE_OF_BIRTH_TEXTFIELD"] = dob  # Store for later verification
-
-        
-    def verify_updated_date_of_birth(setup_platform, context):
-        expected_dob = context.get("DATE_OF_BIRTH_TEXTFIELD")
-        assert expected_dob is not None, "Expected date of birth was not set in context"
-
-        actual_dob = ProfilePage(setup_platform).verify_updated_date_of_birth()
-        print(f"Expected DOB: {expected_dob} | Actual DOB: {actual_dob}")
-
-        assert actual_dob == expected_dob, (
-            f"Expected date of birth '{expected_dob}' does not match actual '{actual_dob}'"
-        )
-        
-    def enter_future_date_of_birth(self):
-        element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        time.sleep(2)
-        self.actions.click_button(*locators['DATE_OF_BIRTH'])
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(*locators['DATE_PICKER'])
-    )
-        # Define the target future date
-        target_day = 30
-        target_month = "July"
-        target_year = 2025
-
-        # Get current date
-        today = datetime.datetime.today()
-
-        # Create datetime object for the target date
-        target_date_str = f"{target_day} {target_month} {target_year}"
-        target_date = datetime.datetime.strptime(target_date_str, "%d %B %Y")
-
-        # Check if the target date is in the future
-        if target_date > today:
-            print(f"ERROR: Attempt to select a future date ({target_date.date()}) is not allowed.")
-            return
-
-        # Proceed to select the date if it's valid (not in the future)
-        self.actions.select_date_from_calendar(str(target_day), target_month, str(target_year))
-        time.sleep(2)
-        self.actions.click_button(*locators["SUBMIT_BUTTON"])
-
-    def verify_future_dob_disabled(self):
-        self.actions.click_button(*locators['DATE_OF_BIRTH'])
-
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(locators['DATE_PICKER'])
-    )
-
-        # Define a known future date (e.g., tomorrow)
         tomorrow = datetime.now() + timedelta(days=1)
-        future_day = str(tomorrow.day)
-        future_month = tomorrow.strftime("%B")
-        future_year = str(tomorrow.year)
+        future_day = tomorrow.day
+        future_month = tomorrow.month
+        future_year = tomorrow.year
 
-    # Try to select the future date using custom method
         is_selectable = self.actions.is_date_selectable(future_day, future_month, future_year)
+        print(f"[DEBUG] Is future date selectable? {is_selectable}")
 
-    # Validate that future date is not selectable
-        assert not is_selectable, f"Future date {tomorrow.strftime('%Y-%m-%d')} should not be selectable"
+        # Return True if date is selectable, else False
+        return is_selectable
 
     def click_change_picture_link(self):
         self.actions.is_element_displayed(*locators['CHANGE_PICTURE_LINK'])

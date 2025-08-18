@@ -835,6 +835,12 @@ class ViewCartPage(BasePage):
         print("Your order text is displayed in cart")
         time.sleep(2)
         self.Clear_all()
+
+    def Click_on_mcdelivery_icon(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MCDELIVERY_ICON'])
+        self.actions.click_button(*locators['MCDELIVERY_ICON'])
+        print("Mcdelivery icon clicked.")
     
 
 
