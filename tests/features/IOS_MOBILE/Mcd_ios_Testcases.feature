@@ -494,3 +494,62 @@ Scenario: Location permission prompt appears when selecting "On the Go" or "Dine
     Then I verify the app home screen is displayed
     And I select the On the Go option
     Then I verify that the location permission prompt is displayed
+
+ 
+@TC_IOS_Switching_Mobile_00010
+Scenario: Display service unavailability message for unsupported region
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter unsupported address details
+    Then I tap on the Save Address
+    Then I verify that the message Service not available in your area is displayed
+    # need to off the location -19/25
+
+@TC_IOS_Switching_Mobile_00011
+Scenario: Ensure only one business model can be active at a time
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I select the Dine In option
+    And I select the On the Go option
+    Then I verify that the location permission prompt is displayed
+
+@TC_IOS_Switching_Mobile_00012
+Scenario: Verify model selection updates restaurant listing
+    Given I launch the mobile application  
+    Then I verify the app home screen is displayed  
+    And I select the Dine In option 
+    Then I verify that only restaurants with Dine-In availability are displayed
+
+@TC_IOS_Switching_Mobile_00013
+Scenario: Test visual feedback on tap for business model options on mobile
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown
+    Then I verify that each option provides visual feedback highlight, underline, or bold
+
+@TC_IOS_Switching_Mobile_00014
+Scenario: Ensure model selection doesn't affect account/profile data
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I open the Profile section and note the profile details
+    And I click on the homepage
+    And I select the Dine In option
+    And I select the MCDelivery
+    Then I verify that the profile details remain unchanged
+
+@TC_IOS_Switching_Mobile_00015
+Scenario: Validate different UI layouts for each business model    
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown  
+
+@TC_IOS_Address_Store_Mobile_0001
+Scenario: Select an existing delivery address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I select an existing address from the saved list
+    Then I verify that the selected address is applied
