@@ -996,6 +996,94 @@ Scenario: Verify behavior when all addresses are deleted
     And   I delete all addresses
     Then  I verify the address list should be empty and the Add Address prompt should be visible
 
+@TC_Android_ORDER_003 
+Scenario: Check customization option availability
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I click on 'Add +' for the customizable item
+    Then  I verify the customization options should appear before adding the item to the cart
+
+@TC_ORDER_004 
+Scenario: Add multiple items to cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add 2 to 3 different available items to the cart
+    And   I click on view cart option
+    Then  I verify all added items should be listed in the cart with correct price and quantities
+
+@TC_Android_ORDER_006
+Scenario: Ensure menu item prices are correctly displayed and reflected in cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I user adds the item to the cart
+    And   I click on view cart option
+    #Then  I verify the item price should be correctly displayed in the cart
+    Then  I verify the price in the cart should match the menu price
+
+
+@TC_Android_ORDER_008 @testmcd1
+Scenario: Add a McBreakfast item to cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I user adds the item to the cart
+    And   I click on view cart option
+    Then  I verify the item is added in the cart
+
+@TC_Android_ORDER_010 
+Scenario: View 3Pc Meals
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I selects the '3Pc Meals' category under menu
+    Then  I verify all items under the '3Pc Meals' category should be displayed
+    When  I select McChicken meal from the '3Pc Meals' category and click on Add to cart 
+    Then  I verify the product added in cart
+
+@TC_ORDER_016
+Scenario: Customize burger before adding to cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I click on 'Add +' for the customizable item
+    When  I clicks on the 'Customize' button
+    And   I selects or removes items from the customization options
+    Then  I verify the customized item should be added to the cart with selected preferences
+
+@TC_Android_ORDER_017
+Scenario: Add fries to cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I click on 'Fries & Sides' menu option
+    And   I add 'Medium Fries' to the cart
+    And   I click on view cart option
+    Then  I verify fries should be added to the cart 
+    
+
+@TC_ORDER_024 
+Scenario: Remove item from the cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add 2 to 3 different available items to the cart
+    And   I click on view cart option
+    Then  I verify the added items in cart
+    When  I clicks the 'Remove' button for an item
+    Then  I verify the selected item should be removed from the cart
+
+
 
 
     
