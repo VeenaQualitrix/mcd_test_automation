@@ -910,17 +910,104 @@ def verify_address_removed_from_list(setup_platform):
     print("Verifying each address should display a Near label with its location description")
     AndroidAddressScreen(setup_platform).verify_near_label_visible_in_address_description()
 
-@when("I scrolls through the address list")
-@allure.step("When I scrolls through the address list")
-def scroll_address_list(setup_platform):
-    print("scrolls through the address list")
-    AndroidAddressScreen(setup_platform).scroll_to_bottom_of_element()
 
 @then("I verify all saved addresses should be accessible via scrolling")
 @allure.step("Then I verify all saved addresses should be accessible via scrolling")
 def verify__all_saved_address_accessible_via_scroll(setup_platform):
     print("Verifying all saved addresses should be accessible via scrolling")
     AndroidAddressScreen(setup_platform).All_addresses_accessible_via_scrolling()
+
+@when("I selects the first address from the address list")
+@allure.step("When I selects the first address from the address list")
+def select_first_address_from_list(setup_platform):
+    print("selects the first address from the address list")
+    AndroidAddressScreen(setup_platform).select_first_address_from_list()
+
+@then("I verify restaurant list should update based on the first address location")
+@allure.step("Then I verify restaurant list should update based on the first address location")
+def verify_restaurant_list_update_based_on_first_address(setup_platform):
+    print("Verifying restaurant list should update based on the first address location")
+    AndroidHomeScreen(setup_platform).verify_error_message_for_undeliverable_address()
+
+@when("I selects the second address from the address list")
+@allure.step("When I selects the second address from the address list")
+def select_second_address_from_list(setup_platform):
+    print("selects the second address from the address list")
+    AndroidAddressScreen(setup_platform).select_another_address_from_list()
+
+@then("I verify restaurant list should update based on the second address location")
+@allure.step("Then I verify restaurant list should update based on the second address location")
+def verify_restaurant_list_update_based_on_second_address(setup_platform):
+    print("Verifying restaurant list should update based on the second address location")
+    AndroidHomeScreen(setup_platform).verify_address_selected_and_restaurant_updated_accordingly()
+
+@when("I enters an undeliverable pin code or area manually")
+@allure.step("When I enters an undeliverable pin code or area manually")
+def enter_undeliverable_address(setup_platform):
+    print("enters an undeliverable pin code or area manually")
+    AndroidAddressScreen(setup_platform).enter_an_undeliverable_address()
+
+@then("I verify an error message should be displayed saying Delivery not available at this address")
+@allure.step("Then I verify an error message should be displayed saying Delivery not available at this address")
+def verify__error_message_for_undeliverable_location(setup_platform):
+    print("Verifying an error message should be displayed saying Delivery not available at this address")
+    AndroidHomeScreen(setup_platform).verify_error_message_for_undeliverable_address()
+
+@then("I verify the most recently used address should be auto-selected")
+@allure.step("Then I verify the most recently used address should be auto-selected")
+def verify_recently_used_address_is_auto_selected_after_login(setup_platform):
+    print("Verifying the most recently used address should be auto-selected")
+    AndroidHomeScreen(setup_platform).verify_recently_used_address_is_auto_selected_after_login()
+
+@when("I adds an address and select a tag")
+@allure.step("When I adds an address and select a tag")
+def add_address_and_select_tag(setup_platform):
+    print("adds an address and select a tag")
+    AndroidAddressScreen(setup_platform).add_address_and_select_tag()
+
+@then("I verify the tag should be displayed next to the address name after adding address")
+@allure.step("Then I verify the tag should be displayed next to the address name after adding address")
+def verify_work_tag_display_next_to_address(setup_platform):
+    print("Verifying the tag should be displayed next to the address name after adding address")
+    AndroidAddressScreen(setup_platform).verify_tag_next_to_address_after_adding_address()
+
+@when("I edits an address and select a tag")
+@allure.step("When I edits an address and select a tag")
+def edit_address_and_select_tag(setup_platform):
+    print("edits an address and select a tag")
+    AndroidAddressScreen(setup_platform).edit_address_and_select_tag()
+
+@then("I verify the tag should be displayed next to the address name after editing address")
+@allure.step("Then I verify the tag should be displayed next to the address name after editing address")
+def verify_home_tag_display_next_to_address(setup_platform):
+    print("Verifying the tag should be displayed next to the address name after editing address")
+    AndroidAddressScreen(setup_platform).verify_tag_next_to_address_after_editing_address()
+
+@when("I delete all addresses")
+@allure.step("When I delete all addresses")
+def verify_delete_all_addresses(setup_platform):
+    print("delete all addresses")
+    AndroidAddressScreen(setup_platform).delete_all_addresses()
+
+@then("I verify the address list should be empty and the Add Address prompt should be visible")
+@allure.step("Then I verify the address list should be empty and the Add Address prompt should be visible")
+def verify_address_prompt_visible(setup_platform):
+    print("Verifying the address list should be empty and the Add Address prompt should be visible")
+    AndroidAddressScreen(setup_platform).verify_add_new_address_prompt_visible()
+
+@when("I verify address list before logout of the application")
+@allure.step("When I verify address list before logout of the application")
+def verify_address_list_before_logout(setup_platform, user_data_store):
+    print("verify address list before logout of the application")
+    AndroidAddressScreen(setup_platform).verify_address_list_before_logout_the_application(user_data_store)
+
+@then("I verify previously saved addresses should be retained and visible")
+@allure.step("Then I verify previously saved addresses should be retained and visible")
+def verify_previously_saved_address_should_visible(setup_platform, user_data_store):
+    print("Verifying previously saved addresses should be retained and visible")
+    AndroidAddressScreen(setup_platform).verify_previously_saved_address_should_visible_after_logs_in(user_data_store)
+
+
 
 
 

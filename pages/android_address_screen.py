@@ -33,6 +33,8 @@ locators = {
         "NEAR_LABEL" : (AppiumBy.XPATH, "//android.view.View[@text='Near :']"),
         "NEAR_LABEL_LAST_ADDRESS" : (AppiumBy.XPATH, "(//android.view.View[@text='Near : '])[2]"),
         "ADDRESS_SAVED_WITH_MAX_CHAR" : (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'AAAAAAA')]"),
+        "VERIFY_WORK_TAG_NEXT_ADDRESS" : (AppiumBy.XPATH, "(//android.widget.TextView[@text='Work'])[2]"),
+        "VERIFY_HOME_TAG_NEXT_ADDRESS" : (AppiumBy.XPATH, "(//android.widget.TextView[@text='Home'])[2]"),
 
 
 }
@@ -422,6 +424,252 @@ class AndroidAddressScreen(BasePage):
             print(" Failed to scroll to last address:", str(e))
             raise
     
+    def select_first_address_from_list(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+
+        addresses = ["Marathahalli village"]
+
+        for address in addresses:
+            try:
+                # Use UiScrollable to scroll until text is visible
+                ui_scrollable = (
+                    'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
+                    f'.scrollIntoView(new UiSelector().textContains("{address}").instance(0));'
+                )
+
+                address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
+
+                address_text = address_element.text.strip()
+                print(f"Captured address: {address_text}")
+                address_element.click()
+                return  # Stop after first successful selection
+
+            except Exception as e:
+                print(f"Could not find address '{address}': {e}")
+
+    def select_another_address_from_list(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+
+        addresses = ["123 Main Street"]
+
+        for address in addresses:
+            try:
+                # Use UiScrollable to scroll until text is visible
+                ui_scrollable = (
+                    'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
+                    f'.scrollIntoView(new UiSelector().textContains("{address}").instance(0));'
+                )
+
+                address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
+
+                address_text = address_element.text.strip()
+                print(f"Captured address: {address_text}")
+                address_element.click()
+                return  # Stop after first successful selection
+
+            except Exception as e:
+                print(f"Could not find address '{address}': {e}")
+
+
+    def delete_all_addresses(self):
+        # Wait until address list is visible
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+
+        while True:
+            # Fetch all visible delete icons
+            delete_buttons = self.driver.find_elements(*locators['ADDRESS_DELETE_ICON'])
+            print(f"DEBUG: Found {len(delete_buttons)} delete icons.")
+
+            if not delete_buttons:
+                print("No more addresses to delete.")
+                break
+
+            try:
+                # Click the first delete button
+                delete_buttons[0].click()
+                print("Delete icon clicked")
+
+                # Wait for confirmation popup
+                WebDriverWait(self.driver, 5).until(
+                    EC.visibility_of_element_located(locators['DELETE_POP_UP'])
+                )
+
+                # Confirm deletion
+                self.driver.find_element(*locators['CLICK_YES_BUTTON']).click()
+                print("Clicked YES on delete confirmation popup")
+
+                # Wait briefly for UI update
+                time.sleep(2)
+
+            except Exception as e:
+                print(f"Error while deleting address: {e}")
+                break
+
+    def verify_add_new_address_prompt_visible(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['ADD_NEW_ADDRESS'])
+        print("Clicked on Add new address")
+
+
+    def enter_an_undeliverable_address(self):
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['ADD_NEW'])
+        self.actions.click_button(*locators['ADD_NEW'])
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['CONFIRM_LOCATION'])
+        self.actions.click_button(*locators["CONFIRM_LOCATION"])
+        print("Clicked Confirm Location Button")
+        time.sleep(1)
+        self.actions.wait_for_element(*locators['HOUSE_NUMBER'])
+        self.actions.enter_text(*locators['HOUSE_NUMBER'], "688, Gurugram, Haryana, 122018")
+        time.sleep(2)
+        self.actions.click_button(*locators["SAVE_AS_WORK_ADDRESS"])
+        print("Work tag selected")
+        time.sleep(2)
+        self.actions.click_button(*locators["SAVE_ADDRESS"])
+        print("Save address button clicked")
+
+    def add_address_and_select_tag(self):
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['ADD_NEW'])
+        self.actions.click_button(*locators['ADD_NEW'])
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['CONFIRM_LOCATION'])
+        self.actions.click_button(*locators["CONFIRM_LOCATION"])
+        print("Clicked Confirm Location Button")
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['HOUSE_NUMBER'])
+        self.actions.click_button(*locators["HOUSE_NUMBER"])
+        print("Clicked on house textfield")
+        time.sleep(1)
+        self.actions.enter_text(*locators['HOUSE_NUMBER'], "BTM layout")
+        time.sleep(1)
+        home_btn = self._scroll_bottom_sheet_until_text("Home")
+        home_btn.click()
+        print("Clicked on Home tag")
+        #self.actions.click_button(*locators["SAVE_AS_WORK_ADDRESS"])
+       # print("Work tag selected")
+        time.sleep(1)
+        self.actions.click_button(*locators["SAVE_ADDRESS"])
+        print("Save address button clicked")
+
+    def verify_tag_next_to_address_after_adding_address(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['VERIFY_HOME_TAG_NEXT_ADDRESS'])
+
+    def edit_address_and_select_tag(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ADDRESS_EDIT_ICON'])
+        self.actions.click_button(*locators['ADDRESS_EDIT_ICON'])
+        print("Edit icon clicked")
+        time.sleep(5)
+        House_field = self.driver.find_element(*locators['HOUSE_NUMBER'])
+        House_field.clear()
+        time.sleep(2)
+        self.actions.enter_text(*locators['HOUSE_NUMBER'], "Vipul greens, Lucknow")
+        time.sleep(1)
+        home_btn = self._scroll_bottom_sheet_until_text("Work")
+        home_btn.click()
+        print("Clicked on Work tag")
+        #self.actions.click_button(*locators["SELECT_HOME_TAG"])
+        print("Work tag selected")
+        time.sleep(2)
+        self.actions.click_button(*locators["SAVE_ADDRESS"])
+        print("Save address button clicked")
+
+    def verify_tag_next_to_address_after_editing_address(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['VERIFY_WORK_TAG_NEXT_ADDRESS'])
+    
+    def verify_address_list_before_logout_the_application(self, user_data_store):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+
+        user_data_store["original_addresses"] = []
+
+        # Predefined addresses to validate
+        expected_addresses = ["Vipul greens, Lucknow", "123 Main Street", "Marathahalli village"]
+
+        for address in expected_addresses:
+            found = False
+            max_scrolls = 5
+
+            for _ in range(max_scrolls):
+                try:
+                    # Try to locate address by text
+                    address_element = self.driver.find_element(
+                        locators['ADDED_ADDRESS'][0],
+                        locators['ADDED_ADDRESS'][1].format(address)
+                    )
+                    # Capture text if found
+                    address_title = address_element.text.strip()
+                    user_data_store["original_addresses"].append(address_title)
+                    print(f" Captured address: {address_title}")
+                    found = True
+                    break
+
+                except Exception:
+                    # Scroll down using Android UiScrollable
+                    try:
+                        self.driver.find_element(
+                            AppiumBy.ANDROID_UIAUTOMATOR,
+                            f'new UiScrollable(new UiSelector().scrollable(true)).scrollForward()'
+                        )
+                    except Exception:
+                        print(" Unable to scroll further")
+                    time.sleep(1)
+
+            if not found:
+                print(f" Could not find address: {address}")
+
+        # Go back from Address list
+        self.driver.back()
+
+    def verify_previously_saved_address_should_visible_after_logs_in(self, user_data_store):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+
+        for expected_address in user_data_store.get("original_addresses", []):
+            found = False
+            max_scrolls = 5
+
+            by, value = locators['ADDED_ADDRESS']
+            formatted_locator = (by, value.format(expected_address))
+
+            for _ in range(max_scrolls):
+                try:
+                    # Try to find the address
+                    address_element = self.driver.find_element(*formatted_locator)
+
+                    # Validate the text
+                    actual_text = address_element.text.strip()
+                    assert expected_address in actual_text, f"Expected '{expected_address}', but found '{actual_text}'"
+                    print(f" [PASS] Address '{expected_address}' is visible after login.")
+                    found = True
+                    break
+
+                except Exception:
+                    # Scroll forward if not found
+                    try:
+                        self.driver.find_element(
+                            AppiumBy.ANDROID_UIAUTOMATOR,
+                            'new UiScrollable(new UiSelector().scrollable(true)).scrollForward()'
+                        )
+                    except Exception:
+                        print(" No more scrolling possible.")
+                    time.sleep(1)
+
+            if not found:
+                print(f" [FAIL] Address '{expected_address}' not found after login.")
+                raise AssertionError(f"Address '{expected_address}' not found after login.")
 
     
 

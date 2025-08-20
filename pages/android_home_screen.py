@@ -40,6 +40,11 @@ locators = {
         "ON_THE_GO_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-otg']"),
         "TAKE_AWAY_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-delivery']"),
         "TOAST_MESSAGE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Sorry, we do not serve this location yet']"),
+        "UNDELIVERABLE_AREA_MESSAGE": (AppiumBy.XPATH, "//android.widget.Image[@text='_banner1_img']"),
+        "NO_STORES_NEAR_BY": (AppiumBy.XPATH, "//android.widget.TextView[@text='No stores nearby']"),
+        "HOME_PAGE_ADDRESS": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Home'])[1]"),
+        "STORE_AVAILABLE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mantri Mall']"),
+        "OPEN": (AppiumBy.XPATH, "//android.widget.TextView[@text='Open']"),
 
          }
 
@@ -207,6 +212,24 @@ class AndroidHomeScreen(BasePage):
 
         except Exception as e:
             print(f"Toast message not found: {e}")
+
+    def verify_error_message_for_undeliverable_address(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['UNDELIVERABLE_AREA_MESSAGE'])
+        self.actions.is_element_displayed(*locators['NO_STORES_NEAR_BY'])
+        print("No stores nearby is displayed")
+    
+    def verify_address_selected_and_restaurant_updated_accordingly(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['HOME_PAGE_ADDRESS'])
+        self.actions.is_element_displayed(*locators['STORE_AVAILABLE'])
+        print("Mantri mall store is displayed")
+        self.actions.is_element_displayed(*locators['OPEN'])
+        print("Open is displayed with timimg")
+    
+    def verify_recently_used_address_is_auto_selected_after_login(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['HOME_PAGE_ADDRESS'])
 
 
     

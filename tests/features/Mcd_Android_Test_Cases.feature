@@ -836,6 +836,23 @@ Scenario: Verify deleting an existing address
     And   I click the delete icon next to an address
     Then  I verify address removed from list
 
+@TC_Android_AD_005
+Scenario: Ensure address selection updates nearby restaurant list
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the first address from the address list
+    Then  I verify restaurant list should update based on the first address location
+    When  I click on add address in home screen
+    And   I selects the second address from the address list
+    Then  I verify restaurant list should update based on the second address location
+
 @TC_Android_AD_006
 Scenario: Validate empty address cannot be saved
     Given I launch the native app
@@ -880,6 +897,34 @@ Scenario: Ensure scroll functionality works if many addresses are saved
     And   I verify address list displayed
     Then  I verify all saved addresses should be accessible via scrolling
 
+@TC_Android_AD_010
+Scenario: Verify error handling for invalid or undeliverable address
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I enters an undeliverable pin code or area manually
+    Then  I verify an error message should be displayed saying Delivery not available at this address
+
+
+@TC_Android_AD_011
+Scenario: Default address selection on login
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify the most recently used address should be auto-selected
+
+
 @TC_Android_AD_012
 Scenario: Ensure “Add New” opens address entry popup or page
     Given I launch the native app
@@ -895,6 +940,61 @@ Scenario: Ensure “Add New” opens address entry popup or page
     When  I click on add new button and click confirm location
     Then  I verify user redirected to address fill in details page
 
+@TC_Android_AD_013
+Scenario: Ensure Address list remains consistent after logout and login
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I verify address list before logout of the application
+    When  I click on MyMcD hamburger icon
+    Then  I click on Log out button
+    When  I click on add address in home screen
+    Then  I verify user redirected to login/signup prompt
+    When  I click on login/signup prompt
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    Then  I verify previously saved addresses should be retained and visible
+
+
+@TC_Android_AD_018
+Scenario: Verify user can tag an address as "Home", "Work", etc.
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I adds an address and select a tag
+    And   I click on add address in home screen
+    Then  I verify the tag should be displayed next to the address name after adding address
+    When  I edits an address and select a tag
+    And   I click on add address in home screen
+    Then  I verify the tag should be displayed next to the address name after editing address
+
+@TC_Android_AD_017
+Scenario: Verify behavior when all addresses are deleted
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I delete all addresses
+    Then  I verify the address list should be empty and the Add Address prompt should be visible
 
 
 
