@@ -597,3 +597,55 @@ def step_select_existing_address(setup_platform):
 def step_verify_selected_address_applied(setup_platform):
     AddressStoreScreenIos(setup_platform).verify_selected_address_applied()
 
+@when("I click the edit icon for the selected address")
+@allure.step("And I click the edit icon for the selected address")
+def step_click_edit_icon_for_address(setup_platform):
+    AddressStoreScreenIos(setup_platform).click_edit_icon()
+
+@when("I modify the address details")
+@allure.step("And I modify the address details")
+def step_modify_address_details(setup_platform):
+    AddressStoreScreenIos(setup_platform).modify_address_details()
+
+@then("I verify that the updated address appears in the list")
+@allure.step("Then I verify that the updated address appears in the list")
+def step_verify_updated_address_in_list(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_updated_address_in_list()
+
+@when("I click the delete icon for the selected address")
+@allure.step("And I click the delete icon for the selected address")
+def step_click_delete_icon_for_selected_address(setup_platform):
+    AddressStoreScreenIos(setup_platform).click_delete_icon()
+
+@then("I select an near by restaurant first times")
+@allure.step("And I select a nearby restaurant multiple times")
+def step_select_nearby_restaurant_multiple_times(setup_platform):
+    AddressStoreScreenIos(setup_platform).select_nearby_restaurant_first_times()
+
+@then("I select an near by restaurant second times")
+@allure.step("And I select a nearby restaurant multiple times")
+def step_select_nearby_restaurant_multiple_times(setup_platform):
+    AddressStoreScreenIos(setup_platform).select_nearby_restaurant_second_times()
+
+@when("I leave the address fields blank")
+@allure.step("And I leave the address fields blank")
+def step_leave_address_fields_blank(setup_platform):
+    AddressStoreScreenIos(setup_platform).leave_address_fields_blank()
+
+@then("I verify that the error message Address fields required is displayed")
+@allure.step("Then I verify that the error message Address fields required is displayed")
+def step_verify_address_fields_required_error(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_address_fields_required_error()
+
+@then("I verify that the Near label is displayed under each address")
+@allure.step("Then I verify that the Near label is displayed under each address")
+def step_verify_near_label_under_each_address(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_near_label_under_addresses()
+
+@when("I scroll through the address list")
+def step_scroll_through_address_list(setup_platform):
+    AddressStoreScreenIos(setup_platform).scroll_to_store_by_name("Orion Mall")
+
+@then("I verify that all addresses are accessible via scrolling")
+def step_verify_all_addresses_accessible(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_all_addresses_scrollable()
