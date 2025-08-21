@@ -457,3 +457,10 @@ class iOSActions(ActionsParent):
         element.send_keys(text)
     
 
+    def scroll_down(self):
+        window_size = self.driver.get_window_size()
+        start_x = window_size["width"] / 2
+        start_y = window_size["height"] * 0.8
+        end_y = window_size["height"] * 0.2
+
+        self.driver.swipe(start_x, start_y, start_x, end_y, duration=800)

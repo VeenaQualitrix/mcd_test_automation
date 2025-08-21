@@ -553,3 +553,71 @@ Scenario: Select an existing delivery address
     When I click the Add Address button
     And I select an existing address from the saved list
     Then I verify that the selected address is applied
+
+@TC_IOS_Address_Store_Mobile_0002
+Scenario: Add a new delivery address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    Then I verify that the selected address is applied
+    
+@TC_IOS_Address_Store_Mobile_0003
+Scenario: Edit an existing delivery address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    When I click the Add Address button
+    And I click the edit icon for the selected address
+    And I modify the address details
+    Then I tap on the Save Address
+    Then I verify that the updated address appears in the list
+
+@TC_IOS_Address_Store_Mobile_0004
+Scenario: Delete an existing delivery address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I click the delete icon for the selected address
+    
+@TC_IOS_Address_Store_Mobile_0005
+Scenario: Ensure address selection updates nearby restaurant list
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I select the Dine In option
+    And I select an near by restaurant first times
+    And I select the MCDelivery
+    And I select the Dine In option
+    And I select an near by restaurant second times
+
+@TC_IOS_Address_Store_Mobile_0006   
+Scenario: Validate empty address cannot be saved
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I leave the address fields blank
+    Then I verify that the error message Address fields required is displayed
+
+@TC_IOS_Address_Store_Mobile_0007
+Scenario: Verify "Near" location is shown under each address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I select the Dine In option
+    Then I verify that the Near label is displayed under each address
+
+@TC_IOS_Address_Store_Mobile_0008
+Scenario: Ensure scroll functionality works if many addresses are saved
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I select the Dine In option
+    When I scroll through the address list
+    Then I verify that all addresses are accessible via scrolling
