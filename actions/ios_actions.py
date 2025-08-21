@@ -451,3 +451,9 @@ class iOSActions(ActionsParent):
         element = self.driver.find_element(by, locator)
         element.clear() 
 
+    def send_keys(self, locator_strategy, locator, text):
+        element = self.driver.find_element(locator_strategy, locator)
+        element.clear()  # Optional: clear the field before typing
+        element.send_keys(text)
+    
+

@@ -5,6 +5,7 @@ import allure
 from pages.mobile.login_screen_ios import LoginScreenIos
 from pages.mobile.profile_screen_ios import ProfileScreenIos
 from pages.mobile.address_screen_ios import AddressScreenIos
+from pages.mobile.switching_screen_ios import SwitchScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -231,77 +232,35 @@ def verify_number_pasted_correctly(setup_platform):
     assert actual_number == expected_number, "Pasted mobile number does not match or was not accepted"
 
 
-
-@when('I visually inspect the mobile number field')
-@allure.step("When I visually inspect the mobile number field")
-def inspect_mobile_field(setup_platform):
-    print("Visually inspect the mobile number field")
-    Login_Page = LoginScreenIos(setup_platform).inspect_mobile_field()
-    assert Login_Page, "Mobile number field not visible"
-
-
-@when('I visually inspect the referral link section')
-@allure.step("When I visually inspect the referral link section")
-def inspect_referral_link(setup_platform):
-    print("Visually inspect the mobile number field")
-    Login_Page = LoginScreenIos(setup_platform).inspect_referral_link()
-    assert Login_Page, "Referral link not visible"
-
-
-@when('I visually inspect the verify button')
-@allure.step("When I visually inspect the verify button")
-def inspect_verify_button(setup_platform):
-    print("Visually inspect the mobile number field")
-    Login_Page = LoginScreenIos(setup_platform).inspect_verify_button()
-    assert Login_Page, "Verify button not visible"
-
-
-@when('I visually inspect the footer links')
-@allure.step("When I visually inspect the footer links")
-def inspect_footer_link(setup_platform):
-    print("Visually inspect the mobile number field")
-    Login_Page = LoginScreenIos(setup_platform).inspect_footer_link()
-    assert Login_Page, "Footer links not visible"
-
-@then("I verify all elements should be visible, correctly aligned, and not overlapping")
-@allure.step("Then I verify all elements should be visible, correctly aligned, and not overlapping")
-def step_validate_alignment(setup_platform):
-    print("Validating visibility, alignment, and non-overlapping of UI elements")
-
-    login_page = LoginScreenIos(setup_platform)
-
-    # Fetching elements using your page object
-    mobile_field = login_page.inspect_mobile_field()
-    referral_link = login_page.inspect_referral_link()
-    verify_button = login_page.inspect_verify_button()
-    footer_links = login_page.inspect_footer_link()
-
-    elements = [mobile_field, referral_link, verify_button, footer_links]
-
-    # Check that all elements are visible
-    for el in elements:
-        assert el.is_displayed(), f"Element not visible: {el}"
-
-    # Check that elements are not overlapping
-    for i in range(len(elements)):
-        for j in range(i + 1, len(elements)):
-            overlapping = is_overlapping_js(setup_platform, elements[i], elements[j])
-            if overlapping:
-            # Capture screenshot before assertion fails
-                screenshot_name = f"overlap_{i}_{j}.png"
-                setup_platform.save_screenshot(screenshot_name)
-                allure.attach.file(screenshot_name, name=f"Overlapping Elements {i}-{j}", attachment_type=allure.attachment_type.PNG)
-                assert not overlapping, f"❌ Elements at index {i} and {j} are overlapping"
-
-
-
-
-
-
 @then("I verify the Terms and Conditions web view or page is displayed")
 @allure.step("Then I verify the Terms and Conditions web view or page is displayed")
 def verify_terms_and_conditions_page(setup_platform):
     LoginScreenIos(setup_platform).verify_terms_and_conditions_page_displayed()
+
+@when("I verify the mobile number input field is present")
+@allure.step("Then I verify the mobile number input field is present and properly aligned")
+def verify_mobile_number_field_alignment(setup_platform):
+    print("Verifying presence and alignment of mobile number input field")
+    LoginScreenIos(setup_platform).validate_mobile_field()
+
+@when("I verify the referral link field is present")
+@allure.step("Then I verify the referral link field is present")
+def verify_referral_link_field(setup_platform):
+    print("Verifying presence of the referral link field")
+    LoginScreenIos(setup_platform).verify_referral_link()
+
+@when("I verify the Verify button is visible")
+@allure.step("Then I verify the Verify button is visible")
+def verify_verify_button_is_visible(setup_platform):
+    print("Verifying visibility of the Verify button")
+    LoginScreenIos(setup_platform).verify_verify_button_is_visible()
+
+@then("I verify the footer links are displayed at the bottom of the screen")
+@allure.step("Then I verify the footer links are displayed at the bottom of the screen")
+def verify_footer_links_displayed(setup_platform):
+    print("Verifying footer links are displayed at the bottom of the screen")
+    LoginScreenIos(setup_platform).verify_footer_links_position()
+
 
 @when("I enter the OTP and click verify")
 @allure.step("When I enter the OTP and click verify")
@@ -329,6 +288,11 @@ def click_save_changes(setup_platform):
     profile = ProfileScreenIos(setup_platform)
     profile.click_save_changes()
 
+@when('I click on Save button')
+@allure.step("Click on Save Changes button")
+def click_save_changes(setup_platform):
+    profile = ProfileScreenIos(setup_platform)
+    profile.click_save()
 
 @then("I enter invalid characters in the full name field")
 @allure.step("Enter invalid characters in the full name field")
@@ -419,7 +383,7 @@ def verify_field_icons_displayed(setup_platform):
 @allure.step("Click the Business Model dropdown")
 def click_business_model_dropdown(setup_platform):
     print("Clicking the Business Model dropdown")
-    ProfileScreenIos(setup_platform).click_business_model_dropdown()    
+    SwitchScreenIos(setup_platform).click_business_model_dropdown()    
 
 @when("I proceed to the checkout screen")
 @allure.step("Proceed to the checkout screen")
@@ -494,4 +458,90 @@ def step_verify_redirection_to_cart_or_checkout(setup_platform):
     print("Verifying redirection to the cart or checkout screen")
     AddressScreenIos(setup_platform).verify_cart_or_checkout_screen_displayed()
 
+@when("I tap on Add New Address")
+@allure.step("When I tap on Add New Address")
+def tap_on_add_new_address(setup_platform):
+    print("Tapping on 'Add New Address'")
+    AddressScreenIos(setup_platform).tap_add_new_address()
 
+@when("I click on confirm location")
+@allure.step("When I click on confirm location")
+def click_on_confirm_location(setup_platform):
+    print("Clicking on 'Confirm Location' button")
+    AddressScreenIos(setup_platform).click_confirm_location()
+
+@when("I enter valid address details")
+@allure.step("When I enter valid address details")
+def enter_valid_address_details(setup_platform):
+    print("Entering valid address details")
+    AddressScreenIos(setup_platform).enter_address_details()
+
+@then("I tap on the Save Address")
+@allure.step("Then I tap on the Save Address")
+def tap_on_save_address(setup_platform):
+    print("Tapping on 'Save Address' button")
+    AddressScreenIos(setup_platform).tap_save_address()
+
+@when("I leave mandatory address fields empty")
+@allure.step("When I leave mandatory address fields empty")
+def leave_mandatory_address_fields_empty(setup_platform):
+    print("Leaving mandatory address fields empty")
+    AddressScreenIos(setup_platform).leave_mandatory_fields_empty()
+
+@then("I verify save is disabled")
+@allure.step("Then I verify save is disabled")
+def verify_save_is_disabled(setup_platform):
+    print("Verifying that 'Save' button is disabled")
+    assert AddressScreenIos(setup_platform).is_save_button_disabled(), "'Save' button should be disabled but it is enabled"
+
+@when("I enter special characters in address fields")
+@allure.step("When I enter special characters in address fields")
+def enter_special_characters_in_address_fields(setup_platform):
+    print("Entering special characters into address fields")
+    AddressScreenIos(setup_platform).enter_special_character_address()
+
+@then("I start entering address and cancel before saving")
+@allure.step("Then I start entering address and cancel before saving")
+def step_cancel_address_entry(setup_platform):
+    AddressScreenIos(setup_platform).cancel_address_entry_midway()
+
+@when("I enter text exceeding the max character limit in address fields")
+@allure.step("And I enter text exceeding the max character limit in address fields")
+def step_enter_text_exceeding_limit(setup_platform):
+    AddressScreenIos(setup_platform).enter_text_exceeding_max_limit()
+
+
+@when("I enter an address identical to an existing one")
+@allure.step("And I enter an address identical to an existing one")
+def step_enter_duplicate_address(setup_platform):
+    AddressScreenIos(setup_platform).enter_duplicate_address()
+
+@when("I verify that the duplicate address is saved")
+@allure.step("And I verify that the duplicate address is saved")
+def step_verify_duplicate_address_saved(setup_platform):
+    AddressScreenIos(setup_platform).verify_duplicate_address_saved()
+
+@then("I select the Dine In option")
+@allure.step("When I select the Dine-In option")
+def step_select_dine_in_option(setup_platform):
+    SwitchScreenIos(setup_platform).select_dine_in()
+
+@then("I verify that Dine-In remains the selected option")
+@allure.step("Then I verify that Dine-In remains the selected option")
+def step_verify_dine_in_remains_selected(setup_platform):
+    SwitchScreenIos(setup_platform).verify_dine_in_selected()    
+
+@then("I verify that the default business model is set to McDelivery")
+@allure.step("And I verify that the default business model is set to McDelivery")
+def step_verify_default_business_model(setup_platform):
+    SwitchScreenIos(setup_platform).verify_default_business_model()
+
+@then("I select the On the Go option")
+@allure.step("And I select the On the Go option")
+def step_select_on_the_go(setup_platform):
+    SwitchScreenIos(setup_platform).select_on_the_go()
+
+@then("I verify that the location permission prompt is displayed")
+@allure.step("Then I verify that the location permission prompt is displayed")
+def step_verify_location_permission_prompt_displayed(setup_platform):
+    SwitchScreenIos(setup_platform).verify_location_permission_prompt()

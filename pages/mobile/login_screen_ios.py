@@ -60,6 +60,8 @@ locators = {
 
     'TERMS_AND_CONDITIONS_LINK': (AppiumBy.ACCESSIBILITY_ID, "Terms and Conditions"),
 
+    'FOOTER_LINK': (AppiumBy.ACCESSIBILITY_ID, "Terms and Conditions"),
+
     'TERMS_AND_CONDITIONS_AGE_LABEL': (AppiumBy.XPATH,
     '//XCUIElementTypeApplication[@name="McDelivery"]/XCUIElementTypeWindow[2]/XCUIElementTypeOther/XCUIElementTypeOther'),
 
@@ -234,7 +236,7 @@ class LoginScreenIos(BasePage):
         input_field.click()
         time.sleep(1)
 
-        # 🔁 Skip long press / paste tap — directly paste from clipboard
+        
         clipboard_text = self.driver.get_clipboard_text()
         print(f"Clipboard Text Retrieved: {clipboard_text}")
 
@@ -305,32 +307,53 @@ class LoginScreenIos(BasePage):
             if not mobile_number_11_digits:
               raise ValueError("Mobile number test data is missing or empty.")
 
-def inspect_referral_link(self):
-    time.sleep(2)
-    return self.actions.get_element(*locators["REFERRAL_CODE_LINK"])
+    def inspect_referral_link(self):
+        time.sleep(2)
+        return self.actions.get_element(*locators["REFERRAL_CODE_LINK"])
 
 
-def inspect_verify_button(self):
-    time.sleep(2)
-    return self.actions.get_element(*locators["VERIFY_MOBILE_BUTTON"])
+    def inspect_verify_button(self):
+        time.sleep(2)
+        return self.actions.get_element(*locators["VERIFY_MOBILE_BUTTON"])
 
 
-def inspect_footer_link(self):
-    time.sleep(2)
-    return self.actions.get_element(*locators["FOOTER_LINK"])
+    def inspect_footer_link(self):
+        time.sleep(2)
+        return self.actions.get_element(*locators["FOOTER_LINK"])
 
 
-def inspect_mobile_field(self):
-    time.sleep(2)
-    return self.actions.get_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
+    def inspect_mobile_field(self):
+        time.sleep(2)
+        return self.actions.get_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
 
-        
+    def validate_mobile_field(self):
+        time.sleep(2)  
+        self.actions.is_element_displayed(*locators['MOBILE_NUMBER_INPUT_FIELD'])
+        print("Mobile number input field is displayed")        
+
+
+    def verify_referral_link(self):
+        time.sleep(2)  # Replace with explicit wait if needed
+        is_displayed = self.actions.is_element_displayed(*locators['REFERRAL_CODE_LINK'])
+        assert is_displayed, "Referral link field is not displayed"
+        print("Referral link field is displayed")
     
+    def verify_verify_button_is_visible(self):
+        time.sleep(2)  # Use an explicit wait if available
+        is_displayed = self.actions.is_element_displayed(*locators['VERIFY_MOBILE_BUTTON'])
+        assert is_displayed, "Verify button is not visible"
+        print("Verify button is visible")
 
-def verify_terms_and_conditions_page_displayed(self):
-    time.sleep(2)
-    assert self.actions.is_element_displayed(*locators["TERMS_AND_CONDITIONS_PAGE_LABEL"]), \
-        "Terms and Conditions page is not displayed"
-    print("Verified: Terms and Conditions page is displayed")
-        
+    def verify_footer_links_position(self):
+        time.sleep(2)  
+        is_displayed = self.actions.is_element_displayed(*locators['FOOTER_LINK'])
+        assert is_displayed, "Footer links are not displayed"
+
+    def verify_terms_and_conditions_page_displayed(self):
+        time.sleep(2)
+        assert self.actions.is_element_displayed(*locators["TERMS_AND_CONDITIONS_PAGE_LABEL"]), \
+            "Terms and Conditions page is not displayed"
+        print("Verified: Terms and Conditions page is displayed")
+            
+
         

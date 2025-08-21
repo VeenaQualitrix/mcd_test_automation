@@ -36,6 +36,25 @@ locators = {
 
 'CART_SCREEN_YOUR_ORDER': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Your Order"]'),
 
+'ADD_NEW_ADDRESS_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "Add new"),
+
+'CONFIRM_LOCATION_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "Confirm Location"),
+
+'FLAT_NO': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="*House / Flat No."]'),
+
+'FLOOR': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="Floor no / Wing name"]'),
+
+'BUILDING_NAME': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="Apartment / Building Name"]'),
+
+'MOBILE_NUMBER': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="Contact Number"]'),
+
+'SAVE_ADDRESS_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "Save Address"),
+
+'BACK_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "ic-arrow-left-primary"),
+
+'ALL_ADDRESS': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[@name="101, 5, Sunset Plaza, Sri Sai Collections"])[1]'),
+
+
 }
 class AddressScreenIos(BasePage):
 
@@ -114,3 +133,109 @@ class AddressScreenIos(BasePage):
         self.actions.is_element_displayed(*locators['CART_SCREEN_YOUR_ORDER'])
         print("User is redirected to the cart screen")
         
+
+    def tap_add_new_address(self):
+        time.sleep(2)  
+        self.actions.click_button(*locators['ADD_NEW_ADDRESS_BUTTON'])
+        print("'Add New Address' button tapped")
+
+    def click_confirm_location(self):
+        time.sleep(2)  # Preferably replace with explicit wait
+        self.actions.click_button(*locators['CONFIRM_LOCATION_BUTTON'])
+        print("'Confirm Location' button clicked")
+
+    
+    def enter_address_details(self):
+        time.sleep(2)  # Consider replacing with explicit waits if available
+        self.actions.send_keys(*locators['FLAT_NO'], "123 Main Street")
+        self.actions.send_keys(*locators['FLOOR'], "2nd floor")
+        self.actions.send_keys(*locators['BUILDING_NAME'], "John")
+        self.actions.send_keys(*locators['MOBILE_NUMBER'], "7777777777")
+        print("Entered address: Flat No - 123 Main Street, Floor - 2nd floor, Building - John, Mobile - 7777777777")
+
+    def tap_save_address(self):
+        time.sleep(2)  # Prefer explicit wait for production use
+        self.actions.click_button(*locators['SAVE_ADDRESS_BUTTON'])
+        print("'Save Address' button tapped")
+
+
+    def leave_mandatory_fields_empty(self):
+        time.sleep(2)  # Replace with explicit wait if needed
+        self.actions.send_keys(*locators['FLOOR'], "3rd Floor")
+        self.actions.send_keys(*locators['BUILDING_NAME'], "Greenwood")
+        print("Mandatory address fields left empty (e.g., Flat No, Mobile Number)")
+
+    def is_save_button_disabled(self):
+        time.sleep(1)  # Use explicit wait ideally
+        save_button = self.driver.find_element(*locators['SAVE_ADDRESS_BUTTON'])
+        is_enabled = save_button.is_enabled()
+        print(f"'Save' button enabled state: {is_enabled}")
+        return not is_enabled
+
+    def enter_special_character_address(self):
+        time.sleep(2)  # Replace with explicit waits in production
+        self.actions.send_keys(*locators['FLAT_NO'], "@#*&^")
+        self.actions.send_keys(*locators['FLOOR'], "!$%^")
+        self.actions.send_keys(*locators['BUILDING_NAME'], "~`<>?")
+        self.actions.send_keys(*locators['MOBILE_NUMBER'], "7777777777")  # Valid input to allow form submission
+        print("Special characters entered in Flat No, Floor, Building Name")
+
+    def cancel_address_entry_midway(self):
+        time.sleep(2)  
+        self.actions.send_keys(*locators['FLAT_NO'], "456")
+        self.actions.send_keys(*locators['FLOOR'], "3rd")
+        self.actions.send_keys(*locators['BUILDING_NAME'], "Ocean View")
+        print("Entered partial address. Cancelling...")
+        self.actions.click_button(*locators['BACK_BUTTON'])
+
+    def enter_text_exceeding_max_limit(self):
+        long_text = "A" * 301  # 301 characters, exceeding the 300 char limit
+        self.actions.send_keys(*locators['FLAT_NO'], long_text)
+        print("Entered 301 characters into address fields.")
+
+    
+    
+    def enter_duplicate_address(self):
+        existing_address = {
+            'FLAT_NO': "101",
+            'FLOOR': "5",
+            'BUILDING_NAME': "Sunset Plaza",
+            'MOBILE_NUMBER': "9999999999",
+        }
+        self.actions.send_keys(*locators['FLAT_NO'], existing_address['FLAT_NO'])
+        self.actions.send_keys(*locators['FLOOR'], existing_address['FLOOR'])
+        self.actions.send_keys(*locators['BUILDING_NAME'], existing_address['BUILDING_NAME'])
+        self.actions.send_keys(*locators['MOBILE_NUMBER'], existing_address['MOBILE_NUMBER'])
+        print("Entered duplicate address details.")
+    
+    def verify_duplicate_address_saved(self):
+        time.sleep(2)  
+        # Get all address elements from the "All Address" section
+        address_elements = self.driver.find_elements(*locators["ALL_ADDRESS"])
+
+        # Extract the text of each address
+        addresses = [el.text.strip() for el in address_elements]
+
+        # Check for duplicates
+        seen = set()
+        duplicates = []
+
+        for addr in addresses:
+            if addr in seen:
+                duplicates.append(addr)
+            else:
+                seen.add(addr)
+
+        # Print results
+        if duplicates:
+            print("Duplicate addresses found:")
+            for dup in set(duplicates):
+                print("-", dup)
+        else:
+            print("No duplicate addresses found.")
+        self.driver.back()
+
+
+    
+   
+

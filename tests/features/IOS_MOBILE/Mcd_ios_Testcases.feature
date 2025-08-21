@@ -107,11 +107,10 @@ Scenario Outline: Verify UI alignment and presence of elements
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    When  I visually inspect the mobile number field
-    And   I visually inspect the referral link section
-    And   I visually inspect the verify button
-    And   I visually inspect the footer links
-    Then  I verify all elements should be visible, correctly aligned, and not overlapping
+    And  I verify the mobile number input field is present
+    And  I verify the referral link field is present 
+    And  I verify the Verify button is visible  
+    Then I verify the footer links are displayed at the bottom of the screen 
 
 @TC_IOS_Login_Mobile_00010
 Scenario Outline: Verify referral link is clickable
@@ -301,37 +300,6 @@ Scenario: Verify the field icons are displayed correctly
     Then I verify the field icons are displayed correctly
 
 
-
-@TC_IOS_Switching_Mobile_00001
-Scenario: Verify the field icons and business model dropdown options
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    When I click the Business Model dropdown
-
-@TC_IOS_Switching_Mobile_00002
-Scenario: Validate user can select “McDelivery” and proceed
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    When I click the Business Model dropdown
-
-@TC_IOS_Switching_Mobile_00003
-Scenario: Validate user can select “Dine-In” and proceed
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    When I click the Business Model dropdown  
-
-@TC_IOS_Switching_Mobile_00004
-Scenario: Validate user can select “On the Go” and proceed
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    When I click the Business Model dropdown           
-
-@TC_IOS_Switching_Mobile_00005
-Scenario: Validate user can select “Take Away” and proceed
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    When I click the Business Model dropdown               
-
         
 
 @TC_IOS_Address_Mobile_00010
@@ -385,4 +353,144 @@ Scenario: Incorrect login from Add Address screen
     When  I enter mobile number with special characters and click verify    
 
 
+@TC_IOS_Address_Mobile_00014
+Scenario: Add a new delivery address during checkout
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    Then I should be redirected to the login screen 
+    When I tap on the login continue
+    When  I enter a valid mobile number click on verify
+    Then  I verify OTP screen navigation
+    When  I enter the OTP and click verify 
+    And   I click on Save button
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+
+@TC_IOS_Address_Mobile_00015
+Scenario: Add address with missing mandatory fields
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I leave mandatory address fields empty
+    Then I verify save is disabled
+   
+
+@TC_IOS_Address_Mobile_00016
+Scenario: Add address with special characters in fields
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter special characters in address fields
+    Then I tap on the Save Address
     
+
+@TC_IOS_Address_Mobile_00017
+Scenario: Cancel address entry mid-way
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    Then I start entering address and cancel before saving
+    
+@TC_IOS_Address_Mobile_00018
+Scenario: Verify max character limit for address fields
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter text exceeding the max character limit in address fields
+    Then I tap on the Save Address    
+
+@TC_IOS_Address_Mobile_00019
+Scenario: Add duplicate address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter an address identical to an existing one
+    Then I tap on the Save Address
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter an address identical to an existing one
+    Then I tap on the Save Address
+    When I click the Add Address button
+    And I verify that the duplicate address is saved
+
+@TC_IOS_Address_Mobile_00020
+Scenario: Add Use Current Location
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+
+    
+@TC_IOS_Switching_Mobile_00001
+Scenario: Verify the field icons and business model dropdown options
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown
+
+@TC_IOS_Switching_Mobile_00002
+Scenario: Validate user can select “McDelivery” and proceed
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown
+
+@TC_IOS_Switching_Mobile_00003
+Scenario: Validate user can select “Dine-In” and proceed
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown  
+
+@TC_IOS_Switching_Mobile_00004
+Scenario: Validate user can select “On the Go” and proceed
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown           
+
+@TC_IOS_Switching_Mobile_00005
+Scenario: Validate user can select “Take Away” and proceed
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown       
+
+@TC_IOS_Switching_Mobile_00006
+Scenario: Dine-In option remains selected until manually changed
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I select the Dine In option
+    Then I verify that Dine-In remains the selected option
+
+@TC_IOS_Switching_Mobile_00007
+Scenario: Ensure mobile responsiveness of dropdown and tappable
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Business Model dropdown  
+
+@TC_IOS_Switching_Mobile_00008
+Scenario: Verify default business model on first visit
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I verify that the default business model is set to McDelivery
+
+@TC_IOS_Switching_Mobile_00009
+Scenario: Location permission prompt appears when selecting "On the Go" or "Dine-In" without location access
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I select the On the Go option
+    Then I verify that the location permission prompt is displayed

@@ -16,18 +16,18 @@ locators = {
     
 "MCDELIVERY_ICON":(AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-bm-delivery-active"]'),
 
-"DINEIN_ICON":(AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-bm-dine-in"]'),
+"DINEIN_ICON":(AppiumBy.ACCESSIBILITY_ID, "ic-bm-dine-in"),
 
 "ONTHEGO_ICON":(AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-bm-otg"]'),
 
 "TAKEAWAY_ICON":(AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-bm-delivery"]'),
 
+"VERIFY_DINE_IN":(AppiumBy.ACCESSIBILITY_ID, 'No store selected'),
+
+"LOCATION_PERMISSION_PROMPT":(AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Store based on your Current Location"]'),
+
 }
-class ProfileScreenIos(BasePage):
-
-
-    
-
+class SwitchScreenIos(BasePage):
 
     def click_business_model_dropdown(self):
         time.sleep(3)  # Consider replacing with explicit waits for better reliability
@@ -54,4 +54,33 @@ class ProfileScreenIos(BasePage):
             print("TAKEAWAY icon not visible.")
        
 
+    def select_dine_in(self):
+        time.sleep(3)
+        self.actions.click_button(*locators["DINEIN_ICON"])
+           
     
+        
+    def verify_dine_in_selected(self):
+        if self.actions.is_element_displayed(*locators["VERIFY_DINE_IN"]):
+            print("Dine-In option is currently selected and visible.")
+        else:
+            print("Dine-In option is not selected or not visible.")
+            raise AssertionError("Dine-In is not selected or not visible.")
+
+
+    def verify_default_business_model(self):
+        if self.actions.is_element_displayed(*locators["MCDELIVERY_ICON"]):
+            print("McDelivery is selected by default.")
+        else:
+            raise AssertionError("Default business model is not set to McDelivery.")
+
+    def select_on_the_go(self):
+        time.sleep(2) 
+        print("Selecting the 'On the Go' option.")
+        self.actions.click_button(*locators["ONTHEGO_ICON"])
+
+    def verify_location_permission_prompt(self):
+        if self.actions.is_element_displayed(*locators["LOCATION_PERMISSION_PROMPT"]):
+            print("Location permission prompt is displayed.")
+        else:
+            raise AssertionError("Location permission prompt was not displayed.")

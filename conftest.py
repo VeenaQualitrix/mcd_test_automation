@@ -379,8 +379,8 @@ def pytest_configure(config):
     # if not app_file and current_platform == "android":
     #     raise pytest.UsageError("--appFileName is required")
 
-    if not app_package_name and current_platform == "android":
-        raise pytest.UsageError("--app_package_name is required")
+    # if not app_package_name and current_platform == "android":
+    #     raise pytest.UsageError("--app_package_name is required")
 
     # if not webDriverAgentUrl and current_platform == "ios":
         # raise pytest.UsageError("--webDriverAgentUrl is required")

@@ -19,6 +19,8 @@ locators = {
 ),
 "SAVE_CHANGES_BUTTON": (AppiumBy.ACCESSIBILITY_ID, "Save Changes"),
 
+"SAVE_BUTTON": (AppiumBy.ACCESSIBILITY_ID, "Save"),
+
 "VALID_MOBILE_NUMBER": (
     AppiumBy.XPATH,
     '//XCUIElementTypeTextField[@value="7777777777"]'
@@ -118,6 +120,10 @@ class ProfileScreenIos(BasePage):
     def click_save_changes(self):
         self.actions.click_button(*locators["SAVE_CHANGES_BUTTON"])
         print("Clicked on Save Changes button")
+
+    def click_save(self):
+        self.actions.click_button(*locators["SAVE_BUTTON"])
+        print("Clicked on Save Changes button")    
 
     def invalid_character(self, name):
         time.sleep(2)
