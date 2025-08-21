@@ -14,7 +14,9 @@ import pyperclip
 
 locators = {
     
-"MCDELIVERY_ICON":(AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-bm-delivery-active"]'),
+"MCDELIVERY_ICON":(AppiumBy.ACCESSIBILITY_ID, "ic-bm-delivery-active"),
+
+"MCDELIVERY_ICON_DISABLED":(AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-bm-delivery"])[1]'),
 
 "DINEIN_ICON":(AppiumBy.ACCESSIBILITY_ID, "ic-bm-dine-in"),
 
@@ -26,11 +28,32 @@ locators = {
 
 "LOCATION_PERMISSION_PROMPT":(AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Store based on your Current Location"]'),
 
+'FLAT_NO': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="*House / Flat No."]'),
+
+'FLOOR': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="Floor no / Wing name"]'),
+
+'SERVICE_UNAVAILABLE_MESSAGE': (AppiumBy.ACCESSIBILITY_ID, '_banner1_img'),
+
+'SEARCH_AREA': (AppiumBy.ACCESSIBILITY_ID, 'Search for area, street name..'),
+
+'CURRENT_LOCATION_DINE': (AppiumBy.ACCESSIBILITY_ID, 'Current location'),
+
+'RESTAURANTS_AVAILABILITY': (AppiumBy.ACCESSIBILITY_ID, 'Mantri Mall'),
+
+'PROFILE_TAB': (AppiumBy.ACCESSIBILITY_ID, 'ic-bottom-tab-mymcd'),
+
+'PROFILE_NAME': (AppiumBy.ACCESSIBILITY_ID, 'Testuser01'),
+
+'PROFILE_PHONENUMBER': (AppiumBy.ACCESSIBILITY_ID, '+917777777777'),
+
+'HOME_TAB': (AppiumBy.ACCESSIBILITY_ID, 'ic-bottom-tab-home'),
+
+
 }
 class SwitchScreenIos(BasePage):
 
     def click_business_model_dropdown(self):
-        time.sleep(3)  # Consider replacing with explicit waits for better reliability
+        time.sleep(1)  # Consider replacing with explicit waits for better reliability
         print("Clicking on MCDELIVERY icon...")
         if self.actions.is_element_displayed(*locators['MCDELIVERY_ICON']):
             self.actions.click_button(*locators['MCDELIVERY_ICON'])
@@ -84,3 +107,71 @@ class SwitchScreenIos(BasePage):
             print("Location permission prompt is displayed.")
         else:
             raise AssertionError("Location permission prompt was not displayed.")
+
+    def enter_unsupported_address(self):
+        time.sleep(2)  
+        self.actions.send_keys(*locators['FLAT_NO'], "Gurugram Sector 99")
+        self.actions.send_keys(*locators['FLOOR'], "3rd Floor")
+        
+    def verify_service_unavailable_message(self):
+        if self.actions.is_element_displayed(*locators["SERVICE_UNAVAILABLE_MESSAGE"]):
+            print("Service not available message is correctly displayed.")
+        else:
+            raise AssertionError("Service not available message was not displayed.")
+
+
+    def verify_dine_in_restaurant_listings(self):
+        self.actions.click_button(*locators["SEARCH_AREA"])
+        self.actions.click_button(*locators["CURRENT_LOCATION_DINE"])
+        self.actions.is_element_displayed(*locators["RESTAURANTS_AVAILABILITY"])
+           
+
+    def verify_visual_feedback_on_model_options(self):
+        visual_feedback_elements = [
+            locators["MCDELIVERY_ICON"],
+            locators["DINEIN_ICON"],
+            locators["ONTHEGO_ICON"],
+            locators["TAKEAWAY_ICON"]
+        ]
+
+        for element in visual_feedback_elements:
+            if self.actions.is_element_displayed(*element):
+                print(f"Visual feedback displayed for: {element}")
+            else:
+                raise AssertionError(f"Visual feedback not displayed for: {element}")
+
+
+    def note_profile_details(self):
+        self.actions.click_button(*locators["PROFILE_TAB"])
+        time.sleep(2) 
+        name = self.actions.get_text(*locators["PROFILE_NAME"])
+        phonenumber = self.actions.get_text(*locators["PROFILE_PHONENUMBER"])
+        self.profile_snapshot = {
+            "name": name,
+            "phonenumber": phonenumber
+        }
+        print(f"Captured profile details: Name = {name}, Email = {phonenumber}")
+
+    def click_homepage(self):
+        self.actions.click_button(*locators["HOME_TAB"])
+        print("Clicked on the homepage tab.")
+
+
+    def select_mc_delivery(self):
+        print("Selecting McDelivery...")
+        if self.actions.is_element_displayed(*locators["MCDELIVERY_ICON_DISABLED"]):
+            self.actions.click_button(*locators["MCDELIVERY_ICON_DISABLED"])
+            print("Clicked McDelivery icon.")
+        else:
+            raise AssertionError("McDelivery icon not found on screen.")
+
+    def verify_profile_details_unchanged(self):
+        self.actions.click_button(*locators["PROFILE_TAB"])
+        assert self.actions.is_element_displayed(*locators["PROFILE_NAME"]), "Profile name is not displayed."
+        assert self.actions.is_element_displayed(*locators["PROFILE_PHONENUMBER"]), "Profile phone number is not displayed."
+        print(" Verified that the profile details are displayed and unchanged.")
+
+    
+    
+        
+        

@@ -6,6 +6,7 @@ from pages.mobile.login_screen_ios import LoginScreenIos
 from pages.mobile.profile_screen_ios import ProfileScreenIos
 from pages.mobile.address_screen_ios import AddressScreenIos
 from pages.mobile.switching_screen_ios import SwitchScreenIos
+from pages.mobile.address_store_screen_ios import AddressStoreScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -545,3 +546,54 @@ def step_select_on_the_go(setup_platform):
 @allure.step("Then I verify that the location permission prompt is displayed")
 def step_verify_location_permission_prompt_displayed(setup_platform):
     SwitchScreenIos(setup_platform).verify_location_permission_prompt()
+
+@when("I enter unsupported address details")
+@allure.step("And I enter unsupported address details")
+def step_enter_unsupported_address_details(setup_platform):
+    SwitchScreenIos(setup_platform).enter_unsupported_address()
+
+@then('I verify that the message Service not available in your area is displayed')
+@allure.step('Then I verify that the message "Service not available in your area" is displayed')
+def step_verify_service_unavailable_message(setup_platform):
+    SwitchScreenIos(setup_platform).verify_service_unavailable_message()
+
+@then("I verify that only restaurants with Dine-In availability are displayed")
+@allure.step("Then I verify that only restaurants with Dine-In availability are displayed")
+def step_verify_dine_in_restaurants_displayed(setup_platform):
+    SwitchScreenIos(setup_platform).verify_dine_in_restaurant_listings()
+
+@then("I verify that each option provides visual feedback highlight, underline, or bold")
+@allure.step("Then I verify that each option provides visual feedback highlight, underline, or bold")
+def step_verify_visual_feedback_on_model_options(setup_platform):
+    SwitchScreenIos(setup_platform).verify_visual_feedback_on_model_options()
+
+@then("I open the Profile section and note the profile details")
+@allure.step("When I open the Profile section and note the profile details")
+def step_open_profile_and_note_details(setup_platform):
+    SwitchScreenIos(setup_platform).note_profile_details()
+
+@then("I click on the homepage")
+@allure.step("When I click on the homepage")
+def step_click_on_homepage(setup_platform):
+    SwitchScreenIos(setup_platform).click_homepage()
+
+@then("I verify that the profile details remain unchanged")
+@allure.step("Then I verify that the profile details remain unchanged")
+def step_verify_profile_details_unchanged(setup_platform):
+    SwitchScreenIos(setup_platform).verify_profile_details_unchanged()
+
+@then("I select the MCDelivery")
+@allure.step("And I select the MCDelivery")
+def step_select_mc_delivery(setup_platform):
+    SwitchScreenIos(setup_platform).select_mc_delivery()
+
+@when("I select an existing address from the saved list")
+@allure.step("And I select an existing address from the saved list")
+def step_select_existing_address(setup_platform):
+    AddressStoreScreenIos(setup_platform).select_existing_address_from_saved_list()
+
+@then("I verify that the selected address is applied")
+@allure.step("Then I verify that the selected address is applied")
+def step_verify_selected_address_applied(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_selected_address_applied()
+
