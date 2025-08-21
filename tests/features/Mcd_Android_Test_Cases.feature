@@ -584,7 +584,23 @@ Scenario: verify clicking cancel button before saving address
     Then  I verify address will not get saved
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
-  
+
+@TC_Android_Address_Login_13
+Scenario: Verify max character limit for address fields
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    Then  I verify view screen navigation
+    When  I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I click on add new button and click confirm location
+    And   I enter text exceeding the max character limit in address fields and click save address
+    Then  I verify address accept max characters and get saved
+
 
 @TC_Android_Address_Login_15
 Scenario: verify adding duplicate address
@@ -604,7 +620,7 @@ Scenario: verify adding duplicate address
     When  I click on add address in home screen
     Then  I verify System allows address duplication based on business logic
     When  I click on MyMcD hamburger icon
-    #Then  I click on Log out button
+    Then  I click on Log out button
 
 
 @TC_Android_BM_001
@@ -689,6 +705,15 @@ Scenario: Check location permission prompt for “On the Go” or “Dine-In”
     When   I select 'On the Go' without granting location access
     Then   I verify a prompt should appear requesting location permission
 
+@TC_Android_BM_014
+Scenario: Validate no restaurant available for selected model
+    Given  I launch the native app
+    Then   I verify the app should be launched
+    And    I verify home screen navigation
+    When   I select Dine-In option
+    And    I search the address from searchbar after selecting BM model
+    Then   I should see the message: “Sorry, we do not serve this location yet”
+
 @TC_Android_BM_015
 Scenario: Ensure no multiple model selection at once
     Given  I launch the native app
@@ -706,24 +731,171 @@ Scenario: Test visual feedback on tap for mobile
     When   I hover over each business model option
     Then   I verify the icons and text should respond visually
 
-@TC_BM_021
+@TC_Android_BM_021
 Scenario: Verify Switching models does not alter profile information
     Given I launch the native app
     Then  I verify the app should be launched
     And   I verify home screen navigation
     When  I click on MyMcD hamburger icon
-    Then  I verify view screen navigation
-    When  I click on login or signup button
-    Then  I verify login screen navigation
-    When  I enter a valid mobile number and click mobile verify
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
     And   I enter the OTP and click verify
     And   I click save changes on profile details page
     Then  I verify home screen navigation
     When  I click on MyMcD hamburger icon
     Then  I verify the user notes their current profile information
     When  I verify user switches from one model to another
-    And   I verify user navigates to the profile page
+    And   I click on MyMcD hamburger icon
     Then  I verify the profile information should remain unchanged
-    
+
+@TC_Android_BM_022
+Scenario: Verify Switching between models updates the UI layout appropriately
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    And   I select the McDelivery option
+    Then  I verify the page layout or menu should adapt to match the McDelivery model
+    When  I select Dine-In option
+    Then  I verify the page layout or menu should adapt to match the Dine-In model
+    When  I select on the go option
+    Then  I verify the page layout or menu should adapt to match the on the go model
+    When  I select Take Away option
+    Then  I verify the page layout or menu should adapt to match the Take Away model
+    When  I click on MyMcD hamburger icon
+    #Then I click on Logout button
+
+@TC_Android_AD_001
+Scenario: verify selecting existing delivery address
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I user click on a listed address
+    Then  I verify the address is selected and restaurant list should update accordingly
+    #When  I click on MyMcD hamburger icon
+    #Then  I click on Log out button
+
+@TC_Android_AD_002
+Scenario: Verify adding a new delivery address
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    Then  I verify 'Add new' button is displayed to add address
+    When  I click on add new button and click confirm location
+    Then  I verify user redirected to address fill in details page
+    When  I add new delivery address
+    Then  I verify address is added and selected
+    #When  I click on MyMcD hamburger icon
+    #Then  I click on Log out button
+
+@TC_Android_AD_003
+Scenario: Verify editing an existing address
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I click the edit icon next to an address
+    And   I modifies the address details and click save button
+    And   I click on add address in home screen
+    Then  I verify updated address is shown in the address list
+
+@TC_Android_AD_004
+Scenario: Verify deleting an existing address
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I verify address list shown
+    And   I click the delete icon next to an address
+    Then  I verify address removed from list
+
+@TC_Android_AD_006
+Scenario: Validate empty address cannot be saved
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    Then  I verify 'Add new' button is displayed to add address
+    When  I click on add new button and click confirm location
+    And   I leave mandatory field empty and click save address
+    Then  I verify that the address not saved and validation error should be displayed
+
+@TC_Android_AD_007
+Scenario: Verify "Near" location shown under each address
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I verify address list displayed
+    Then  I verify each address should display a Near label with its location description
+
+@TC_Android_AD_008
+Scenario: Ensure scroll functionality works if many addresses are saved
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I verify address list displayed
+    Then  I verify all saved addresses should be accessible via scrolling
+
+@TC_Android_AD_012
+Scenario: Ensure “Add New” opens address entry popup or page
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    Then  I verify 'Add new' button is displayed to add address
+    When  I click on add new button and click confirm location
+    Then  I verify user redirected to address fill in details page
+
+
+
 
     

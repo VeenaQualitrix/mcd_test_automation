@@ -12,6 +12,7 @@ from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
 from selenium.webdriver.common.actions.interaction import Interaction
 from selenium.webdriver.common.actions.interaction import KEY
+from selenium.common.exceptions import NoSuchElementException
 from conftest import readConstants
 
 
@@ -414,5 +415,8 @@ class AndroidActions(ActionsParent):
         actions.pointer_action.pointer_down()
         actions.pointer_action.pause(hold_duration_ms / 1000)  # pause takes seconds
         actions.pointer_action.pointer_up()
+
+
+    
 
     

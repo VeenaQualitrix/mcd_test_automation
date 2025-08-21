@@ -172,6 +172,7 @@ class AndroidLoginScreen(BasePage):
                 #self.click_verify_mobile()
                 # ✅ Since we're in the same class, this works
                 self.hide_keyboard_by_tapping_outside()
+                self.driver.tap([(100, 100)]) 
 
                 print("Entered referral code and clicked verify")
             else:

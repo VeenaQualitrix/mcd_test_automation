@@ -9,6 +9,8 @@ import allure
 from bs4 import BeautifulSoup
 import psutil
 import pytest
+from appium import webdriver as androidDriver
+from appium.webdriver import Remote as AppiumRemote
 from appium import webdriver as appiumDriver
 from selenium import webdriver
 from appium.webdriver.appium_service import AppiumService
@@ -26,14 +28,18 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 from selenium import webdriver as browserDriver
+from appium import webdriver as androidDriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 import os
 from pathlib import Path
 import time
+import pandas as pd
 import zipfile
 import signal
 
@@ -104,14 +110,16 @@ def get_admin_server(request):
     server_value = request.config.getoption("--qaserver")
     admin_server_url = readConstants("admin_app_url")
     print('admin_server_url===', admin_server_url.format(server_value))
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-    browserDriver = launchChromeBrowser()
+    # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    # browserDriver = launchChromeBrowser()
     browserDriver = launchChromeheadless()
     print("launch portal")
     browserDriver.get(admin_server_url.format(server_value))
     browserDriver.save_screenshot("headless_mode_test.png")
     yield browserDriver
     # browserDriver.close
+
+
 
 
 def load_capabilities(config_name):
@@ -143,6 +151,16 @@ def readPreReqJson(prereqFileName, constant_key):
         costant_value = json.load(constant_file)
     return costant_value.get(constant_key)
 
+def readExcelColumn(excel_file_name, sheet_name=0, column_name="Product Name"):
+    # Get project root and construct the full path to the Excel file
+    project_root = os.getcwd()
+    excel_file_path = os.path.join(project_root, 'util', excel_file_name + '.xlsx')
+
+    # Read Excel file using pandas
+    df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
+
+    # Return non-empty values from the specified column as a list
+    return df[column_name].dropna().tolist()
 
 def start_appium_service_with_retry(port=4723, retries=3, delay=5):
     appium_service = AppiumService()
@@ -183,7 +201,20 @@ def kill_process_on_port(port):
     except Exception as e:
         print(f"Error killing process on port {port}: {e}")
 
-@pytest.fixture(scope="class", autouse=False)
+
+def kill_process_on_port(port):
+    try:
+        # Use lsof to find the PID and kill it
+        result = os.popen(f"lsof -ti:{port}").read().strip()
+        if result:
+            print(f"Killing process with PID: {result} on port {port}.")
+            os.system(f"kill -9 {result}")
+        else:
+            print(f"No process found running on port {port}.")
+    except Exception as e:
+        print(f"Error killing process on port {port}: {e}")
+
+@pytest.fixture(scope="module", autouse=False)
 def setup_platform(env, request):
     driver = None
     """
@@ -204,13 +235,14 @@ def setup_platform(env, request):
         print("Inside android")
         appium_service = AppiumService()
         appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
+        appium_service.start()
         if not appium_service.is_running:
             raise Exception("Appium server did not start!")
 
         capabilities = load_capabilities(currentPlatform)
-        appPath = os.path.abspath(os.getcwd())
+        #appPath = os.path.abspath(os.getcwd())
        
-        capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
+       # capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
         print('capabilities to load', capabilities)
         
         options = UiAutomator2Options().load_capabilities(capabilities)
@@ -219,19 +251,17 @@ def setup_platform(env, request):
         # capabilities_options = UiAutomator2Options().load_capabilities(capabilities)
         try:
             print("am i relunching app?=============================")
-            driver = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
+            driver = androidDriver.Remote("http://127.0.0.1:4723", options=options)
+            #driver = AppiumRemote("http://127.0.0.1:4723", options=options)
             print(" firetv driver started=====")
             print(" firetv driver started=  driver type ====", type(driver))
             driver.terminate_app(readConstants("current_app_package"))
             time.sleep(2)
-            driver.close
+            driver.close()
             # Launch (activate) the app again
             driver.activate_app(readConstants("current_app_package"))
             
             driver.implicitly_wait(10)
-        except Exception as e:
-            print("firetv appluanch error ===", e)
-    
         except Exception as e:
             print("firetv appluanch error ===", e)
 
@@ -279,12 +309,12 @@ def setup_platform(env, request):
             driver.execute_script('mobile: activateApp', {'bundleId': bundleId})
         except Exception as e:
             print("iOS appluanch error ===", e)
-        
+
     if driver:
         print('yeidling driver instance condition')
         yield driver
         print('after yielding driver')
-        if isinstance(driver, appiumDriver.Remote):
+        if isinstance(driver, androidDriver.Remote):
             print('Inside tear down')
             # driver.quit()
             if currentPlatform == 'ios':
@@ -319,16 +349,8 @@ def pytest_runtest_makereport(item, call):
             print("coming to take screenshot for failure")
             if isinstance(driver, webdriver):
                 screenshot = driver.get_screenshot_as_png()
-                print("secnario is failed so trying to kill app and relaunch ", readConstants("current_app_package"))
-                # driver.terminate_app(readConstants("current_app_package"))
-                try:
-                    # Attempt to terminate using Appium
-                    driver_status = driver.terminate_app(readConstants("current_app_package"))
-                    print(f"status of the driver is: ======================= {driver_status}")
-                except Exception as e:
-                    print(f"Appium terminate_app failed: {e}. Trying force stop.")
-                    # Fallback to ADB force stop
-                    os.system(f"adb shell am force-stop {readConstants('current_app_package')}")
+                print("secnario is failed so trying to kill app and relaunch " ,readConstants("current_app_package"))
+                driver.terminate_app(readConstants("current_app_package"))
                 time.sleep(2)
                 print("app killed====lets relaunch")
                 driver.activate_app(readConstants("current_app_package"))
@@ -339,8 +361,6 @@ def pytest_runtest_makereport(item, call):
                 print("its roku report")    
 
         # Make sure the setup_platform fixture is called
-
-        
         mode = 'a' if os.path.exists('failures') else 'w'
         try:
             with open('failures', mode) as f:
@@ -365,42 +385,6 @@ consecutive_failure_count = 5
 consecutive_failures = 0
 
 
-def pytest_configure(config):
-    global consecutive_failure_abort, consecutive_failure_count
-    consecutive_failure_abort = config.getoption("--consecutive_failure_abort")
-    print("Consecutive failure value", consecutive_failure_abort, type(consecutive_failure_abort))
-    if config.getoption("--consecutive_failure_count"):
-        consecutive_failure_count = int(config.getoption("--consecutive_failure_count"))
-
-    app_file = config.getoption("--appFileName")
-    app_package_name = config.getoption("--app_package_name")
-    current_platform = config.getoption("--platform")
-    webDriverAgentUrl = config.getoption("--webDriverAgentUrl")
-    # if not app_file and current_platform == "android":
-    #     raise pytest.UsageError("--appFileName is required")
-
-    # if not app_package_name and current_platform == "android":
-    #     raise pytest.UsageError("--app_package_name is required")
-
-    # if not webDriverAgentUrl and current_platform == "ios":
-        # raise pytest.UsageError("--webDriverAgentUrl is required")
-
-    #isScreenshoreRequired = config.getoption("--screenShotToggle")
-
-    # project_root = os.getcwd()
-    # constants_path = os.path.join(project_root, 'utils', 'constants.json')
-    # with open(constants_path) as constant_file:
-    #     costant_value = json.load(constant_file)
-    # costant_value["current_app_package"] = app_package_name
-    # print("reading from cons for screenshot ===", costant_value["NEED_SCREENSHOTS_FOR_PASS"])
-    # print("reading run tim e setup screenshot ===", isScreenshoreRequired)
-    # costant_value["NEED_SCREENSHOTS_FOR_PASS"] = isScreenshoreRequired
-    # print("reading from cons for screenshot after update ===", costant_value["NEED_SCREENSHOTS_FOR_PASS"])
-
-    # print("final value for screenshot ===", costant_value["NEED_SCREENSHOTS_FOR_PASS"])
-
-    # with open(constants_path, "w") as constant_file:
-    #     json.dump(costant_value, constant_file, indent=4)
 
 
 def pytest_runtest_logreport(report):
@@ -428,22 +412,18 @@ def updateConstantFile(contantKey, ConstantValue):
     costant_value[contantKey] = ConstantValue
     with open(constants_path, "w") as constant_file:
         json.dump(costant_value, constant_file, indent=4) 
+
+@pytest.fixture
+def user_data_store():
+    """Fixture to store user input temporarily across steps."""
+    return {}
+
+@pytest.fixture
+def context():
+    return {}
+
+
+
+
     
 
-@pytest.fixture(scope="session", autouse=False)
-def mobile_driver():
-
-    desired_caps = {
-        "platformName": "iOS",
-        "platformVersion": "18.5",
-        "deviceName": "Sunil's iPhone",
-        "automationName": "XCUITest",
-        "appPackage": "com.il.mcd",
-        "appActivity": "com.mcdonalds.mobileapp/.MainActivity",
-        "noReset": False,
-        "fullReset": False
-    }
-    appium_service = AppiumService()
-    appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
-    if not appium_service.is_running:
-        raise Exception("Appium server did not start!") 

@@ -1,6 +1,7 @@
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
@@ -25,11 +26,18 @@ locators = {
         "ALL_ADDRESS" : (AppiumBy.XPATH, "//android.widget.TextView[@text='All Addresses']"),
         "CLICK_BACK_BUTTON" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-arrow-left-primary'])[2]"),
         "CLICK_BACK_BUTTON_FROM_SELECT_LOCATION" : (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
+        "ADDRESS_EDIT_ICON" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-edit'])[1]"),
+        "ADDRESS_DELETE_ICON" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-delete'])[1]"),
+        "DELETE_POP_UP" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Delete Address']"),
+        "CLICK_YES_BUTTON" : (AppiumBy.XPATH, "//android.widget.Button[@text='YES']"),
+        "NEAR_LABEL" : (AppiumBy.XPATH, "//android.view.View[@text='Near :']"),
+        "NEAR_LABEL_LAST_ADDRESS" : (AppiumBy.XPATH, "(//android.view.View[@text='Near : '])[2]"),
+        "ADDRESS_SAVED_WITH_MAX_CHAR" : (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'AAAAAAA')]"),
+
 
 }
 
 class AndroidAddressScreen(BasePage):
-
 
     def hide_keyboard_by_tapping_outside(self):
         try:
@@ -82,6 +90,23 @@ class AndroidAddressScreen(BasePage):
         self.actions.is_element_displayed(*locators['FIRST_ADDRESS'])
         self.actions.click_button(*locators['FIRST_ADDRESS'])
         print("First address clicked.")
+
+    def search_for_address_after_selecting_Dine_In_model(self):
+        time.sleep(2)
+        self.actions.click_button(*locators['SEARCH_BUTTON'])
+        time.sleep(2)
+        self.actions.click_button(*locators['SEARCH_INPUT_FIELD'])
+        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Gurugram")
+        self.driver.press_keycode(66)  # KEYCODE_ENTER
+        time.sleep(5)
+        # Click the suggested address
+        select_address_locator = (
+            locators['SELECT_ADDRESS'][0],
+            locators['SELECT_ADDRESS'][1].format("Gurugram")
+        )
+        self.actions.is_element_displayed(*select_address_locator)
+        self.actions.click_button(*select_address_locator)
+        print("Suggested address clicked.")
         
 
     def verify_selected_address_is_displayed(self):
@@ -109,7 +134,7 @@ class AndroidAddressScreen(BasePage):
             raise AssertionError(f"Validation failed: Selected delivery address did not appear. Details: {e}")
         
     def Click_add_new_button_and_confirm_location(self):
-        time.sleep(5)
+        time.sleep(1)
         self.actions.is_element_displayed(*locators['ADD_NEW'])
         self.actions.click_button(*locators['ADD_NEW'])
         time.sleep(2)
@@ -121,34 +146,77 @@ class AndroidAddressScreen(BasePage):
         time.sleep(2)
         return self.actions.is_element_displayed(*locators['ADDRESS_SCREEN_HEADER'])
     
+    def _scroll_bottom_sheet_until_text(self, text, max_scrolls=8):
+        """
+        Scrolls *inside the bottom-sheet/inner ScrollView* until an element
+        containing the given text is visible, then returns it.
+        """
+        # Try to grab the first scrollable container (the inner ScrollView/RecyclerView)
+        container = None
+        try:
+            container = self.driver.find_element(
+                AppiumBy.ANDROID_UIAUTOMATOR,
+                'new UiSelector().scrollable(true).instance(0)'
+            )
+        except Exception:
+            pass
+
+        for _ in range(max_scrolls):
+            # Is the target visible now?
+            try:
+                el = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'new UiSelector().textContains("{text}")'
+                )
+                if el.is_displayed():
+                    return el
+            except Exception:
+                pass
+
+            # Scroll *inside* the container if we found one, else do a screen swipe
+            if container:
+                self.driver.execute_script("mobile: scrollGesture", {
+                    "elementId": container.id,
+                    "direction": "down",
+                    "percent": 0.9
+                })
+            else:
+                size = self.driver.get_window_size()
+                self.driver.swipe(
+                    size['width'] * 0.5, size['height'] * 0.8,
+                    size['width'] * 0.5, size['height'] * 0.3, 400
+                )
+
+        raise NoSuchElementException(f'Could not find "{text}" after scrolling.')
+          
     def add_new_delivery_address(self):
         time.sleep(2)
         self.actions.is_element_displayed(*locators['HOUSE_NUMBER'])
         self.actions.click_button(*locators["HOUSE_NUMBER"])
         print("Clicked on house textfield")
-        time.sleep(2)
+        time.sleep(1)
         self.actions.enter_text(*locators['HOUSE_NUMBER'], "Marathahalli village, HAL Airport road")
-        time.sleep(2)
-        self.driver.tap([(100, 100)]) 
-        self.actions.click_button(*locators["SAVE_ADDRESS"])
+        time.sleep(1)
+        # Use the scroll helper from AndroidActions
+        save_btn = self._scroll_bottom_sheet_until_text("Save Address")
+        save_btn.click()
+        print("Clicked on Save Address")
 
     def verify_address_is_added_and_selected(self):
         time.sleep(2)
         locator_strategy, locator_pattern = locators['ADDRESS_SELECTED']
         dynamic_locator = (locator_strategy, locator_pattern.format("Marathahalli village, HAL Airport road"))
         return self.actions.is_element_displayed(*dynamic_locator)
-        
-    
+          
     def verify_leave_address_mandatory_field_empty(self):
         time.sleep(2)
         self.actions.is_element_displayed(*locators['HOUSE_NUMBER'])
         self.actions.click_button(*locators['HOUSE_NUMBER'])
-        time.sleep(2)
-        try:
-            self.driver.hide_keyboard()
-        except Exception:
-            print("Keyboard was not present or could not be hidden.")
-        self.actions.click_button(*locators['SAVE_ADDRESS'])
+        time.sleep(1)
+        # Use the scroll helper from AndroidActions
+        save_btn = self._scroll_bottom_sheet_until_text("Save Address")
+        save_btn.click()
+        print("Clicked on Save Address")
        
     def verify_address_mandatory_field_empty_error(self):
         time.sleep(2)
@@ -237,6 +305,123 @@ class AndroidAddressScreen(BasePage):
         self.actions.is_element_displayed(*locators['FIRST_ADDRESS'])
         self.actions.click_button(*locators['FIRST_ADDRESS'])
         print("First address clicked.")
+
+    def Click_from_listed_address(self):
+        WebDriverWait(self.driver, 10).until(
+             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Marathahalli village, HAL Airport road"))
+        print("Address from list clicked")
+
+       
+    def click_address_edit_icon(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ADDRESS_EDIT_ICON'])
+        self.actions.click_button(*locators['ADDRESS_EDIT_ICON'])
+        print("Edit icon clicked")
+
+    def modify_existing_address_and_click_save(self, updated_house_name):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['HOUSE_NUMBER'])
+        self.actions.enter_text(*locators["HOUSE_NUMBER"], updated_house_name)
+        time.sleep(2)
+        save_btn = self._scroll_bottom_sheet_until_text("Save Address")
+        save_btn.click()
+        print("Clicked on Save Address")
+        time.sleep(1)
+        print(f"Entered updated house/flat value: '{updated_house_name}' and clicked save button")
+
+    def verify_updated_address_display_in_address_list(self, expected_partial_text):
+        time.sleep(2)
+        # Fetch all address elements
+        all_address_elements = self.driver.find_elements(*locators["ALL_ADDRESS"])
+        # Extract text and normalize for comparison
+        all_addresses = [addr.text.strip().lower() for addr in all_address_elements]
+        print("Addresses found on screen:", all_addresses)
+        # Check if expected text is present in any address
+        is_present = any(expected_partial_text.lower() in address for address in all_addresses)
+
+        assert is_present, f"Expected address '{expected_partial_text}' not found in the All Address section."
+        print(f"Verified: '{expected_partial_text}' is present in All Address section.")
+
+    def enter_text_exceeding_max_limit(self):
+        time.sleep(2)
+        long_text = "A" * 301
+        element = self.driver.find_element(*locators['HOUSE_NUMBER'])
+        element.clear()
+        element.send_keys(long_text)
+        print("Entered 301 characters into address field.")
+        time.sleep(2)
+        save_btn = self._scroll_bottom_sheet_until_text("Save Address")
+        save_btn.click()
+        print("Clicked on Save Address")
+
+    def verify_field_accept_maximum_char_and_address_saved(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['ADDRESS_SAVED_WITH_MAX_CHAR'])
+
+    def Verify_address_shown_in_list_before_deletion(self, user_data_store):
+        time.sleep(2)
+        address_element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((
+                    locators['ADDRESS_SELECTED'][0],
+                    locators['ADDRESS_SELECTED'][1].format("Marathahalli village, HAL Airport road"))))
+        address_title = address_element.text.strip()
+        user_data_store["original_address"] = address_title
+        print("Captured address name before deletion:", address_title)
+        return address_title
+
+    def click_address_delete_icon(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ADDRESS_DELETE_ICON'])
+        self.actions.click_button(*locators['ADDRESS_DELETE_ICON'])
+        print("Delete icon clicked")
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['DELETE_POP_UP'])
+        self.actions.click_button(*locators['CLICK_YES_BUTTON'])
+        print("Clicked on YES option on address delete pop up")
+
+    def Verify_address_removed_from_list_after_deletion(self, user_data_store):
+        time.sleep(2)
+        deleted_address_name = user_data_store.get("original_address") 
+        print(f"Validating deleted address: '{deleted_address_name}'")
+
+        all_address_elements = self.driver.find_elements(*locators["ALL_ADDRESS"])
+        all_titles = [el.text.strip() for el in all_address_elements]
+        print("Remaining address titles after deletion:", all_titles)
+
+        assert deleted_address_name not in all_titles, f"'{deleted_address_name}' is still visible after deletion!"
+        self.driver.back()
+
+    def verify_address_list(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['ALL_ADDRESS'])
+    
+    def verify_near_label_visible_in_address_description(self):
+        time.sleep(2)
+        near_elements = self.driver.find_elements(*locators['NEAR_LABEL'])
+        for el in near_elements:
+            print(el.text)
+        self.driver.back()
+
+    def All_addresses_accessible_via_scrolling(self):
+        try:
+            # Use UiScrollable to bring last address into view
+            last_address_element = self.driver.find_element(
+                AppiumBy.ANDROID_UIAUTOMATOR,
+                'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView('
+                'new UiSelector().textContains("Marathahalli"))'
+            )
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of(last_address_element)
+            )
+            print(" Scrolled to access the last address")
+            return last_address_element
+
+        except Exception as e:
+            print(" Failed to scroll to last address:", str(e))
+            raise
+    
 
     
 

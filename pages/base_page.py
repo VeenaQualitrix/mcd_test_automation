@@ -26,20 +26,25 @@ class BasePage:
                 self.actions = WebAppActions(driver)
 
 
-    
+    '''
     def launch_application(self, appURL):
         if appURL:
             self.actions.launch_browser_url(appURL)
             print("Opened McD Website")
         else:
             self.actions.launch_app()
-            print("Opened McD App")   
+            print("Opened McD App")  
+            '''
 
-    
+    def launch_application(self):
+        self.actions.launch_app()
+        print("Opened McD App")
+
+
     def open_mcd_website(self):
         url = readConstants("APP_URL")
         self.actions.launch_browser_url(url)
-        self.driver.maximize_window() 
+        self.driver.maximize_window()
         print("Opened McD Website")
 
 

@@ -39,6 +39,7 @@ locators = {
         "DINE_IN_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-dine-in']"),
         "ON_THE_GO_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-otg']"),
         "TAKE_AWAY_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-delivery']"),
+        "TOAST_MESSAGE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Sorry, we do not serve this location yet']"),
 
          }
 
@@ -182,6 +183,30 @@ class AndroidHomeScreen(BasePage):
         print("On the Go text is displayed with icon")
         self.actions.is_element_displayed(*locators['TAKE_AWAY_ICON'])
         print("Take Away text is displayed with icon")
+
+    def verify_switching_from_one_model_to_another(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['DINE_IN_OPTION'])
+        self.actions.click_button(*locators['DINE_IN_OPTION'])
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MCDELIVERY_OPTION'])
+        self.actions.click_button(*locators['MCDELIVERY_OPTION'])
+
+    def show_toast(self):
+        try:
+            toast = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(locators['TOAST_MESSAGE'])
+            )
+            web_toast_message = toast.get_attribute("text").strip()
+            expected_message = "Sorry, we do not serve this location yet"
+
+            if web_toast_message == expected_message:
+                print("Toast message matches.")
+            else:
+                print(f"Toast message not matched: '{web_toast_message}'")
+
+        except Exception as e:
+            print(f"Toast message not found: {e}")
 
 
     

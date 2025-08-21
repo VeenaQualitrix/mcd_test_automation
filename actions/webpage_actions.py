@@ -2,6 +2,7 @@ import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
 
 
 class WebAppActions:
@@ -157,4 +158,31 @@ class WebAppActions:
             isElementStatus = element.is_displayed()
             return isElementStatus
         except TimeoutException:
+            return False
+        
+    def is_date_selectable(self, day, month, year):
+        """
+        Check if the date button for given day/month/year is enabled (not disabled).
+        Args:
+            day (int or str): Day of the month (e.g., 26)
+            month (int or str): Month number (1-12)
+            year (int or str): Year (e.g., 2025)
+        Returns:
+            bool: True if date is selectable (enabled), False if disabled or not found.
+        """
+        day = str(int(day))
+        month = str(int(month))
+        year = str(year)
+
+        try:
+            date_button = self.driver.find_element(
+                By.CSS_SELECTOR,
+                f'button.calendar-day[data-day="{day}"][data-month="{month}"][data-year="{year}"]'
+            )
+            # Check if 'disabled' attribute is present
+            is_disabled = date_button.get_attribute("disabled")
+            return not bool(is_disabled)  # True if no disabled attribute, else False
+
+        except NoSuchElementException:
+            # The date button was not found in the calendar
             return False

@@ -1,5 +1,9 @@
 from pytest_bdd.parsers import parse
 from pytest_bdd import given, when, then, scenarios
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+
 from pages.base_page import BasePage
 from pages.android_home_screen import AndroidHomeScreen
 from pages.android_login_screen import AndroidLoginScreen
@@ -15,12 +19,10 @@ import time
 scenarios('../features/Mcd_Android_Test_Cases.feature')
 
 
-@given("I launch the native app")
-@allure.step('I launch the native appL')
-def launch_native_app(setup_platform):
+@given("I launch the native app") 
+@allure.step('I launch the native appL') 
+def launch_native_app(setup_platform): 
     BasePage(setup_platform).launch_application()
-    print("Native app launched via Appium session start")
-    # No need to call driver.get()
 '''
 def wait_for_activity(driver, expected_activity, timeout=10):
     for _ in range(timeout):
@@ -784,25 +786,140 @@ def verify_icons_and_text_repond_visually(setup_platform):
 @allure.step("Then I verify the user notes their current profile information")
 def verify_current_profile_info(setup_platform, user_data_store):
     print("Verifying the user notes their current profile information")
-    ProfilePage(setup_platform).Verify_current_profile_info(user_data_store)
+    AndroidViewScreen(setup_platform).Verify_current_profile_info(user_data_store)
 
 @when("I verify user switches from one model to another")
 @allure.step("When I verify user switches from one model to another")
 def switch_between_business_model(setup_platform):
     print("Verify user switches from one model to another")
-    HomePage(setup_platform).verify_switching_from_one_model_to_another()
-
-@when("I verify user navigates to the profile page")
-@allure.step("When I verify user navigates to the profile page")
-def verify_user_navigates_to_profile_page(setup_platform):
-    print("verify user navigates to the profile page")
-    ProfilePage(setup_platform).verify_profile_page_navigation_after_switching_model()
+    AndroidHomeScreen(setup_platform).verify_switching_from_one_model_to_another()
 
 @then("I verify the profile information should remain unchanged")
 @allure.step("Then I verify the profile information should remain unchanged")
 def verify_icons_and_text_repond_visually(setup_platform, user_data_store):
     print("Verifying the profile information should remain unchanged")
-    ProfilePage(setup_platform).Verify_profile_info_remian_unchanged(user_data_store)
+    AndroidViewScreen(setup_platform).Verify_profile_info_remian_unchanged(user_data_store)
+
+@then("I verify the page layout or menu should adapt to match the McDelivery model")
+@allure.step("Then I verify the page layout or menu should adapt to match the McDelivery model")
+def verify_layout_of_Dine_In_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the McDelivery model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_McDelivery_ordering_flow()
+
+@then("I verify the page layout or menu should adapt to match the on the go model")
+@allure.step("Then I verify the page layout or menu should adapt to match the on the go model")
+def verify_layout_of_Take_away_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the on the go model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_On_the_go_pick_up_location_flow()
+
+@then("I verify the page layout or menu should adapt to match the Dine-In model")
+@allure.step("Then I verify the page layout or menu should adapt to match the Dine-In model")
+def verify_layout_of_On_the_go_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the Dine-In model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_Dine_In_location_flow()
+
+@then("I verify the page layout or menu should adapt to match the Take Away model")
+@allure.step("Then I verify the page layout or menu should adapt to match the Take Away model")
+def verify_layout_of_Mcdelivery_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the Take Away model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_take_away_location_flow()
+
+@when("I search the address from searchbar after selecting BM model")
+@allure.step("When I search the address from searchbar after selecting BM model")
+def search_address_after_selecting_BM_model(setup_platform):
+    print("search the address from searchbar after selecting BM model")
+    AndroidAddressScreen(setup_platform).search_for_address_after_selecting_Dine_In_model()
+
+@then("I should see the message: “Sorry, we do not serve this location yet”")
+@allure.step("Then I should see the message: “Sorry, we do not serve this location yet”")
+def verify_toast_appear_for_unsupported_location(setup_platform):
+    print("Verifying the message: “Sorry, we do not serve this location yet”")
+    AndroidHomeScreen(setup_platform).show_toast()
+
+@when("I user click on a listed address")
+@allure.step("When I user click on a listed address")
+def click_on_listed_address(setup_platform):
+    print("user click on a listed address")
+    AndroidAddressScreen(setup_platform).Click_from_listed_address()
+
+@then("I verify the address is selected and restaurant list should update accordingly")
+@allure.step("Then I verify the address is selected and restaurant list should update accordingly")
+def verify_address_selected_restaurant_updated_accordingly(setup_platform):
+    print("Verifying the address is selected and restaurant list should update accordingly")
+    AndroidAddressScreen(setup_platform).verify_address_is_added_and_selected()
+
+@when("I click the edit icon next to an address")
+@allure.step("When I click the edit icon next to an address")
+def click_address_edit_icon(setup_platform):
+    print("click the edit icon next to an address")
+    AndroidAddressScreen(setup_platform).click_address_edit_icon()
+
+@when("I modifies the address details and click save button")
+@allure.step("When I modifies the address details and click save button")
+def modify_existing_address(setup_platform):
+    print("modifies the address details and click save button")
+    AndroidAddressScreen(setup_platform).modify_existing_address_and_click_save("123, Marathahalli")
+
+@then("I verify updated address is shown in the address list")
+@allure.step("Then I verify updated address is shown in the address list")
+def verify__updated_address_display_in_address_list(setup_platform):
+    print("Verifying updated address is shown in the address list")
+    AndroidAddressScreen(setup_platform).verify_updated_address_display_in_address_list("123, Marathahalli")
+
+@when("I enter text exceeding the max character limit in address fields and click save address")
+@allure.step("And I enter text exceeding the max character limit in address fields and click save address")
+def step_enter_text_exceeding_limit(setup_platform):
+    AndroidAddressScreen(setup_platform).enter_text_exceeding_max_limit()
+
+@then("I verify address accept max characters and get saved")
+@allure.step("Then I verify address accept max characters and get saved")
+def verify_address_accept_max_char(setup_platform):
+    print("verify address accept max characters and get saved")
+    Address_accept_max_char = AndroidAddressScreen(setup_platform).verify_field_accept_maximum_char_and_address_saved()
+    assert Address_accept_max_char, "Address does not accept maximum char and show validation error"
+
+@when("I verify address list shown")
+@allure.step("When I verify address list shown")
+def verify_address_list_shown(setup_platform, user_data_store):
+    print("verify address list shown")
+    AndroidAddressScreen(setup_platform).Verify_address_shown_in_list_before_deletion(user_data_store)
+
+@when("I click the delete icon next to an address")
+@allure.step("When I click the delete icon next to an address")
+def click_address_delete_icon(setup_platform):
+    print("click the delete icon next to an address")
+    AndroidAddressScreen(setup_platform).click_address_delete_icon()
+
+@then("I verify address removed from list")
+@allure.step("Then I verify address removed from list")
+def verify_address_removed_from_list(setup_platform, user_data_store):
+    print("Verifying address removed from list")
+    AndroidAddressScreen(setup_platform).Verify_address_removed_from_list_after_deletion(user_data_store)
+
+@when("I verify address list displayed")
+@allure.step("When I verify address list displayed")
+def verify_address_list(setup_platform):
+    print("verify address list displayed")
+    AndroidAddressScreen(setup_platform).verify_address_list()
+
+@then("I verify each address should display a Near label with its location description")
+@allure.step("Then I verify each address should display a Near label with its location description")
+def verify_address_removed_from_list(setup_platform):
+    print("Verifying each address should display a Near label with its location description")
+    AndroidAddressScreen(setup_platform).verify_near_label_visible_in_address_description()
+
+@when("I scrolls through the address list")
+@allure.step("When I scrolls through the address list")
+def scroll_address_list(setup_platform):
+    print("scrolls through the address list")
+    AndroidAddressScreen(setup_platform).scroll_to_bottom_of_element()
+
+@then("I verify all saved addresses should be accessible via scrolling")
+@allure.step("Then I verify all saved addresses should be accessible via scrolling")
+def verify__all_saved_address_accessible_via_scroll(setup_platform):
+    print("Verifying all saved addresses should be accessible via scrolling")
+    AndroidAddressScreen(setup_platform).All_addresses_accessible_via_scrolling()
+
 
 
     
