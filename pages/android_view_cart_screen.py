@@ -14,7 +14,9 @@ locators = {
         "VIEW_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='View Cart']"),
         "LOGIN_FROM_CHECKOUT_PAGE": (AppiumBy.XPATH, "//android.widget.Button[@text='Log In / Sign Up to Continue']"),
         "CANCEL_FROM_LOGIN_PROMPT": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-close']"),
-    
+        "PRODUCT_PRIZE_IN_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='{}']/following-sibling::android.widget.TextView"),
+        "ADDED_FRIES_DISPLAY": (AppiumBy.XPATH, "//android.widget.TextView[@text='Fries (Medium)']"),
+
 
          }
 
@@ -37,3 +39,17 @@ class AndroidViewCartScreen(BasePage):
     def verify_redirect_to_checkout_page(self):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['YOUR_ORDER'])
+    
+    def verify_product_price_is_displayed_correct_in_cart(self, product_name="Mexican Grilled Chicken & Cheese Burger + Fries (M)"):
+        time.sleep(2)
+        by, value = locators['PRODUCT_PRIZE_IN_CART']
+        cart_price_locator = (by, value.format(product_name))
+        cart_price_element = self.driver.find_element(*cart_price_locator)
+        cart_price = cart_price_element.text.strip().replace(" ", "")
+        print(f" Cart price for '{product_name}' is: {cart_price}")
+
+    def verify_fries_added_to_cart(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ADDED_FRIES_DISPLAY'])
+    
+    

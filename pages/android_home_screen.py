@@ -45,6 +45,7 @@ locators = {
         "HOME_PAGE_ADDRESS": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Home'])[1]"),
         "STORE_AVAILABLE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mantri Mall']"),
         "OPEN": (AppiumBy.XPATH, "//android.widget.TextView[@text='Open']"),
+        "MENU_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bottom-tab-menu']"),
 
          }
 
@@ -65,11 +66,18 @@ class AndroidHomeScreen(BasePage):
 
     
     def click_on_MyMcD_hamburger_icon(self):
-        time.sleep(5)
+        time.sleep(2)
         self.actions.is_element_displayed(*locators['HAMBURGER_ICON'])
         self.actions.click_button(*locators["HAMBURGER_ICON"])
-        time.sleep(5)
+        time.sleep(1)
         print("Clicked on MyMcD hamburger icon")
+
+    def click_on_Menu_icon(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MENU_ICON'])
+        self.actions.click_button(*locators["MENU_ICON"])
+        time.sleep(1)
+        print("Clicked on Menu icon")
 
     def verify_displays_of_all_business_model(self):
         time.sleep(5)
