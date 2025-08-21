@@ -451,3 +451,16 @@ class iOSActions(ActionsParent):
         element = self.driver.find_element(by, locator)
         element.clear() 
 
+    def send_keys(self, locator_strategy, locator, text):
+        element = self.driver.find_element(locator_strategy, locator)
+        element.clear()  # Optional: clear the field before typing
+        element.send_keys(text)
+
+
+    def scroll_down(self):
+        window_size = self.driver.get_window_size()
+        start_x = window_size["width"] / 2
+        start_y = window_size["height"] * 0.8
+        end_y = window_size["height"] * 0.2
+
+        self.driver.swipe(start_x, start_y, start_x, end_y, duration=800)

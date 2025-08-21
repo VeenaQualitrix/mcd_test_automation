@@ -23,8 +23,6 @@ scenarios('../features/Mcd_Android_Test_Cases.feature')
 @allure.step('I launch the native appL') 
 def launch_native_app(setup_platform): 
     BasePage(setup_platform).launch_application()
-
-    
 '''
 def wait_for_activity(driver, expected_activity, timeout=10):
     for _ in range(timeout):

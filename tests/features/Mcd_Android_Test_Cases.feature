@@ -600,7 +600,7 @@ Scenario: Verify max character limit for address fields
     And   I click on add new button and click confirm location
     And   I enter text exceeding the max character limit in address fields and click save address
     Then  I verify address accept max characters and get saved
-  
+
 
 @TC_Android_Address_Login_15
 Scenario: verify adding duplicate address
@@ -804,7 +804,7 @@ Scenario: Verify adding a new delivery address
     Then  I verify address is added and selected
     #When  I click on MyMcD hamburger icon
     #Then  I click on Log out button
-  
+
 @TC_Android_AD_003
 Scenario: Verify editing an existing address
     Given I launch the native app
@@ -851,7 +851,7 @@ Scenario: Validate empty address cannot be saved
     When  I click on add new button and click confirm location
     And   I leave mandatory field empty and click save address
     Then  I verify that the address not saved and validation error should be displayed
-  
+
 @TC_Android_AD_007
 Scenario: Verify "Near" location shown under each address
     Given I launch the native app

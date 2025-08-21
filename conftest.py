@@ -1,18 +1,26 @@
 
-
+import http
+from http.client import RemoteDisconnected
+import platform
+import socket
+import subprocess
 # import time
 import allure
-
+from bs4 import BeautifulSoup
+import psutil
 import pytest
 from appium import webdriver as androidDriver
 from appium.webdriver import Remote as AppiumRemote
+from appium import webdriver as appiumDriver
+from selenium import webdriver
 from appium.webdriver.appium_service import AppiumService
 from allure_commons.types import AttachmentType
-# from requests.auth import HTTPDigestAuth
-# import re
-# import urllib3
-# import wget
-# import logging
+from selenium import webdriver
+from requests.auth import HTTPDigestAuth
+import re
+import urllib3
+import wget
+import logging
 # from src.app.application import Application
 # from appium.webdriver.common.appiumby import AppiumBy
 # from appium.webdriver.webdriver import AppiumOptions
@@ -193,6 +201,19 @@ def kill_process_on_port(port):
     except Exception as e:
         print(f"Error killing process on port {port}: {e}")
 
+
+def kill_process_on_port(port):
+    try:
+        # Use lsof to find the PID and kill it
+        result = os.popen(f"lsof -ti:{port}").read().strip()
+        if result:
+            print(f"Killing process with PID: {result} on port {port}.")
+            os.system(f"kill -9 {result}")
+        else:
+            print(f"No process found running on port {port}.")
+    except Exception as e:
+        print(f"Error killing process on port {port}: {e}")
+
 @pytest.fixture(scope="module", autouse=False)
 def setup_platform(env, request):
     driver = None
@@ -247,7 +268,48 @@ def setup_platform(env, request):
     if currentPlatform == 'web':
         driver = launchChromeheadless()
         print("launch chrome browser ", type(driver))
-        
+
+    if currentPlatform == 'ios':
+        print("launch apple tv")
+        appium_service = start_appium_service_with_retry()
+        appium_service.start()
+        webDriverAgentUrl = request.config.getoption("--webDriverAgentUrl")
+        if not appium_service.is_running:
+            raise Exception("Appium server did not start!")
+        appToLaunch = request.config.getoption("--appFileName")
+        bundleId = request.config.getoption("app_package_name")
+        capabilities = load_capabilities(currentPlatform)
+        appPath = os.path.abspath(os.getcwd())
+        capabilities["webDriverAgentUrl"] = webDriverAgentUrl
+        print('capabilities to load for iOS', capabilities)
+
+        print(os.path.abspath(os.getcwd()))
+
+        options = XCUITestOptions().load_capabilities(capabilities)
+        print("loadingoptions ====", options)
+        try:
+            print("am i relunching app?=============================")
+            for attempt in range(3):
+                try:
+                    driver = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
+                    if driver is not None:
+                        break
+                except Exception as e:
+                    print(f"Attempt {attempt + 1} to create driver failed: {e}")
+                    time.sleep(5)
+            print("iOS driver started=====")
+            print("iOS driver started=  driver type ====", type(driver))
+            driver.implicitly_wait(30)
+            bundleId= 'com.il.mcd'
+            try:
+                driver.execute_script('mobile: terminateApp', {'bundleId': bundleId})
+
+            except Exception as e:
+                print(f"Failed to terminate app {bundleId}: {e}")
+            driver.execute_script('mobile: activateApp', {'bundleId': bundleId})
+        except Exception as e:
+            print("iOS appluanch error ===", e)
+
     if driver:
         print('yeidling driver instance condition')
         yield driver
@@ -255,7 +317,7 @@ def setup_platform(env, request):
         if isinstance(driver, androidDriver.Remote):
             print('Inside tear down')
             # driver.quit()
-            if currentPlatform == 'ipad':
+            if currentPlatform == 'ios':
                 appium_service.stop()
         if isinstance(driver, browserDriver.chrome.webdriver.WebDriver):
             print('Inside tear down for web ')

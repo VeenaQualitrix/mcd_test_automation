@@ -7,8 +7,11 @@ from selenium.webdriver.common.by import By
 
 class WebAppActions:
 
+    
     def __init__(self, driver):
         self.driver = driver
+        
+    
     
     def launch_browser_url(self, url):
         """
@@ -74,7 +77,8 @@ class WebAppActions:
             element.click()
         except Exception:
             print("Element not found to perform click action")
-
+    
+    
     def wait_for_element(self, locator, value, timeout=30):
         """
         Waits for an element to be present on the page.
@@ -110,6 +114,17 @@ class WebAppActions:
         except Exception:
             print("Element not found")
             return None
+        '''
+    def wait_for_element(self, locator, value, timeout=30):
+        try:
+            return WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located((locator, value))
+        )
+        except TimeoutException:
+            raise Exception(f"Timeout: Element with locator ({locator}, {value}) not found.")
+        except NoSuchElementException:
+            raise Exception(f"NoSuchElementException: Element ({locator}, {value}) not found.")
+            '''
 
     def quit_Driver(self):
         self.driver.quit()  
