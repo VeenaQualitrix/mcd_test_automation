@@ -649,3 +649,23 @@ def step_scroll_through_address_list(setup_platform):
 @then("I verify that all addresses are accessible via scrolling")
 def step_verify_all_addresses_accessible(setup_platform):
     AddressStoreScreenIos(setup_platform).verify_all_addresses_scrollable()
+
+@when("I log out of the application")
+@allure.step("When I log out of the application")
+def step_log_out_of_application(setup_platform):
+    AddressStoreScreenIos(setup_platform).logout_user()
+
+@when("I delete all saved addresses")
+@allure.step("When I delete all saved addresses")
+def step_delete_all_saved_addresses(setup_platform):
+    AddressStoreScreenIos(setup_platform).delete_all_saved_addresses()
+
+@then("I verify that the last address is not deleted as it is set as the default address")
+@allure.step("Then I verify that the last address is not deleted as it is set as the default address")
+def step_verify_default_address_not_deleted(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_default_address_not_deleted()
+
+@when("I select the Home tag and Work for the address and verify that the tag is applied")
+@allure.step("And I select the Home tag and Work for the address and verify that the tag is applied")
+def step_select_tags_and_verify(setup_platform):
+    AddressStoreScreenIos(setup_platform).select_and_verify_address_tags()
