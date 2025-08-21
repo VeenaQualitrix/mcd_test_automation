@@ -44,8 +44,8 @@ class AndroidViewScreen(BasePage):
         # Click it
         logout_element.click()
         print("Clicked on Log out button")
-        time.sleep(2)
-        self.actions.click_button(*locators['POPUP_DO_LATER'])
+        #time.sleep(2)
+        #self.actions.click_button(*locators['POPUP_DO_LATER'])
 
     def click_profile_edit_icon(self):
         time.sleep(2)
