@@ -47,6 +47,20 @@ locators = {
 
 'ADDRESS_ERROR_MESSAGE': (AppiumBy.ACCESSIBILITY_ID, "Please enter valid House / Flat No."),
 
+'LOGOUT_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "ic-logoutIconLogout ic-arrow-right"),
+
+'DELETE_ICON_TWO': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-delete"])[1]'),
+
+'DELETE_ICON_THREE': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-delete"])[3]'),
+
+
+'DEFAULT_ADDRESS_LABEL': (AppiumBy.ACCESSIBILITY_ID, "Can not delete selected address"),
+
+'HOME_TAG': (AppiumBy.ACCESSIBILITY_ID, "Home"),
+
+'WORK_TAG': (AppiumBy.ACCESSIBILITY_ID, "Work"),
+
+
 }
 
 class AddressStoreScreenIos(BasePage):
@@ -154,3 +168,48 @@ class AddressStoreScreenIos(BasePage):
         self.actions.is_element_displayed(*locators["FIRST_NEARBY_RESTAURANT"])
         self.actions.is_element_displayed(*locators["SECOND_NEARBY_RESTAURANT"])
                     
+    def logout_user(self):
+        self.actions.click_button(*locators["LOGOUT_BUTTON"])
+        print(" User has been logged out.")
+    
+    def delete_all_saved_addresses(self):
+        if self.actions.is_element_displayed(*locators["DELETE_ICON"]):
+            self.actions.click_button(*locators["DELETE_ICON"])
+            self.actions.click_button(*locators["CONFRIM_YES"])
+            print("First address deleted.")
+        else:
+            print("First delete icon not found.")
+        if self.actions.is_element_displayed(*locators["DELETE_ICON_TWO"]):
+            self.actions.click_button(*locators["DELETE_ICON_TWO"])
+            self.actions.click_button(*locators["CONFRIM_YES"])
+            print("Second address deleted.")
+        else:
+            print("Second delete icon not found.")
+        if self.actions.is_element_displayed(*locators["DELETE_ICON_THREE"]):
+            self.actions.click_button(*locators["DELETE_ICON_THREE"])
+            self.actions.click_button(*locators["CONFRIM_YES"])
+            print("Third address deleted.")
+        else:
+            print("Third delete icon not found.")
+        print("Address deletion flow completed.")
+
+    def verify_default_address_not_deleted(self):
+        self.actions.is_element_displayed(*locators["DEFAULT_ADDRESS_LABEL"])
+        
+    
+    def select_and_verify_address_tags(self):
+        if self.actions.is_element_displayed(*locators["HOME_TAG"]):
+            self.actions.click_button(*locators["HOME_TAG"])
+            print("Home tag selected.")
+        else:
+            raise AssertionError("Home tag option not found.")
+        if self.actions.is_element_displayed(*locators["WORK_TAG"]):
+            self.actions.click_button(*locators["WORK_TAG"])
+            print("Work tag selected.")
+        else:
+            raise AssertionError("Work tag option not found.")
+        if self.actions.is_element_displayed(*locators["HOME_TAG"]):
+            self.actions.click_button(*locators["HOME_TAG"])
+            print("Home tag selected.")
+        else:
+            raise AssertionError("Home tag option not found.")

@@ -621,3 +621,69 @@ Scenario: Ensure scroll functionality works if many addresses are saved
     And I select the Dine In option
     When I scroll through the address list
     Then I verify that all addresses are accessible via scrolling
+
+@TC_IOS_Address_Store_Mobile_0009
+Scenario: Verify error message for undeliverable address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter unsupported address details
+    Then I tap on the Save Address
+    Then I verify that the message Service not available in your area is displayed
+    # need to off the location -21/25
+
+@TC_IOS_Address_Store_Mobile_0010
+Scenario: Select an existing delivery address
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I select an existing address from the saved list
+    Then I verify that the selected address is applied
+
+@TC_IOS_Address_Store_Mobile_0011
+Scenario: Ensure “Add New” opens address entry popup or page
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+
+@TC_IOS_Address_Store_Mobile_0012
+Scenario: Ensure address list remains consistent across sessions
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I select an existing address from the saved list
+    When I tap on the My McD bottom tab
+    And I log out of the application
+    When I tap on the My McD bottom tab
+    Then I verify the Login Sign Up screen appears
+    When I tap on the Login Sign Up Button
+    And I enter a valid mobile number click on verify
+    Then  I verify OTP screen navigation
+    When  I enter the OTP and click verify
+    And   I click on Save button
+    When I click the Add Address button
+    Then I verify that the selected address is applied
+
+@TC_IOS_Address_Store_Mobile_0013
+Scenario: Verify behavior when all addresses are deleted
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    When I delete all saved addresses
+    Then I verify that the last address is not deleted as it is set as the default address
+
+@TC_IOS_Address_Store_Mobile_0014  
+Scenario: Test address tagging (“Home”, “Work”) feature
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I click the edit icon for the selected address
+    And I select the Home tag and Work for the address and verify that the tag is applied
+    Then I tap on the Save Address
+
+
