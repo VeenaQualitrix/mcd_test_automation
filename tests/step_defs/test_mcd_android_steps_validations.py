@@ -1,5 +1,9 @@
 from pytest_bdd.parsers import parse
 from pytest_bdd import given, when, then, scenarios
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+
 from pages.base_page import BasePage
 from pages.android_home_screen import AndroidHomeScreen
 from pages.android_login_screen import AndroidLoginScreen
@@ -8,6 +12,7 @@ from pages.android_view_screen import AndroidViewScreen
 from pages.android_search_menu_screen import AndroidSearchMenuScreen
 from pages.android_address_screen import AndroidAddressScreen
 from pages.android_view_cart_screen import AndroidViewCartScreen
+from pages.android_menu_screen import AndroidMenuScreen
 from conftest import readPreReqJson
 import allure
 import time
@@ -15,12 +20,10 @@ import time
 scenarios('../features/Mcd_Android_Test_Cases.feature')
 
 
-@given("I launch the native app")
-@allure.step('I launch the native appL')
-def launch_native_app(setup_platform):
+@given("I launch the native app") 
+@allure.step('I launch the native appL') 
+def launch_native_app(setup_platform): 
     BasePage(setup_platform).launch_application()
-    print("Native app launched via Appium session start")
-    # No need to call driver.get()
 '''
 def wait_for_activity(driver, expected_activity, timeout=10):
     for _ in range(timeout):
@@ -256,14 +259,12 @@ def verify_field_restricts_to_10_digits(setup_platform):
     assert len(entered_number) == 10, f"Expected 10 digits, but got '{entered_number}' with length {len(entered_number)}"
 
 
-@when("I copy a mobile number")
-@allure.step("When I copy a mobile number")
-def step_copy_mobile_number(setup_platform):
-    mobile_number = readPreReqJson("test_data", "mobile_number")
-    print(f"Copying mobile number: {mobile_number}")
-    AndroidLoginScreen(setup_platform).copy_mobile_number_to_clipboard(mobile_number)
-
-
+@when("I copied a mobile number")
+@allure.step("When I copied a mobile number")
+def copy_mobile_number(setup_platform):
+     Copied_number = readPreReqJson("test_data", "mobile_number")
+     print("verify mobile number copied")
+     AndroidLoginScreen(setup_platform).copy_mobile_number_to_clipboard(Copied_number)
 
 @when("I paste the number with Ctrl V and click verify")
 @allure.step("When I paste the number with Ctrl V and click verify")
@@ -786,25 +787,355 @@ def verify_icons_and_text_repond_visually(setup_platform):
 @allure.step("Then I verify the user notes their current profile information")
 def verify_current_profile_info(setup_platform, user_data_store):
     print("Verifying the user notes their current profile information")
-    ProfilePage(setup_platform).Verify_current_profile_info(user_data_store)
+    AndroidViewScreen(setup_platform).Verify_current_profile_info(user_data_store)
 
 @when("I verify user switches from one model to another")
 @allure.step("When I verify user switches from one model to another")
 def switch_between_business_model(setup_platform):
     print("Verify user switches from one model to another")
-    HomePage(setup_platform).verify_switching_from_one_model_to_another()
-
-@when("I verify user navigates to the profile page")
-@allure.step("When I verify user navigates to the profile page")
-def verify_user_navigates_to_profile_page(setup_platform):
-    print("verify user navigates to the profile page")
-    ProfilePage(setup_platform).verify_profile_page_navigation_after_switching_model()
+    AndroidHomeScreen(setup_platform).verify_switching_from_one_model_to_another()
 
 @then("I verify the profile information should remain unchanged")
 @allure.step("Then I verify the profile information should remain unchanged")
 def verify_icons_and_text_repond_visually(setup_platform, user_data_store):
     print("Verifying the profile information should remain unchanged")
-    ProfilePage(setup_platform).Verify_profile_info_remian_unchanged(user_data_store)
+    AndroidViewScreen(setup_platform).Verify_profile_info_remian_unchanged(user_data_store)
+
+@then("I verify the page layout or menu should adapt to match the McDelivery model")
+@allure.step("Then I verify the page layout or menu should adapt to match the McDelivery model")
+def verify_layout_of_Dine_In_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the McDelivery model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_McDelivery_ordering_flow()
+
+@then("I verify the page layout or menu should adapt to match the on the go model")
+@allure.step("Then I verify the page layout or menu should adapt to match the on the go model")
+def verify_layout_of_Take_away_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the on the go model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_On_the_go_pick_up_location_flow()
+
+@then("I verify the page layout or menu should adapt to match the Dine-In model")
+@allure.step("Then I verify the page layout or menu should adapt to match the Dine-In model")
+def verify_layout_of_On_the_go_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the Dine-In model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_Dine_In_location_flow()
+
+@then("I verify the page layout or menu should adapt to match the Take Away model")
+@allure.step("Then I verify the page layout or menu should adapt to match the Take Away model")
+def verify_layout_of_Mcdelivery_model(setup_platform):
+    print("verify the page layout or menu should adapt to match the Take Away model")
+    AndroidHomeScreen(setup_platform).verify_user_redirect_to_take_away_location_flow()
+
+@when("I search the address from searchbar after selecting BM model")
+@allure.step("When I search the address from searchbar after selecting BM model")
+def search_address_after_selecting_BM_model(setup_platform):
+    print("search the address from searchbar after selecting BM model")
+    AndroidAddressScreen(setup_platform).search_for_address_after_selecting_Dine_In_model()
+
+@then("I should see the message: “Sorry, we do not serve this location yet”")
+@allure.step("Then I should see the message: “Sorry, we do not serve this location yet”")
+def verify_toast_appear_for_unsupported_location(setup_platform):
+    print("Verifying the message: “Sorry, we do not serve this location yet”")
+    AndroidHomeScreen(setup_platform).show_toast()
+
+@when("I user click on a listed address")
+@allure.step("When I user click on a listed address")
+def click_on_listed_address(setup_platform):
+    print("user click on a listed address")
+    AndroidAddressScreen(setup_platform).Click_from_listed_address()
+
+@then("I verify the address is selected and restaurant list should update accordingly")
+@allure.step("Then I verify the address is selected and restaurant list should update accordingly")
+def verify_address_selected_restaurant_updated_accordingly(setup_platform):
+    print("Verifying the address is selected and restaurant list should update accordingly")
+    AndroidAddressScreen(setup_platform).verify_address_is_added_and_selected()
+
+@when("I click the edit icon next to an address")
+@allure.step("When I click the edit icon next to an address")
+def click_address_edit_icon(setup_platform):
+    print("click the edit icon next to an address")
+    AndroidAddressScreen(setup_platform).click_address_edit_icon()
+
+@when("I modifies the address details and click save button")
+@allure.step("When I modifies the address details and click save button")
+def modify_existing_address(setup_platform):
+    print("modifies the address details and click save button")
+    AndroidAddressScreen(setup_platform).modify_existing_address_and_click_save("123, Marathahalli")
+
+@then("I verify updated address is shown in the address list")
+@allure.step("Then I verify updated address is shown in the address list")
+def verify__updated_address_display_in_address_list(setup_platform):
+    print("Verifying updated address is shown in the address list")
+    AndroidAddressScreen(setup_platform).verify_updated_address_display_in_address_list("123, Marathahalli")
+
+@when("I enter text exceeding the max character limit in address fields and click save address")
+@allure.step("And I enter text exceeding the max character limit in address fields and click save address")
+def step_enter_text_exceeding_limit(setup_platform):
+    AndroidAddressScreen(setup_platform).enter_text_exceeding_max_limit()
+
+@then("I verify address accept max characters and get saved")
+@allure.step("Then I verify address accept max characters and get saved")
+def verify_address_accept_max_char(setup_platform):
+    print("verify address accept max characters and get saved")
+    Address_accept_max_char = AndroidAddressScreen(setup_platform).verify_field_accept_maximum_char_and_address_saved()
+    assert Address_accept_max_char, "Address does not accept maximum char and show validation error"
+
+@when("I verify address list shown")
+@allure.step("When I verify address list shown")
+def verify_address_list_shown(setup_platform, user_data_store):
+    print("verify address list shown")
+    AndroidAddressScreen(setup_platform).Verify_address_shown_in_list_before_deletion(user_data_store)
+
+@when("I click the delete icon next to an address")
+@allure.step("When I click the delete icon next to an address")
+def click_address_delete_icon(setup_platform):
+    print("click the delete icon next to an address")
+    AndroidAddressScreen(setup_platform).click_address_delete_icon()
+
+@then("I verify address removed from list")
+@allure.step("Then I verify address removed from list")
+def verify_address_removed_from_list(setup_platform, user_data_store):
+    print("Verifying address removed from list")
+    AndroidAddressScreen(setup_platform).Verify_address_removed_from_list_after_deletion(user_data_store)
+
+@when("I verify address list displayed")
+@allure.step("When I verify address list displayed")
+def verify_address_list(setup_platform):
+    print("verify address list displayed")
+    AndroidAddressScreen(setup_platform).verify_address_list()
+
+@then("I verify each address should display a Near label with its location description")
+@allure.step("Then I verify each address should display a Near label with its location description")
+def verify_address_removed_from_list(setup_platform):
+    print("Verifying each address should display a Near label with its location description")
+    AndroidAddressScreen(setup_platform).verify_near_label_visible_in_address_description()
+
+
+@then("I verify all saved addresses should be accessible via scrolling")
+@allure.step("Then I verify all saved addresses should be accessible via scrolling")
+def verify__all_saved_address_accessible_via_scroll(setup_platform):
+    print("Verifying all saved addresses should be accessible via scrolling")
+    AndroidAddressScreen(setup_platform).All_addresses_accessible_via_scrolling()
+
+@when("I selects the first address from the address list")
+@allure.step("When I selects the first address from the address list")
+def select_first_address_from_list(setup_platform):
+    print("selects the first address from the address list")
+    AndroidAddressScreen(setup_platform).select_first_address_from_list()
+
+@then("I verify restaurant list should update based on the first address location")
+@allure.step("Then I verify restaurant list should update based on the first address location")
+def verify_restaurant_list_update_based_on_first_address(setup_platform):
+    print("Verifying restaurant list should update based on the first address location")
+    AndroidHomeScreen(setup_platform).verify_error_message_for_undeliverable_address()
+
+@when("I selects the second address from the address list")
+@allure.step("When I selects the second address from the address list")
+def select_second_address_from_list(setup_platform):
+    print("selects the second address from the address list")
+    AndroidAddressScreen(setup_platform).select_another_address_from_list()
+
+@then("I verify restaurant list should update based on the second address location")
+@allure.step("Then I verify restaurant list should update based on the second address location")
+def verify_restaurant_list_update_based_on_second_address(setup_platform):
+    print("Verifying restaurant list should update based on the second address location")
+    AndroidHomeScreen(setup_platform).verify_address_selected_and_restaurant_updated_accordingly()
+
+@when("I enters an undeliverable pin code or area manually")
+@allure.step("When I enters an undeliverable pin code or area manually")
+def enter_undeliverable_address(setup_platform):
+    print("enters an undeliverable pin code or area manually")
+    AndroidAddressScreen(setup_platform).enter_an_undeliverable_address()
+
+@then("I verify an error message should be displayed saying Delivery not available at this address")
+@allure.step("Then I verify an error message should be displayed saying Delivery not available at this address")
+def verify__error_message_for_undeliverable_location(setup_platform):
+    print("Verifying an error message should be displayed saying Delivery not available at this address")
+    AndroidHomeScreen(setup_platform).verify_error_message_for_undeliverable_address()
+
+@then("I verify the most recently used address should be auto-selected")
+@allure.step("Then I verify the most recently used address should be auto-selected")
+def verify_recently_used_address_is_auto_selected_after_login(setup_platform):
+    print("Verifying the most recently used address should be auto-selected")
+    AndroidHomeScreen(setup_platform).verify_recently_used_address_is_auto_selected_after_login()
+
+@when("I adds an address and select a tag")
+@allure.step("When I adds an address and select a tag")
+def add_address_and_select_tag(setup_platform):
+    print("adds an address and select a tag")
+    AndroidAddressScreen(setup_platform).add_address_and_select_tag()
+
+@then("I verify the tag should be displayed next to the address name after adding address")
+@allure.step("Then I verify the tag should be displayed next to the address name after adding address")
+def verify_work_tag_display_next_to_address(setup_platform):
+    print("Verifying the tag should be displayed next to the address name after adding address")
+    AndroidAddressScreen(setup_platform).verify_tag_next_to_address_after_adding_address()
+
+@when("I edits an address and select a tag")
+@allure.step("When I edits an address and select a tag")
+def edit_address_and_select_tag(setup_platform):
+    print("edits an address and select a tag")
+    AndroidAddressScreen(setup_platform).edit_address_and_select_tag()
+
+@then("I verify the tag should be displayed next to the address name after editing address")
+@allure.step("Then I verify the tag should be displayed next to the address name after editing address")
+def verify_home_tag_display_next_to_address(setup_platform):
+    print("Verifying the tag should be displayed next to the address name after editing address")
+    AndroidAddressScreen(setup_platform).verify_tag_next_to_address_after_editing_address()
+
+@when("I delete all addresses")
+@allure.step("When I delete all addresses")
+def verify_delete_all_addresses(setup_platform):
+    print("delete all addresses")
+    AndroidAddressScreen(setup_platform).delete_all_addresses()
+
+@then("I verify the address list should be empty and the Add Address prompt should be visible")
+@allure.step("Then I verify the address list should be empty and the Add Address prompt should be visible")
+def verify_address_prompt_visible(setup_platform):
+    print("Verifying the address list should be empty and the Add Address prompt should be visible")
+    AndroidAddressScreen(setup_platform).verify_add_new_address_prompt_visible()
+
+@when("I verify address list before logout of the application")
+@allure.step("When I verify address list before logout of the application")
+def verify_address_list_before_logout(setup_platform, user_data_store):
+    print("verify address list before logout of the application")
+    AndroidAddressScreen(setup_platform).verify_address_list_before_logout_the_application(user_data_store)
+
+@then("I verify previously saved addresses should be retained and visible")
+@allure.step("Then I verify previously saved addresses should be retained and visible")
+def verify_previously_saved_address_should_visible(setup_platform, user_data_store):
+    print("Verifying previously saved addresses should be retained and visible")
+    AndroidAddressScreen(setup_platform).verify_previously_saved_address_should_visible_after_logs_in(user_data_store)
+
+@when("I click on Menu icon")
+@allure.step("When I click on Menu icon")
+def click_add_button(setup_platform):
+    print("click on Menu icon")
+    AndroidHomeScreen(setup_platform).click_on_Menu_icon()
+
+@when("I click on 'Add +' for the customizable item")
+@allure.step("When I click on 'Add +' for the customizable item")
+def click_add_button(setup_platform):
+    print("Add+ button clicked for the customizable item")
+    AndroidMenuScreen(setup_platform).click_add_for_customise_item("Mexican Grilled Chicken & Cheese Burger + Fries (M)")
+
+@then("I verify the customization options should appear before adding the item to the cart")
+@allure.step("When I verify the customization options should appear before adding the item to the cart")
+def step_verify_customise_option_appear(setup_platform):
+    print("Verifying the customization options should appear before adding the item to the cart")
+    AndroidMenuScreen(setup_platform).verify_customise_option_appear()
+
+@when("I add 2 to 3 different available items to the cart")
+@allure.step("When I add 2 to 3 different available items to the cart")
+def add_multiple_items_to_the_cart(setup_platform):
+    print("add 2 to 3 different available items to the cart")
+    HomePage(setup_platform).add_multiple_items_to_cart()
+
+@then("I verify all added items should be listed in the cart with correct price and quantities")
+@allure.step("When I verify all added items should be listed in the cart with correct price and quantities")
+def verify_all_item_added_with_correct_price(setup_platform):
+    print("Verifying all added items should be listed in the cart with correct price and quantities")
+    ViewCartPage(setup_platform).verify_multiple_products_in_cart_with_correct_price()
+
+@when("I user adds the item to the cart")
+@allure.step("When I user adds the item to the cart")
+def Add_single_item_to_the_cart(setup_platform):
+    print("user adds the item to the cart")
+    AndroidMenuScreen(setup_platform).add_single_item_in_cart("Mexican Grilled Chicken & Cheese Burger + Fries (M)")
+
+
+@then("I verify the item price should be correctly displayed in the cart")
+@allure.step("When I verify the item price should be correctly displayed in the cart")
+def verify_product_price_in_the_cart(setup_platform):
+    print("verify the item price should be correctly displayed in the cart")
+    AndroidViewCartScreen(setup_platform).verify_product_price_is_displayed_correct_in_cart()
+
+@then("I verify the price in the cart should match the menu price")
+@allure.step("When I verify the price in the cart should match the menu price")
+def verify_product_price_in_the_cart_match_with_menu_price(setup_platform):
+    print("verify the price in the cart should match the menu price")
+    AndroidMenuScreen(setup_platform).verify_price_in_cart_matches_menu_price()
+
+@when("I clicks on the 'Customize' button")
+@allure.step("When I clicks on the 'Customize' button")
+def click_customised(setup_platform):
+    print("clicks on the 'Customize' button")
+    ViewCartPage(setup_platform).Click_customise()
+
+@when("I selects or removes items from the customization options")
+@allure.step("When I selects or removes items from the customization options")
+def Add_or_remove_items_on_customise_page(setup_platform):
+    print("selects or removes items from the customization options")
+    ViewCartPage(setup_platform).Add_or_remove_items_on_customise_page()
+
+@then("I verify the customized item should be added to the cart with selected preferences")
+@allure.step("When I verify the customized item should be added to the cart with selected preferences")
+def Verify_customisation_text_after_adding_or_removing_items(setup_platform):
+    print("verify the customized item should be added to the cart with selected preferences")
+    ViewCartPage(setup_platform).Verify_customisation_text_after_adding_or_removing_items()
+
+@then("I verify the added items in cart")
+@allure.step("When I verify the added items in cart")
+def Verify_items_in_cart(setup_platform):
+    print("verify the added items in cart")
+    ViewCartPage(setup_platform).Verify_items_in_cart()
+
+@when("I clicks the 'Remove' button for an item")
+@allure.step("When I clicks the 'Remove' button for an item")
+def Click_remove_to_decrease_cart_item(setup_platform):
+    print("clicks the 'Remove' button for an item")
+    ViewCartPage(setup_platform).decrease_cart_item()
+
+@then("I verify the selected item should be removed from the cart")
+@allure.step("When I verify the selected item should be removed from the cart")
+def Verify_selected_items_removed_from_cart(setup_platform):
+    print("verify the selected item should be removed from the cart")
+    ViewCartPage(setup_platform).Verify_selected_items_removed_from_cart()
+
+@when("I selects the '3Pc Meals' category under menu")
+@allure.step("When I selects the '3Pc Meals' category under menu")
+def select_3PC_meal_under_menu(setup_platform):
+    print("selects the '3Pc Meals' category under menu")
+    HomePage(setup_platform).select_3PC_meal_under_menu()
+
+@then("I verify all items under the '3Pc Meals' category should be displayed")
+@allure.step("When I verify all items under the '3Pc Meals' category should be displayed")
+def verify_display_of_3PC_meal_category(setup_platform):
+    print("verify all items under the '3Pc Meals' category should be displayed")
+    HomePage(setup_platform).verify_display_of_3PC_meal_category()
+
+@when("I select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
+@allure.step("When I select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
+def select_product_from_3PC_meals_category(setup_platform):
+    print("Select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
+    HomePage(setup_platform).select_product_from_3PC_meals_category()
+
+@then("I verify the product added in cart")
+@allure.step("When I verify the product added in cart")
+def verify_product_added_in_cart(setup_platform):
+    print("verify the product added in cart")
+    HomePage(setup_platform).verify_product_added_in_cart()
+
+@when("I click on 'Fries & Sides' menu option")
+@allure.step("When I click on 'Fries & Sides' menu option")
+def click_fries_and_sides_menu(setup_platform):
+    print("click on 'Fries & Sides' menu option")
+    AndroidMenuScreen(setup_platform).click_fries_and_sides_menu()
+    
+@when("I add 'Medium Fries' to the cart")
+@allure.step("When I add 'Medium Fries' to the cart")
+def add_fries_in_cart(setup_platform):
+    print("add 'Medium Fries' to the cart")
+    AndroidMenuScreen(setup_platform).add_fries_in_cart()
+
+@then("I verify fries should be added to the cart ")
+@allure.step("Then I verify fries should be added to the cart ")
+def verify_product_added_in_cart(setup_platform):
+    print("verify fries should be added to the cart ")
+    AndroidViewCartScreen(setup_platform).verify_fries_added_to_cart()
+    
+
+
+
 
 
     
