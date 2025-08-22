@@ -256,12 +256,14 @@ def verify_field_restricts_to_10_digits(setup_platform):
     assert len(entered_number) == 10, f"Expected 10 digits, but got '{entered_number}' with length {len(entered_number)}"
 
 
-@when("I copied a mobile number")
-@allure.step("When I copied a mobile number")
-def copy_mobile_number(setup_platform):
-     Copied_number = readPreReqJson("test_data", "mobile_number")
-     print("verify mobile number copied")
-     AndroidLoginScreen(setup_platform).copy_mobile_number_to_clipboard(Copied_number)
+@when("I copy a mobile number")
+@allure.step("When I copy a mobile number")
+def step_copy_mobile_number(setup_platform):
+    mobile_number = readPreReqJson("test_data", "mobile_number")
+    print(f"Copying mobile number: {mobile_number}")
+    AndroidLoginScreen(setup_platform).copy_mobile_number_to_clipboard(mobile_number)
+
+
 
 @when("I paste the number with Ctrl V and click verify")
 @allure.step("When I paste the number with Ctrl V and click verify")

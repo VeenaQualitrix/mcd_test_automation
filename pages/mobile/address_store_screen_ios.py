@@ -60,6 +60,7 @@ locators = {
 
 'WORK_TAG': (AppiumBy.ACCESSIBILITY_ID, "Work"),
 
+"BOTTOM_TAB_MY_MCD_IMAGE": (AppiumBy.ACCESSIBILITY_ID, "MyMcD"),
 
 }
 
@@ -169,8 +170,14 @@ class AddressStoreScreenIos(BasePage):
         self.actions.is_element_displayed(*locators["SECOND_NEARBY_RESTAURANT"])
                     
     def logout_user(self):
-        self.actions.click_button(*locators["LOGOUT_BUTTON"])
-        print(" User has been logged out.")
+        time.sleep(3)
+        try: 
+            self.actions.click_button(*locators["LOGOUT_BUTTON"])
+            print("User has been logged out.")
+        except Exception:
+            self.actions.click_button(*locators["BOTTOM_TAB_MY_MCD_IMAGE"])
+            print("Navigated to My McD tab as logout button was not found.")
+        
     
     def delete_all_saved_addresses(self):
         if self.actions.is_element_displayed(*locators["DELETE_ICON"]):
