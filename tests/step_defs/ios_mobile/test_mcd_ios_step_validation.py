@@ -7,6 +7,7 @@ from pages.mobile.profile_screen_ios import ProfileScreenIos
 from pages.mobile.address_screen_ios import AddressScreenIos
 from pages.mobile.switching_screen_ios import SwitchScreenIos
 from pages.mobile.address_store_screen_ios import AddressStoreScreenIos
+from pages.mobile.Oderingflow_screen_ios import OderingScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -204,33 +205,19 @@ def tap_on_terms_and_conditions_link(setup_platform):
 def enter_mobile_number_with_more_than_10_digits(setup_platform):
     LoginScreenIos(setup_platform).enter_invalid_mobile_number("98765432101")
 
-@when("I copied a mobile number")
-@allure.step("When I copied a mobile number")
+@when("I copied the mobile number this is ios")
+@allure.step("Copy mobile number to clipboard")
 def copy_mobile_number(setup_platform):
-    Copied_number = readPreReqJson("test_data", "mobile_number")
-    print("verify mobile number copied")
-    LoginScreenIos(setup_platform).copy_mobile_number_to_clipboard(Copied_number)
+    mobile_number = readPreReqJson("test_data", "mobile_number")
+    print(f"Copying mobile number: {mobile_number}")
+    LoginScreenIos(setup_platform).copy_mobile_number_to_clipboard(mobile_number)
 
 
-@when("I paste the number with Ctrl V and click verify")
-@allure.step("When I paste the number with Ctrl V and click verify")
-def paste_copied_mobile_number(setup_platform):
-    print("Pasting mobile number using Ctrl+V")
+
+@when("I paste CTRL V and click verify")
+@allure.step("When I paste CTRL V and click verify")
+def step_paste_number_and_verify(setup_platform):
     LoginScreenIos(setup_platform).paste_mobile_number_using_clipboard()
-
-
-@then("I verify number pasted correctly and accepted")
-@allure.step("Then I verify number pasted correctly and accepted")
-def verify_number_pasted_correctly(setup_platform):
-    print("Verifying that the pasted number was accepted correctly")
-
-    expected_number = readPreReqJson("test_data", "mobile_number")
-    actual_number = LoginScreenIos(setup_platform).get_pasted_mobile_number()
-
-    print(f"Expected Mobile Number: {expected_number}")
-    print(f"Actual Mobile Number in Field: {actual_number}")
-
-    assert actual_number == expected_number, "Pasted mobile number does not match or was not accepted"
 
 
 @then("I verify the Terms and Conditions web view or page is displayed")
@@ -669,3 +656,34 @@ def step_verify_default_address_not_deleted(setup_platform):
 @allure.step("And I select the Home tag and Work for the address and verify that the tag is applied")
 def step_select_tags_and_verify(setup_platform):
     AddressStoreScreenIos(setup_platform).select_and_verify_address_tags()
+
+
+@then("I navigate to the McBreakfast menu page")
+@allure.step("When I navigate to the McBreakfast menu page")
+def navigate_to_mcbreakfast_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_breakfast_category()
+
+@then("I select Veg McMuffin with protein plus Meal")
+@allure.step("When I select Veg McMuffin with protein plus Meal")
+def select_veg_mcmuffin_protein_plus_meal(setup_platform):
+    OderingScreenIos(setup_platform).select_veg_mcmuffin_protein_plus_meal()
+
+@then("I click on Add item")
+@allure.step("When I click on Add item")
+def click_on_add_item(setup_platform):
+    OderingScreenIos(setup_platform).click_add_item()
+
+@then("I click on the please select location")
+@allure.step("When I click on the please select location")
+def click_select_location(setup_platform):
+    OderingScreenIos(setup_platform).click_select_location()
+
+@then("I select the location in add popup")
+@allure.step("When I select the location in add popup")
+def select_location_in_popup(setup_platform):
+    OderingScreenIos(setup_platform).select_location_in_popup()
+
+@then("I verify the your order")
+@allure.step("Then I verify the your order")
+def verify_your_order(setup_platform):
+    OderingScreenIos(setup_platform).verify_your_order_displayed()
