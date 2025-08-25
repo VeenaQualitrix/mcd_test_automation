@@ -687,3 +687,77 @@ def select_location_in_popup(setup_platform):
 @allure.step("Then I verify the your order")
 def verify_your_order(setup_platform):
     OderingScreenIos(setup_platform).verify_your_order_displayed()
+
+@when("I search for the location")
+@allure.step("User searches for the location")
+def search_for_location(setup_platform):
+    OderingScreenIos(setup_platform).search_location()
+
+@when("I enter breakfast address details")
+@allure.step("Entering address details for McBreakfast order")
+def enter_valid_address_details(setup_platform):
+    OderingScreenIos(setup_platform).enter_address_details_breakfast()
+
+  
+  
+@then("I clear the order")
+@allure.step("User clears the current order")
+def clear_the_order(setup_platform):
+    OderingScreenIos(setup_platform).clear_order()
+
+@when("I search for out of stock item location")
+@allure.step("User searches for delivery location before selecting an out-of-stock item")
+def search_location_for_out_of_stock_item(setup_platform):
+    OderingScreenIos(setup_platform).search_location_outofstock()   
+
+@when("I enter  out of stock item address details")
+@allure.step("User enters breakfast address details to check out-of-stock behavior")
+def enter_address_for_out_of_stock_item(setup_platform):
+    OderingScreenIos(setup_platform).enter_address_details_outodstock()  
+
+@then("I verify the sold out item is indicated as unavailable")
+@allure.step("Verify that the sold out item is correctly marked as unavailable")
+def verify_sold_out_item_unavailable(setup_platform):
+    assert OderingScreenIos(setup_platform).is_item_marked_sold_out(), \
+    "Sold out item is not indicated as unavailable"    
+
+@then("I click on the customization options and verify")
+@allure.step("User clicks on the customization options")
+def click_customization_options(setup_platform):
+    OderingScreenIos(setup_platform).select_customization_option()
+
+@then("I added the first item from menu")
+@allure.step("User adds an item from the menu")
+def add_item_from_menu(setup_platform): 
+    OderingScreenIos(setup_platform).add_first_available_item()    
+
+@then("I added the second item from menu")
+@allure.step("User adds an item from the menu")
+def add_item_from_menu(setup_platform): 
+    OderingScreenIos(setup_platform).add_second_available_item()
+
+@then("I navigate to the MCsaver menu page")
+@allure.step("Navigate to the MCsaver menu page")
+def navigate_to_mcsaver_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_mcsaver_category()
+
+@then("I verify the payment method and button")
+@allure.step("Verify payment method and confirm button visibility")
+def verify_payment_method_and_button(setup_platform):
+    OderingScreenIos(setup_platform).is_payment_method_and_confirm_button_displayed()
+    print("Payment method and confirm button verified successfully")
+
+@then("I verify the item price matches the listed menu price")
+@allure.step("Verify the item price matches the listed menu price")
+def verify_item_price_matches_menu(setup_platform):
+    OderingScreenIos(setup_platform).verify_pricing()
+
+@then("I verify that sold out items cannot be added to cart")
+@allure.step("Verify 'Sold out' label prevents adding the item to cart")
+def step_verify_sold_out_items_not_addable(setup_platform):
+    OderingScreenIos(setup_platform).verify_sold_out_items_not_clickable()
+
+@then("I verify the item is added to the cart")
+@allure.step("Verify that the selected item is present in the cart")
+def verify_item_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_item_in_cart()

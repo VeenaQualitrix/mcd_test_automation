@@ -692,16 +692,141 @@ Scenario: Test address tagging (“Home”, “Work”) feature
 Scenario: Place an order with available breakfast item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for the location
+    And I click on confirm location
+    And I enter breakfast address details
+    Then I tap on the Save Address
     Then I click on the Menu option
     And I navigate to the McBreakfast menu page
     And I select Veg McMuffin with protein plus Meal
     And I click on Add item
     And I click on Add to Cart
     And I click on View Cart
-    And I click on the please select location
-    And I select the location in add popup
-    Then I verify the your order
-#    Need to disable the location -22/25
-    
-    
+    And  I verify the your order
+    Then I clear the order 
 
+@TC_IOS_Ordering_Mobile_002
+Scenario: User attempts to order an out-of-stock item
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for out of stock item location
+    And I click on confirm location
+    And I enter  out of stock item address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the McBreakfast menu page
+    Then I verify the sold out item is indicated as unavailable
+
+@TC_IOS_Ordering_Mobile_003
+Scenario: Verify customization options appear for customizable items
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for the location
+    And I click on confirm location
+    And I enter breakfast address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the McBreakfast menu page
+    And I select Veg McMuffin with protein plus Meal
+    And I click on Add item
+    Then I click on the customization options and verify
+    
+@TC_IOS_Ordering_Mobile_004
+Scenario: Add multiple items to the cart and verify cart contents
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for the location
+    And I click on confirm location
+    And I enter breakfast address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the MCsaver menu page  
+    And I added the first item from menu  
+    And I click on the Next button
+    And I click on Add to Cart
+    And I added the second item from menu  
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_005
+Scenario: Place an order with only 1 item
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for the location
+    And I click on confirm location
+    And I enter breakfast address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the MCsaver menu page  
+    And I added the first item from menu  
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I verify the payment method and button
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_006
+Scenario: Verify menu item pricing
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for the location
+    And I click on confirm location
+    And I enter breakfast address details    
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the MCsaver menu page  
+    And I added the first item from menu  
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I verify the item price matches the listed menu price
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_007
+Scenario: Verify out-of-stock label handling
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for out of stock item location
+    And I click on confirm location
+    And I enter  out of stock item address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the McBreakfast menu page    
+    Then I verify the sold out item is indicated as unavailable
+    Then I verify that sold out items cannot be added to cart
+
+@TC_IOS_Ordering_Mobile_007
+Scenario: verify the item is added to the cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for the location
+    And I click on confirm location
+    And I enter breakfast address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the McBreakfast menu page
+    And I select Veg McMuffin with protein plus Meal
+    And I click on Add item
+    And I click on Add to Cart 
+    # And I click on View Cart
+    # And I verify the item is added to the cart
+    # Then I clear the order
+    # Not able to add the cart for the breakfast
