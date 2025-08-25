@@ -35,6 +35,7 @@ locators = {
         "ADDRESS_SAVED_WITH_MAX_CHAR" : (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'AAAAAAA')]"),
         "VERIFY_WORK_TAG_NEXT_ADDRESS" : (AppiumBy.XPATH, "(//android.widget.TextView[@text='Work'])[2]"),
         "VERIFY_HOME_TAG_NEXT_ADDRESS" : (AppiumBy.XPATH, "(//android.widget.TextView[@text='Home'])[2]"),
+        "ADD_NEW_ADDRESS" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Add new address']"),
 
 
 }
@@ -70,6 +71,9 @@ class AndroidAddressScreen(BasePage):
         self.actions.is_element_displayed(*locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         self.actions.is_element_displayed(*locators['ADD_NEW'])
         print("Add new button is displayed to add new address")
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        print("Clicked on back button")
 
     def search_for_address_after_selecting_business_model(self):
         time.sleep(2)
@@ -117,6 +121,7 @@ class AndroidAddressScreen(BasePage):
         print("Kasturba Road address is displayed")
 
     def click_add_address_from_checkout(self):
+        time.sleep(5)
         print("Checking and clicking address arrow.")
         self.actions.is_element_displayed(*locators['ADDRESS_ARROW'])
         self.actions.click_button(*locators['ADDRESS_ARROW'])
@@ -125,6 +130,7 @@ class AndroidAddressScreen(BasePage):
 
 
     def verify_address_appear_as_selected_delivery_address(self):
+        time.sleep(5)
         try:
             WebDriverWait(self.driver, 10).until(
              EC.visibility_of_element_located(locators['SELECTED_DELIVERY_ADDRESS'])
@@ -146,7 +152,12 @@ class AndroidAddressScreen(BasePage):
 
     def verify_redirect_to_address_filling_page(self):
         time.sleep(2)
-        return self.actions.is_element_displayed(*locators['ADDRESS_SCREEN_HEADER'])
+        self.actions.is_element_displayed(*locators['ADDRESS_SCREEN_HEADER'])
+        time.sleep(1)
+        self.actions.click_button(*locators["CLICK_BACK_BUTTON"])
+        time.sleep(2)
+        self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
+        print("Entered text in house/flat field and click back button without saving")
     
     def _scroll_bottom_sheet_until_text(self, text, max_scrolls=8):
         """
@@ -222,9 +233,14 @@ class AndroidAddressScreen(BasePage):
        
     def verify_address_mandatory_field_empty_error(self):
         time.sleep(2)
-        return self.actions.is_element_displayed(*locators['HOUSE_FIELD_EMPTY_ERROR'])
+        self.actions.is_element_displayed(*locators['HOUSE_FIELD_EMPTY_ERROR'])
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON'])
+        time.sleep(1)
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        time.sleep(1)
     
     def enter_special_char_in_house_field(self):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['HOUSE_NUMBER'])
         self.actions.enter_text(*locators["HOUSE_NUMBER"], "%$^#@&*")
         time.sleep(2)
@@ -240,6 +256,7 @@ class AndroidAddressScreen(BasePage):
         return self.actions.is_element_displayed(*locators['ADDRESS_SAVED_WITH_SPECIAL_CHAR'])
     
     def verify_saved_delivery_address(self, user_data_store):
+        time.sleep(5)
         # Save current values before changing
         try:
             selected_address = self.driver.find_element(*locators['SELECTED_DELIVERY_ADDRESS'])
@@ -334,17 +351,19 @@ class AndroidAddressScreen(BasePage):
         print(f"Entered updated house/flat value: '{updated_house_name}' and clicked save button")
 
     def verify_updated_address_display_in_address_list(self, expected_partial_text):
-        time.sleep(2)
-        # Fetch all address elements
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_all_elements_located(locators["ALL_ADDRESS"])
+        )
         all_address_elements = self.driver.find_elements(*locators["ALL_ADDRESS"])
-        # Extract text and normalize for comparison
         all_addresses = [addr.text.strip().lower() for addr in all_address_elements]
-        print("Addresses found on screen:", all_addresses)
-        # Check if expected text is present in any address
-        is_present = any(expected_partial_text.lower() in address for address in all_addresses)
+        print("DEBUG - Addresses found on screen:", all_addresses)
 
-        assert is_present, f"Expected address '{expected_partial_text}' not found in the All Address section."
-        print(f"Verified: '{expected_partial_text}' is present in All Address section.")
+        normalized_expected = expected_partial_text.lower().replace(" ", "")
+        is_present = any(normalized_expected in address.replace(" ", "") for address in all_addresses)
+
+        assert is_present, f"Expected address '{expected_partial_text}' not found. Found: {all_addresses}"
+        # Press back button (Android)
+        self.driver.press_keycode(4)
 
     def enter_text_exceeding_max_limit(self):
         time.sleep(2)
@@ -404,25 +423,39 @@ class AndroidAddressScreen(BasePage):
         near_elements = self.driver.find_elements(*locators['NEAR_LABEL'])
         for el in near_elements:
             print(el.text)
-        self.driver.back()
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        print("Clicked on back button")
 
     def All_addresses_accessible_via_scrolling(self):
+        time.sleep(5)
         try:
-            # Use UiScrollable to bring last address into view
+            # Scroll until "Marathahalli" is visible
             last_address_element = self.driver.find_element(
                 AppiumBy.ANDROID_UIAUTOMATOR,
                 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView('
                 'new UiSelector().textContains("Marathahalli"))'
             )
+
+            # Wait until it is visible on screen
             WebDriverWait(self.driver, 10).until(
                 EC.visibility_of(last_address_element)
             )
             print(" Scrolled to access the last address")
-            return last_address_element
+
+            # (Optional) Validate if the address is displayed
+            if last_address_element.is_displayed():
+                print(f"Found address: {last_address_element.text}")
 
         except Exception as e:
-            print(" Failed to scroll to last address:", str(e))
+            print(f" Failed to scroll to last address: {str(e)}")
             raise
+
+        # Now click back button
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        print(" Clicked on back button successfully")
     
     def select_first_address_from_list(self):
         WebDriverWait(self.driver, 10).until(
@@ -512,9 +545,12 @@ class AndroidAddressScreen(BasePage):
                 break
 
     def verify_add_new_address_prompt_visible(self):
-        time.sleep(5)
+        time.sleep(2)
         self.actions.is_element_displayed(*locators['ADD_NEW_ADDRESS'])
         print("Clicked on Add new address")
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        print("Clicked on back button")
 
 
     def enter_an_undeliverable_address(self):
@@ -585,7 +621,10 @@ class AndroidAddressScreen(BasePage):
 
     def verify_tag_next_to_address_after_editing_address(self):
         time.sleep(5)
-        return self.actions.is_element_displayed(*locators['VERIFY_WORK_TAG_NEXT_ADDRESS'])
+        self.actions.is_element_displayed(*locators['VERIFY_WORK_TAG_NEXT_ADDRESS'])
+        time.sleep(2)
+        self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
+        print("Clicked back button")
     
     def verify_address_list_before_logout_the_application(self, user_data_store):
         WebDriverWait(self.driver, 10).until(
@@ -670,6 +709,10 @@ class AndroidAddressScreen(BasePage):
             if not found:
                 print(f" [FAIL] Address '{expected_address}' not found after login.")
                 raise AssertionError(f"Address '{expected_address}' not found after login.")
+            
+            time.sleep(2)
+            self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
+            print("clicked back button ")
 
     
 

@@ -66,8 +66,9 @@ class AndroidHomeScreen(BasePage):
 
     
     def click_on_MyMcD_hamburger_icon(self):
-        time.sleep(2)
+        time.sleep(10)
         self.actions.is_element_displayed(*locators['HAMBURGER_ICON'])
+        time.sleep(5)
         self.actions.click_button(*locators["HAMBURGER_ICON"])
         time.sleep(1)
         print("Clicked on MyMcD hamburger icon")

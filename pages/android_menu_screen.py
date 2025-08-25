@@ -28,7 +28,7 @@ locators = {
         "ITEM_QUANTITY": (AppiumBy.XPATH, "//android.widget.TextView[@text='01']"),
         "ADD_QUANTITY": (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-add'])[1]"),
         "REMOVE_QUANTITY": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-subtract']"),
-        "CUSTOMISE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Customise']"),
+        "CUSTOMISE": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Customise'])[1]"),
         "DONE_BUTTON": (AppiumBy.XPATH, "//android.widget.Button[@text='Done']"),
         "FRIES_AND_SIDES": (AppiumBy.XPATH, "//android.widget.Image[@text='Fries & Sides']"),
         "FRIES_MEDIUM_PRODUCT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Fries (Medium)']"),
@@ -36,12 +36,39 @@ locators = {
         "MEXICAN_RANGE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mexican Range & New Offerings']"),
         "PRODUCT_PRICE_IN_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='{}']/following-sibling::android.widget.TextView"),
         "PRODUCT_PRICE_IN_MENU": (AppiumBy.XPATH, "//android.widget.TextView[@text='{}']/..//android.widget.TextView[contains(@text,'₹')]"),
+        "BACK_BUTTON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
+        "DESSERTS_ITEM": (AppiumBy.XPATH, "//android.widget.TextView[@text='Hot Fudge Sundae']"),
+        "DESSERTS_THUMBNAIL_IMAGE": (AppiumBy.XPATH, "//android.widget.Image[@text='Desserts']"),
+        "ALL_PRODUCT_PRICES_IN_MENU": (AppiumBy.XPATH, "//android.widget.TextView[@text='{0}']/following-sibling::android.widget.TextView"),
+        "COLD_COFFEE_PRODUCT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Iced Coffee with French Vanilla']"),
+        "COFFEE_AND_BEVERAGES_MENU": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Coffee & Beverages (Hot and Cold)'])[1]"),
+        "MILLET_BUN_MENU": (AppiumBy.XPATH, "//android.widget.TextView[@text='Protein Plus and Burgers with Millet Bun']"),
+        "MILLET_BUN_DESCRIPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Spice up your meal with a healthier bite! Try your McSpicy Paneer Burger with the nutritious multi-millet bun.']]"),
+        
+       
     
 
          }
 
 
 class AndroidMenuScreen(BasePage):
+
+    def add_breakfast_item(self, item_name):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MENU_HEADER'])
+        print("Our Menu header is displayed")
+        time.sleep(1)
+        # Format burger/item locator dynamically
+        by, value = locators['BURGER_XPATH']
+        formatted_locator = (by, value.format(item_name))
+        self.actions.click_button(*formatted_locator)
+        print(f" Clicked on item: {item_name}")
+        # Finally, click on Add button
+        self.actions.click_button(*locators['ADD_BUTTON'])
+        print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print("'ADD to Cart' is clicked")
     
     def click_add_for_customise_item(self, item_name):
         time.sleep(2)
@@ -65,6 +92,29 @@ class AndroidMenuScreen(BasePage):
         time.sleep(1)
         self.actions.is_element_displayed(*locators['CUSTOMISE_MEAL'])
         print("Customise your meal is displayed")
+        time.sleep(1)
+        self.actions.click_button(*locators['BACK_BUTTON'])
+        print("Back button is clicked from customise screen")
+
+    def click_customise_option(self):
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['CUSTOMISE'])
+        self.actions.click_button(*locators['CUSTOMISE'])
+        print(" Customise button is clicked")
+
+    def click_add_and_remove_sign_to_customised_item(self):
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['ADD_QUANTITY'])
+        self.actions.click_button(*locators['ADD_QUANTITY'])
+        print(" add quantity button is clicked")
+        self.actions.is_element_displayed(*locators['REMOVE_QUANTITY'])
+        self.actions.click_button(*locators['REMOVE_QUANTITY'])
+        print(" Remove quantity button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['DONE_BUTTON'])
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print("'ADD to Cart' is clicked")
 
     def add_multiple_items_to_cart(self):
         time.sleep(2)
@@ -99,30 +149,65 @@ class AndroidMenuScreen(BasePage):
         self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
         print(" 'Add to cart' button is clicked")
 
-    def verify_price_in_cart_matches_menu_price(self, product_name="Mexican Grilled Chicken & Cheese Burger + Fries (M)"):
+    def add_item_in_cart(self, item_name):
+        """Click on menu item and add it to the cart."""
         time.sleep(2)
+        self.actions.is_element_displayed(*locators['MENU_HEADER'])
+        print("Our Menu header is displayed")
 
-        # --- Get price from Cart ---
-        by, value = locators['PRODUCT_PRICE_IN_CART']
-        cart_price_locator = (by, value.format(product_name))
-        cart_price_element = self.driver.find_element(*cart_price_locator)
-        cart_price = cart_price_element.text.strip().replace(" ", "")
-        print(f" Cart price for '{product_name}' is: {cart_price}")
-        self.driver.back()
-        time.sleep(1)
+        # Click on Mexican Range
         self.actions.is_element_displayed(*locators['MEXICAN_RANGE'])
         self.actions.click_button(*locators['MEXICAN_RANGE'])
+        print("Clicked on Mexican Range")
 
-        # --- Get price from Menu ---
-        by, value = locators['PRODUCT_PRICE_IN_MENU']
-        menu_price_locator = (by, value.format(product_name))
-        menu_price_element = self.driver.find_element(*menu_price_locator)
-        menu_price = menu_price_element.text.strip().replace(" ", "")
-        print(f"📋 Menu price for '{product_name}' is: {menu_price}")
+        # --- Ensure product is visible 
+        by, value = locators['BURGER_XPATH']
+        formatted_locator = (by, value.format(item_name))
+        self.actions.is_element_displayed(*formatted_locator)
 
-        # --- Compare Prices ---
-        assert cart_price == menu_price, f" Price mismatch: Menu({menu_price}) != Cart({cart_price})"
-        print(" Price in cart matches the menu price.")
+        # --- Fetch Menu Price ---
+        by, value = locators['ALL_PRODUCT_PRICES_IN_MENU']
+        price_locator = (by, value.format(item_name))
+        menu_price_elements = self.driver.find_elements(*price_locator)
+
+        menu_prices = [
+            el.text.strip().replace(" ", "")
+            for el in menu_price_elements
+            if el.text.strip() and "₹" in el.text
+        ]
+
+        if not menu_prices:
+            raise AssertionError(f"No valid price found for {item_name}, got: {[el.text for el in menu_price_elements]}")
+
+        self.menu_price = menu_prices[-1]  # store menu price in the object
+        print(f"[DEBUG] Final menu price considered for '{item_name}': {self.menu_price}")
+
+        # --- Add item to cart ---
+        self.actions.click_button(*formatted_locator)
+        print(f"Clicked on item: {item_name}")
+        self.actions.click_button(*locators['ADD_BUTTON'])
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print(f"'{item_name}' added to cart")
+
+        return self.menu_price   # Return menu price for later comparison
+
+
+    def verify_price_in_cart_matches_menu_price(self, product_name, menu_price):
+        """Verify that cart price matches menu price passed as argument."""
+        time.sleep(3)
+
+        by, value = locators['PRODUCT_PRICE_IN_CART']
+        cart_price_locator = (by, value.format(product_name))
+        cart_price_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(cart_price_locator)
+        )
+        cart_price = cart_price_element.text.strip().replace(" ", "")
+        print(f"[DEBUG] Cart price for '{product_name}': {cart_price}")
+        print(f"[DEBUG] Expected menu price: {menu_price}")
+
+        assert cart_price == menu_price, f"Price mismatch: Menu({menu_price}) != Cart({cart_price})"
+        print("Price in cart matches the menu price!")
+
 
     def click_fries_and_sides_menu(self):
         time.sleep(5)
@@ -135,23 +220,352 @@ class AndroidMenuScreen(BasePage):
         # Click it
         Fries_and_slides.click()
         print("Clicked on fries & slides")
-        #time.sleep(1)
-        #self.actions.is_element_displayed(*locators['FRIES_AND_SIDES'])
-        #self.actions.click_button(*locators['FRIES_AND_SIDES'])
 
     def add_fries_in_cart(self):
-        time.sleep(2)
-        Fries_medium = self.driver.find_element(
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "Fries (Medium)"
+        max_scrolls = 5 
+        item = self.driver.find_element(
             AppiumBy.ANDROID_UIAUTOMATOR,
-            'new UiScrollable(new UiSelector().scrollable(true))'
+            'new UiScrollable(new UiSelector().resourceId("background-content"))'
             '.scrollIntoView(new UiSelector().textContains("Fries (Medium)"));'
         )
-        Fries_medium.click()
-        print("Clicked on fries & slides")
-        self.actions.click_button(*locators['ADD_BUTTON'])
+        item.click()
+        print(" Clicked on Fries (Medium)")
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                McChicken_3pc_meal = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                McChicken_3pc_meal.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
         print(" 'Add' button is clicked")
         time.sleep(1)
         self.actions.click_button(*locators['NEXT_BUTTON'])
         time.sleep(1)
         self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
         print(" 'Add to cart' button is clicked")
+
+    def Select_3PC_meals_menu(self):
+        time.sleep(5)
+        Select_3pc_meals = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Burger Combos ( 3 Pc Meals )"));'
+        )
+
+        Select_3pc_meals.click()
+        print("Clicked on Burger Combos ( 3 Pc Meals )")
+
+    def add_McChicken_meal_in_cart(self):
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "McChicken Burger Happy Meal"
+        max_scrolls = 5 
+        item = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().resourceId("background-content"))'
+            '.scrollIntoView(new UiSelector().textContains("McChicken Burger Happy Meal"));'
+        )
+        item.click()
+        print(" Clicked on McChicken Burger Happy Meal")
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                McChicken_3pc_meal = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                McChicken_3pc_meal.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
+        print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print(" 'Add to cart' button is clicked")
+
+    def Select_Desserts_menu(self):
+        time.sleep(5)
+        Select_Desserts = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Desserts"));'
+        )
+
+        Select_Desserts.click()
+        print("Clicked on Desserts menu")
+
+    def add_Desserts_product_in_cart(self):
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['DESSERTS_ITEM'])
+        self.actions.click_button(*locators['DESSERTS_ITEM'])
+        self.actions.click_button(*locators['ADD_BUTTON'])
+        print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print(" 'Add to cart' button is clicked")
+
+    def verify_Desserts_thumnbnails_image_is_clearly_displayed(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['DESSERTS_THUMBNAIL_IMAGE'])
+        print("The desserts thumbnails image is loded and clearly displayed under menu section")
+
+    def Select_Burgers_and_wrap_menu(self):
+        time.sleep(5)
+        Select_Burgers_and_Wraps = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Burgers & Wraps"));'
+        )
+
+        Select_Burgers_and_Wraps.click()
+        print("Clicked on Burgers & Wraps menu")
+
+    def add_Chicken_wrap_to_cart(self):
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "Big Spicy Chicken Wrap"
+        max_scrolls = 5   
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                Big_Spicy_Chicken_Wrap = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                Big_Spicy_Chicken_Wrap.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
+        print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['NEXT_BUTTON'])
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print(" 'Add to cart' button is clicked")
+
+    def Select_Coffee_and_beverages_menu(self):
+        time.sleep(5)
+        Select_Coffee_and_beverages = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Coffee & Beverages (Hot and Cold)"));'
+        )
+
+        Select_Coffee_and_beverages.click()
+        print("Clicked on Coffee & beverages menu")
+
+    def add_cold_coffee_to_cart(self):
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['COLD_COFFEE_PRODUCT'])
+        self.actions.click_button(*locators['COLD_COFFEE_PRODUCT'])
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_BUTTON'])
+        print(" 'Add' button is clicked")
+
+    def add_hot_coffee_to_cart(self):
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "Hot Chocolate (S)"
+        max_scrolls = 5  
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                Hot_Chocolate = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                Hot_Chocolate.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
+        print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print(" 'Add to cart' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['COFFEE_AND_BEVERAGES_MENU'])
+        print(" 'Coffee & beverages' menu is clicked")
+
+    def Select_Cakes_brownies_and_cookies_menu(self):
+        time.sleep(5)
+        Select_Cakes_brownies_and_cookies = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Cakes Brownies and Cookies"));'
+        )
+
+        Select_Cakes_brownies_and_cookies.click()
+        print("Clicked on Cakes Brownies and Cookies menu")
+
+
+    def add_brownie_to_cart(self):
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "Chocochip Muffin"
+        max_scrolls = 10   # safety limit to avoid infinite scrolling
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                muffin = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                muffin.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
+        print(" 'Add' button is clicked")
+
+    def select_millet_bun_menu(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MENU_HEADER'])
+        print("Our Menu header is displayed")
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['MILLET_BUN_MENU'])
+        self.actions.click_button(*locators['MILLET_BUN_MENU'])
+        print("'Protein Plus and Burgers with Millet Bun' is clicked")
+
+    def add_millet_bun_to_cart(self):
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "McSpicy Paneer Burger with Multi-Millet Bun"
+        max_scrolls = 10   # safety limit to avoid infinite scrolling
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                Millet_bun = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                Millet_bun.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
+        print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print(" 'Add to cart' button is clicked")
+
+
+    def click_on_millet_bun_burger(self):
+        time.sleep(5)
+        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
+        item_text = "McSpicy Paneer Burger with Multi-Millet Bun"
+        max_scrolls = 10   # safety limit to avoid infinite scrolling
+
+        for i in range(max_scrolls):
+            try:
+                # Try to scroll to and find the item
+                Millet_bun = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                )
+                Millet_bun.click()
+                print(f" Clicked on {item_text}")
+                break
+            except Exception:
+                # If not found, scroll forward and retry
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    f'{scrollable}.scrollForward()'
+                )
+        else:
+            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
+        
+    def verify_millet_bun_description_is_displayed(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MILLET_BUN_DESCRIPTION'])
+        print("Millet bun descrption is displayed")
+       
+       

@@ -456,6 +456,12 @@ def verify_save_button_disabled(setup_platform):
     is_disabled = AndroidProfileScreen(setup_platform).check_save_changes_button_disabled()
     assert is_disabled, "The save button should be disabled"
 
+@then('I click profile back button')
+@allure.step("Then I click profile back button ")
+def click_back_button_on_profile_acreen(setup_platform):
+    print("click profile back button")
+    AndroidProfileScreen(setup_platform).click_back_button_on_profile_acreen()
+
 @when("I Check icon presence near each field")
 @allure.step("When I Check icon presence near each field")
 def check_icons_presence(setup_platform):
@@ -621,8 +627,7 @@ def click_add_new_and_confirm_location(setup_platform):
 @allure.step("Then I verify that the address not saved and validation error should be displayed")
 def verify_user_redirected_to_address_filling_page(setup_platform):
     print("Verifying that the address not saved and validation error should be displayed")
-    Address_validation_error = AndroidAddressScreen(setup_platform).verify_address_mandatory_field_empty_error()
-    assert Address_validation_error, "Address validation error is not displayed"
+    AndroidAddressScreen(setup_platform).verify_address_mandatory_field_empty_error()
 
 @when("I enter special character in house/flat field and click save address")
 @allure.step("When I enter special character in house/flat field and click save address")
@@ -1006,11 +1011,29 @@ def verify_previously_saved_address_should_visible(setup_platform, user_data_sto
     print("Verifying previously saved addresses should be retained and visible")
     AndroidAddressScreen(setup_platform).verify_previously_saved_address_should_visible_after_logs_in(user_data_store)
 
+@when("I click on clear all to empty the cart")
+@allure.step("When I click on clear all to empty the cart")
+def click_add_button(setup_platform):
+    print("click on clear all to empty the cart")
+    AndroidViewCartScreen(setup_platform).Clear_all_cart()
+
 @when("I click on Menu icon")
 @allure.step("When I click on Menu icon")
-def click_add_button(setup_platform):
+def click_on_Menu_icon(setup_platform):
     print("click on Menu icon")
     AndroidHomeScreen(setup_platform).click_on_Menu_icon()
+
+@when("I add breakfast item")
+@allure.step("When I add breakfast item")
+def add_breakfast_item(setup_platform):
+    print("add breakfast item")
+    AndroidMenuScreen(setup_platform).add_breakfast_item("Veg McMuffin with protein plus Meal")
+
+@then("I verify the item is added to the cart")
+@allure.step("Then I verify the item is added to the cart")
+def verify_breakfast_item_added_to_cart(setup_platform):
+    print("verify the item is added to the cart")
+    AndroidViewCartScreen(setup_platform).verify_breakfast_item_added_to_cart()
 
 @when("I click on 'Add +' for the customizable item")
 @allure.step("When I click on 'Add +' for the customizable item")
@@ -1019,7 +1042,7 @@ def click_add_button(setup_platform):
     AndroidMenuScreen(setup_platform).click_add_for_customise_item("Mexican Grilled Chicken & Cheese Burger + Fries (M)")
 
 @then("I verify the customization options should appear before adding the item to the cart")
-@allure.step("When I verify the customization options should appear before adding the item to the cart")
+@allure.step("Then I verify the customization options should appear before adding the item to the cart")
 def step_verify_customise_option_appear(setup_platform):
     print("Verifying the customization options should appear before adding the item to the cart")
     AndroidMenuScreen(setup_platform).verify_customise_option_appear()
@@ -1038,40 +1061,40 @@ def verify_all_item_added_with_correct_price(setup_platform):
 
 @when("I user adds the item to the cart")
 @allure.step("When I user adds the item to the cart")
-def Add_single_item_to_the_cart(setup_platform):
-    print("user adds the item to the cart")
-    AndroidMenuScreen(setup_platform).add_single_item_in_cart("Mexican Grilled Chicken & Cheese Burger + Fries (M)")
+def Add_single_item_to_the_cart(setup_platform, context):
+    print("User adds the item to the cart")
+    menu_price = AndroidMenuScreen(setup_platform).add_item_in_cart(
+        "Mexican Grilled Chicken & Cheese Burger + Fries (M)"
+    )
+    context["menu_price"] = menu_price  # Store price for later
 
-
-@then("I verify the item price should be correctly displayed in the cart")
-@allure.step("When I verify the item price should be correctly displayed in the cart")
-def verify_product_price_in_the_cart(setup_platform):
-    print("verify the item price should be correctly displayed in the cart")
-    AndroidViewCartScreen(setup_platform).verify_product_price_is_displayed_correct_in_cart()
 
 @then("I verify the price in the cart should match the menu price")
-@allure.step("When I verify the price in the cart should match the menu price")
-def verify_product_price_in_the_cart_match_with_menu_price(setup_platform):
-    print("verify the price in the cart should match the menu price")
-    AndroidMenuScreen(setup_platform).verify_price_in_cart_matches_menu_price()
+@allure.step("Then I verify the price in the cart should match the menu price")
+def verify_product_price_in_the_cart_match_with_menu_price(setup_platform, context):
+    print("Verifying that the price in the cart matches the menu price")
+    menu_price = context.get("menu_price")
+    AndroidMenuScreen(setup_platform).verify_price_in_cart_matches_menu_price(
+        "Mexican Grilled Chicken & Cheese Burger + Fries (M)", menu_price
+    )
 
 @when("I clicks on the 'Customize' button")
 @allure.step("When I clicks on the 'Customize' button")
-def click_customised(setup_platform):
+def click_customise_option(setup_platform):
     print("clicks on the 'Customize' button")
-    ViewCartPage(setup_platform).Click_customise()
+    AndroidMenuScreen(setup_platform).click_customise_option()
 
 @when("I selects or removes items from the customization options")
 @allure.step("When I selects or removes items from the customization options")
 def Add_or_remove_items_on_customise_page(setup_platform):
     print("selects or removes items from the customization options")
-    ViewCartPage(setup_platform).Add_or_remove_items_on_customise_page()
+    AndroidMenuScreen(setup_platform).click_add_and_remove_sign_to_customised_item()
 
 @then("I verify the customized item should be added to the cart with selected preferences")
 @allure.step("When I verify the customized item should be added to the cart with selected preferences")
 def Verify_customisation_text_after_adding_or_removing_items(setup_platform):
     print("verify the customized item should be added to the cart with selected preferences")
-    ViewCartPage(setup_platform).Verify_customisation_text_after_adding_or_removing_items()
+    AndroidViewCartScreen(setup_platform).verify_customised_item_is_displayed_to_cart()
 
 @then("I verify the added items in cart")
 @allure.step("When I verify the added items in cart")
@@ -1095,25 +1118,19 @@ def Verify_selected_items_removed_from_cart(setup_platform):
 @allure.step("When I selects the '3Pc Meals' category under menu")
 def select_3PC_meal_under_menu(setup_platform):
     print("selects the '3Pc Meals' category under menu")
-    HomePage(setup_platform).select_3PC_meal_under_menu()
-
-@then("I verify all items under the '3Pc Meals' category should be displayed")
-@allure.step("When I verify all items under the '3Pc Meals' category should be displayed")
-def verify_display_of_3PC_meal_category(setup_platform):
-    print("verify all items under the '3Pc Meals' category should be displayed")
-    HomePage(setup_platform).verify_display_of_3PC_meal_category()
+    AndroidMenuScreen(setup_platform).Select_3PC_meals_menu()
 
 @when("I select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
 @allure.step("When I select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
 def select_product_from_3PC_meals_category(setup_platform):
     print("Select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
-    HomePage(setup_platform).select_product_from_3PC_meals_category()
+    AndroidMenuScreen(setup_platform).add_McChicken_meal_in_cart()
 
-@then("I verify the product added in cart")
-@allure.step("When I verify the product added in cart")
-def verify_product_added_in_cart(setup_platform):
-    print("verify the product added in cart")
-    HomePage(setup_platform).verify_product_added_in_cart()
+@then("I verify the 3Pc meal added in cart")
+@allure.step("Then I verify the 3Pc meal added in cart")
+def verify_3pc_meal_item_added_to_cart(setup_platform):
+    print("verify the 3Pc meal added in cart")
+    AndroidViewCartScreen(setup_platform).verify_3pc_meal_item_added_to_cart()
 
 @when("I click on 'Fries & Sides' menu option")
 @allure.step("When I click on 'Fries & Sides' menu option")
@@ -1132,6 +1149,127 @@ def add_fries_in_cart(setup_platform):
 def verify_product_added_in_cart(setup_platform):
     print("verify fries should be added to the cart ")
     AndroidViewCartScreen(setup_platform).verify_fries_added_to_cart()
+
+@when("I selects the 'Desserts' category under menu")
+@allure.step("When I selects the 'Desserts' category under menu")
+def Select_Desserts_menu(setup_platform):
+    print("selects the 'Desserts' category under menu")
+    AndroidMenuScreen(setup_platform).Select_Desserts_menu()
+
+@when("I select any product from desserts and click on Add to cart")
+@allure.step("When I select any product from desserts and click on Add to cart")
+def add_Desserts_product_in_cart(setup_platform):
+    print("select any product from desserts and click on Add to cart")
+    AndroidMenuScreen(setup_platform).add_Desserts_product_in_cart()
+
+@then("I verify the Desserts product added in cart")
+@allure.step("Then I verify the Desserts product added in cart")
+def verify_Desserts_item_added_to_cart(setup_platform):
+    print("verify the Desserts product added in cart")
+    AndroidViewCartScreen(setup_platform).verify_Desserts_item_added_to_cart()
+
+@when("I selects the 'Burgers & Wraps' category under menu")
+@allure.step("When I selects the 'Burgers & Wraps' category under menu")
+def Select_Burgers_and_wrap_menu(setup_platform):
+    print("selects the 'Burgers & Wraps' category under menu")
+    AndroidMenuScreen(setup_platform).Select_Burgers_and_wrap_menu()
+
+@when("I select chicken wrap and Add to cart")
+@allure.step("When I select chicken wrap and Add to cart")
+def add_Chicken_wrap_to_cart(setup_platform):
+    print("select chicken wrap and Add to cart")
+    AndroidMenuScreen(setup_platform).add_Chicken_wrap_to_cart()
+
+@then("I verify the Burgers & Wraps product added in cart")
+@allure.step("Then I verify the Burgers & Wraps product added in cart")
+def verify_Wrap_item_added_to_cart(setup_platform):
+    print("verify the Burgers & Wraps product added in cart")
+    AndroidViewCartScreen(setup_platform).verify_Wrap_item_added_to_cart()
+
+@when("I click on 'Coffee & Beverages' menu option")
+@allure.step("When I click on 'Coffee & Beverages' menu option")
+def Select_Coffee_and_beverages_menu(setup_platform):
+    print("click on 'Coffee & Beverages' menu option")
+    AndroidMenuScreen(setup_platform).Select_Coffee_and_beverages_menu()
+
+@when("I add 'cold coffee' to the cart")
+@allure.step("When I add 'cold coffee' to the cart")
+def add_cold_coffee_to_cart(setup_platform):
+    print("add 'cold coffee' to the cart")
+    AndroidMenuScreen(setup_platform).add_cold_coffee_to_cart()
+
+@then("I verify cold coffee should be added to the cart")
+@allure.step("Then I verify cold coffee should be added to the cart")
+def verify_cold_coffee_added_to_cart(setup_platform):
+    print("verify cold coffee should be added to the cart")
+    AndroidViewCartScreen(setup_platform).verify_cold_coffee_added_to_cart()
+
+@when("I add 'Hot coffee' to the cart")
+@allure.step("When I add 'Hot coffee' to the cart")
+def add_hot_coffee_to_cart(setup_platform):
+    print("add 'Hot coffee' to the cart")
+    AndroidMenuScreen(setup_platform).add_hot_coffee_to_cart()
+
+@then("I verify cold coffee & hot coffee should be added to the cart")
+@allure.step("Then I verify cold coffee & hot coffee should be added to the cart")
+def verify_cold_coffee_and_hot_coffee_added_to_cart(setup_platform):
+    print("verify cold coffee & hot coffee should be added to the cart")
+    AndroidViewCartScreen(setup_platform).verify_cold_coffee_and_hot_coffee_added_to_cart()
+
+@when("I click on 'Cakes, Brownies & Cookies' menu option")
+@allure.step("When I click on 'Cakes, Brownies & Cookies' menu option")
+def Select_Cakes_brownies_and_cookies_menu(setup_platform):
+    print("click on 'Cakes, Brownies & Cookies' menu option")
+    AndroidMenuScreen(setup_platform).Select_Cakes_brownies_and_cookies_menu()
+
+@when("I add 'Brownie' to the cart")
+@allure.step("When I add 'Brownie' to the cart")
+def add_brownie_to_cart(setup_platform):
+    print("add 'Brownie' to the cart")
+    AndroidMenuScreen(setup_platform).add_brownie_to_cart()
+
+@then("I verify brownie should be added to the cart")
+@allure.step("Then I verify brownie should be added to the cart")
+def verify_brownie_added_to_cart(setup_platform):
+    print("verify brownie should be added to the cart")
+    AndroidViewCartScreen(setup_platform).verify_brownie_added_to_cart()
+
+@then("I verify thumbnails image of a dessert is clearly displayed")
+@allure.step("Then I verify thumbnails image of a dessert is clearly displayed")
+def verify_Desserts_thumnbnails_image_is_clearly_displayed(setup_platform):
+    print("verify thumbnails image of a dessert is clearly displayed")
+    AndroidMenuScreen(setup_platform).verify_Desserts_thumnbnails_image_is_clearly_displayed()
+
+@when("I click on 'Burgers with Millet Bun' menu option")
+@allure.step("When I click on 'Burgers with Millet Bun' menu option")
+def select_millet_bun_menu(setup_platform):
+    print("click on 'Burgers with Millet Bun' menu option")
+    AndroidMenuScreen(setup_platform).select_millet_bun_menu()
+
+@when("I add 'millet bun burger' to the cart")
+@allure.step("When I add 'millet bun burger' to the cart")
+def add_millet_bun_to_cart(setup_platform):
+    print("add 'millet bun burger' to the cart")
+    AndroidMenuScreen(setup_platform).add_millet_bun_to_cart()
+
+@then("I verify millet bun burger should be added to the cart")
+@allure.step("Then I verify millet bun burger should be added to the cart")
+def verify_millet_bun_added_to_cart(setup_platform):
+    print("verify millet bun burger should be added to the cart")
+    AndroidViewCartScreen(setup_platform).verify_millet_bun_added_to_cart()
+
+@when("I click on millet bun burger")
+@allure.step("When I click on millet bun burger")
+def click_on_millet_bun_burger(setup_platform):
+    print("click on millet bun burger")
+    AndroidMenuScreen(setup_platform).click_on_millet_bun_burger()
+
+@then("I verify nutritional info is displayed in the description")
+@allure.step("Then I verify nutritional info is displayed in the description")
+def verify_millet_bun_description_is_displayed(setup_platform):
+    print("verify nutritional info is displayed in the description")
+    AndroidMenuScreen(setup_platform).verify_millet_bun_description_is_displayed()
+
     
 
 

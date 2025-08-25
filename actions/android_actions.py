@@ -1,4 +1,5 @@
 import random
+import pytest
 import time
 import allure
 from allure_commons.types import AttachmentType
@@ -13,6 +14,8 @@ from selenium.webdriver.common.actions.pointer_input import PointerInput
 from selenium.webdriver.common.actions.interaction import Interaction
 from selenium.webdriver.common.actions.interaction import KEY
 from selenium.common.exceptions import NoSuchElementException
+from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from conftest import readConstants
 
 
@@ -140,7 +143,7 @@ class AndroidActions(ActionsParent):
         print(f"Attempting to click element using locator: {locator_type}, {locator_value}")
 
         try_count = 1
-        max_retries = 5
+        max_retries = 2
 
         while try_count <= max_retries:
             try:
@@ -415,6 +418,83 @@ class AndroidActions(ActionsParent):
         actions.pointer_action.pointer_down()
         actions.pointer_action.pause(hold_duration_ms / 1000)  # pause takes seconds
         actions.pointer_action.pointer_up()
+
+    def safe_action(action, retries=2, wait=3):
+        for attempt in range(retries):
+            try:
+                return action()
+            except WebDriverException as e:
+                if "socket hang up" in str(e).lower():
+                    print(f"[WARN] Socket hang up detected. Retrying... ({attempt + 1}/{retries})")
+                    time.sleep(wait)
+                else:
+                    raise
+        raise Exception("Failed due to repeated 'socket hang up' errors")
+
+    @pytest.fixture(scope="function")
+    def setup_platform(request):
+        platform = request.config.getoption("--platform")
+
+        if platform == "android":
+            desired_caps = {
+                "platformName": "Android",
+                "deviceName": "RZ8N810NC1K",
+                "automationName": "UiAutomator2",
+                "app": "D:\\UAT-v12.81.0-1754378379877.apk",
+                "appPackage": "com.il.mcdelivery",
+                "appActivity": "com.il.mcdelivery.MainActivity",
+                "noReset": True,
+                "fullReset": False,
+                "uiautomator2ServerLaunchTimeout": 60000,
+                "uiautomator2ServerInstallTimeout": 60000,
+                "adbExecTimeout": 60000,
+                "newCommandTimeout": 300
+            }
+            driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
+
+        elif platform == "web":
+            from selenium import webdriver as selenium_webdriver
+            driver = selenium_webdriver.Chrome()
+
+        else:
+            raise ValueError(f"Unknown platform: {platform}")
+
+        print(f"[DEBUG] Created driver for {platform}")
+        yield driver
+
+        # ✅ Now this will work
+        safe_action(lambda: driver.quit())
+
+
+
+        '''
+    def setup_platform(request):
+        platform = request.config.getoption("--platform")  # Pass --platform=android or --platform=web
+
+            if platform == "android":
+                desired_caps = {
+                    "platformName": "Android",
+                        "deviceName": "RZ8N810NC1K",
+                        "automationName": "UiAutomator2",
+                        "app": "D:\\UAT-v12.81.0-1754378379877.apk",
+                        "appPackage": "com.il.mcdelivery",
+                        "appActivity": "com.il.mcdelivery.MainActivity"
+                    }
+                    driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
+
+                elif platform == "web":
+                    driver = webdriver.Chrome()
+
+                else:
+                    raise ValueError(f"Unknown platform: {platform}")
+
+                print(f"DEBUG: Created driver for {platform}")
+                yield driver
+                driver.quit()
+
+                '''
+
+        
 
 
     
