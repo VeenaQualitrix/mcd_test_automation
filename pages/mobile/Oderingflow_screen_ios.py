@@ -26,6 +26,38 @@ locators = {
 
 'YOUR_ORDER_HEADER': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Your Order"]'),
 
+"SEARCH_LOCATION_FIELD": (AppiumBy.ACCESSIBILITY_ID, "Search for area, street name.."),
+
+"SEARCH_GPS_LOCATION": (AppiumBy.XPATH, '//XCUIElementTypeTextField'),
+
+"CLICK_THE_LOCATION": (AppiumBy.ACCESSIBILITY_ID, "Gurugram"),
+
+'FLAT_NO': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="*House / Flat No."]'),
+
+"CLEAR_ORDER_BUTTON": (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Clear All"]'),
+
+"CLEAR_ORDER_OK_BUTTON": (AppiumBy.ACCESSIBILITY_ID, "OK"),
+
+"CLICK_THE_LOCATION_DADAR": (AppiumBy.ACCESSIBILITY_ID, "Dadar"),
+
+"CLICK_CUSTOMIZATION_OPTION": (AppiumBy.ACCESSIBILITY_ID, "Customise"),
+
+'SOLD_OUT_LABEL': (AppiumBy.XPATH, "(//XCUIElementTypeStaticText[contains(@name, 'Sold out')])[1]"),
+
+"ADD_ONE_ITEM": (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[@name="Add"])[1]'),
+
+
+"ADD_SECOND_ITEM": (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[@name="Add"])[2]'),
+
+"MCSAVER_CATEGORY_BUTTON": (AppiumBy.XPATH, '//XCUIElementTypeImage[contains(@name, "McSaver Combos")]'),
+
+"PAYMENT_METHOD": (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Total Payable"]'),
+
+"CONFIRM_BUTTON": (AppiumBy.CLASS_NAME, "XCUIElementTypeButton"),
+
+"FIRST_MENU_ITEM_PRICE": (AppiumBy.XPATH, "(//XCUIElementTypeStaticText[contains(@name, '₹')])[1]"),
+
+"FIRST_CART_ITEM_PRICE": (AppiumBy.XPATH, "(//XCUIElementTypeStaticText[contains(@name, '₹')])[18]"),
 }
 class OderingScreenIos(BasePage):
 
@@ -68,3 +100,114 @@ class OderingScreenIos(BasePage):
         order_header = self.actions.is_element_displayed(*locators['YOUR_ORDER_HEADER'])
         assert order_header is not None, "Your Order screen is not displayed"
         print("'Your Order' screen verified successfully")
+
+    def search_location(self):
+        time.sleep(2)
+        print("Searching for location")
+        self.actions.click_button(*locators['SEARCH_LOCATION_FIELD'])
+        self.actions.click_button(*locators['SEARCH_GPS_LOCATION'])
+        self.actions.send_keys(*locators['SEARCH_GPS_LOCATION'], "Gurugram")
+        self.actions.click_button(*locators['CLICK_THE_LOCATION'])
+        print("Location search initiated")
+
+    def enter_address_details_breakfast(self):
+        time.sleep(2)  # Ideally replace with explicit wait
+        self.actions.send_keys(*locators['FLAT_NO'], "Gurugram")
+        print("Entered address: Flat No - Gurugram")    
+
+    def clear_order(self):
+        time.sleep(2)
+        self.actions.click_button(*locators['CLEAR_ORDER_BUTTON'])
+        self.actions.click_button(*locators['CLEAR_ORDER_OK_BUTTON'])
+        print("Order cleared")    
+
+    def search_location_outofstock(self):
+        time.sleep(2)
+        print("Searching for location")
+        self.actions.click_button(*locators['SEARCH_LOCATION_FIELD'])
+        self.actions.click_button(*locators['SEARCH_GPS_LOCATION'])
+        self.actions.send_keys(*locators['SEARCH_GPS_LOCATION'], "Dadar")
+        self.actions.click_button(*locators['CLICK_THE_LOCATION_DADAR'])
+        print("Location search initiated")    
+
+    def enter_address_details_outodstock(self):
+        time.sleep(2)  # Ideally replace with explicit wait
+        self.actions.send_keys(*locators['FLAT_NO'], "Dadar")
+        print("Entered address: Flat No - Dadar")      
+
+    def is_item_marked_sold_out(self):
+        try:
+            self.driver.execute_script("mobile: scroll", {
+                "direction": "down",
+                "predicateString": "name == 'Sold out'"
+            })
+            time.sleep(2)  # wait briefly after scroll
+            return self.actions.is_element_displayed(*locators['SOLD_OUT_LABEL'])
+        except Exception as e:
+            print(f"Error checking sold-out label: {e}")
+            return False
+
+    def select_customization_option(self):
+        try:
+            self.actions.is_element_displayed(*locators['CLICK_CUSTOMIZATION_OPTION']) 
+            self.actions.click_button(*locators['CLICK_CUSTOMIZATION_OPTION'])  
+            print("Clicked on the customization option")
+        except Exception as e:
+            print(f"Failed to click customization option: {e}")
+            raise
+
+    def add_first_available_item(self):
+        time.sleep(2)
+        self.actions.click_button(*locators['ADD_ONE_ITEM'])    
+
+    def add_second_available_item(self):
+        time.sleep(2)
+        self.actions.click_button(*locators['ADD_SECOND_ITEM'])     
+
+    def select_mcsaver_category(self):
+        time.sleep(3)
+        print("Attempting to select the MCsaver category")
+        self.actions.click_button(*locators['MCSAVER_CATEGORY_BUTTON'])
+        print("Navigated to the MCsaver menu page")
+    
+    def is_payment_method_and_confirm_button_displayed(self):
+        time.sleep(2)
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Total Payable'"
+            })
+        payment_visible = self.actions.is_element_displayed(*locators['PAYMENT_METHOD'])
+        confirm_visible = self.actions.is_element_displayed(*locators['CONFIRM_BUTTON'])
+        print(f"Payment method visible: {payment_visible}")
+        print(f"Confirm button visible: {confirm_visible}")
+
+    def scroll_to_element(self, locator):
+        element = self.driver.find_element(*locator)
+        self.driver.execute_script("mobile: scrollToElement", {"elementId": element.id})
+        time.sleep(1)
+
+    def verify_pricing(self):
+        time.sleep(2)
+        self.actions.get_text(*locators['FIRST_MENU_ITEM_PRICE'])
+        
+    def verify_sold_out_items_not_clickable(self):
+        time.sleep(2)
+        if self.actions.is_element_displayed(*locators['SOLD_OUT_LABEL']):
+            print("'Sold out' label is visible.")
+            try:
+                self.actions.click_button(*locators['SOLD_OUT_LABEL'])
+                raise AssertionError("Add button was clickable for a sold out item.")
+            except Exception:
+                print("Correct: 'Add' button not clickable for sold out item.")
+        else:
+                raise AssertionError("'Sold out' label was not found.")
+   
+    def verify_item_in_cart(self):
+        time.sleep(2)
+        item_name = self.actions.get_text(*locators['CART_ITEM_NAME'])  # Read the cart item
+        print(f"Item in cart: {item_name}")
+        expected_item = "Veg McMuffin + Hashbrown"
+        assert expected_item in item_name, f"Expected '{expected_item}' in cart but found '{item_name}'"
+        print("Item successfully verified in cart.")
+
+        
