@@ -811,7 +811,7 @@ Scenario: Verify out-of-stock label handling
     Then I verify the sold out item is indicated as unavailable
     Then I verify that sold out items cannot be added to cart
 
-@TC_IOS_Ordering_Mobile_007
+@TC_IOS_Ordering_Mobile_008
 Scenario: verify the item is added to the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -826,7 +826,98 @@ Scenario: verify the item is added to the cart
     And I select Veg McMuffin with protein plus Meal
     And I click on Add item
     And I click on Add to Cart 
-    # And I click on View Cart
-    # And I verify the item is added to the cart
-    # Then I clear the order
-    # Not able to add the cart for the breakfast
+    And I click on View Cart
+    And I verify the item is added to the cart
+    Then I clear the order
+    # only morning veg muffin is sold out and scripted for the protien meal test within 11am
+
+@TC_IOS_Ordering_Mobile_009
+Scenario: Handle Sold Out McBreakfast Items
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for out of stock item location
+    And I click on confirm location
+    And I enter  out of stock item address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the McBreakfast menu page    
+    Then I verify the sold out item is indicated as unavailable
+
+@TC_IOS_Ordering_Mobile_0010
+Scenario: View 3Pc Meals Category
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the 3pc meal menu page  
+    And I click on the meal category
+    And I click on Add item
+    And I click on Add to Cart 
+    And I click on View Cart
+    And I verity the 3pc meal iteam is added to the cart
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0011
+Scenario: user should selecet product from dessert
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    Then I click on the Menu option    
+    And I click on the dessert menu
+    And I select the random dersert item
+    And I click on Add item
+    And I click on the Next button
+    And I click on Add to Cart 
+    And I click on View Cart
+    And I verity the dessert iteam is added to the cart
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0012
+Scenario: Add Chicken Wrap from Burgers & Wraps
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    Then I click on the Menu option    
+    And I click on the Burgers & Wraps menu
+    And I select the Chicken Wrap item
+    And I click on Add item
+    And I click on the Next button
+    And I click on Add to Cart 
+    And I click on View Cart
+    And I verity the Chicken Wrap iteam is added to the cart
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0013
+Scenario: Customize a burger and add to cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    Then I click on the Menu option    
+    And I click on the Burgers & Wraps menu
+    And I select the Chicken Wrap item   
+    And I click on Add item
+    And I select the burger on the customization options
+    And I click on the Next button
+    And I Click on Customize button
+    And I added the extra item 
+    And I click on Add to Cart 
+    And I click on View Cart
+    Then I clear the order

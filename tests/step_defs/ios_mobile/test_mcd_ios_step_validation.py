@@ -761,3 +761,63 @@ def step_verify_sold_out_items_not_addable(setup_platform):
 @allure.step("Verify that the selected item is present in the cart")
 def verify_item_in_cart(setup_platform):
     OderingScreenIos(setup_platform).verify_item_in_cart()
+
+@then("I navigate to the 3pc meal menu page")
+@allure.step("User navigates to the 3pc meal menu page")
+def navigate_to_3pc_meal_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_3pc_meal_category()
+
+@then("I verity the 3pc meal iteam is added to the cart")
+@allure.step("Verify 3pc meal item is present in the cart")
+def verify_3pc_meal_added_to_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_3pc_meal_item_in_cart()
+
+@then("I click on the meal category")
+@allure.step("User clicks on the meal category")
+def click_meal_category(setup_platform):
+    OderingScreenIos(setup_platform).select_3pc_meal()
+
+@then("I click on the dessert menu")
+@allure.step("Click on the Desserts menu from the category list")
+def click_on_dessert_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_desserts_category()
+
+@then("I select the random dersert item")
+@allure.step("Select a random dessert item from the Desserts menu")
+def select_random_dessert_item(setup_platform):
+    OderingScreenIos(setup_platform).select_random_dessert_item()
+
+@then("I verity the dessert iteam is added to the cart")
+@allure.step("Verify dessert item is present in the cart")
+def verify_dessert_item_added_to_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_dessert_item_in_cart()
+
+@then("I click on the Burgers & Wraps menu")
+@allure.step("Click on the Burgers & Wraps menu")
+def click_on_burgers_and_wraps_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_burgers_and_wraps_menu()
+
+@then("I select the Chicken Wrap item")
+@allure.step("Select the Chicken Wrap item from the Burgers & Wraps menu")
+def select_chicken_wrap_item(setup_platform):
+    OderingScreenIos(setup_platform).select_chicken_wrap_item()
+
+@then("I verity the Chicken Wrap iteam is added to the cart")
+@allure.step("Verify Chicken Wrap item is present in the cart")
+def verify_chicken_wrap_added_to_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_chicken_wrap_item_in_cart()
+
+@then("I select the burger on the customization options")
+@allure.step("Select the burger from the customization options")
+def select_burger_on_customization_options(setup_platform):
+    OderingScreenIos(setup_platform).select_burger_customization_option()
+
+@then("I Click on Customize button")
+@allure.step("Click on the Customize button")
+def click_on_customize_button(setup_platform):
+    OderingScreenIos(setup_platform).click_customize_button()
+
+@then("I added the extra item")
+@allure.step("Add an extra item in the customization options")
+def add_extra_item(setup_platform):
+    OderingScreenIos(setup_platform).add_extra_item()

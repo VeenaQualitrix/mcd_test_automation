@@ -58,6 +58,33 @@ locators = {
 "FIRST_MENU_ITEM_PRICE": (AppiumBy.XPATH, "(//XCUIElementTypeStaticText[contains(@name, '₹')])[1]"),
 
 "FIRST_CART_ITEM_PRICE": (AppiumBy.XPATH, "(//XCUIElementTypeStaticText[contains(@name, '₹')])[18]"),
+
+"CART_ITEM_NAME": (AppiumBy.XPATH, "//XCUIElementTypeStaticText[contains(@name, 'Veg McMuffin')]"),
+
+"THREE_PC_MEAL_CATEGORY_BUTTON": (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Burger Combos ( 3 Pc Meals )"]'),
+
+"THREE_PC_MEAL_ITEM_IN_CART": (AppiumBy.XPATH, "//XCUIElementTypeStaticText[contains(@name, 'Veg McMuffin')]"),
+
+"THREE_PC_MEAL_CATEGORY_CLICK": (AppiumBy.XPATH, "//XCUIElementTypeOther[contains(@name, 'Mexican Grilled Chicken')]"),
+
+'DESSERTS_CATEGORY_BUTTON': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Desserts"]'),
+
+'DESSERT_ITEM': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Black Forest McFlurry Medium"]'),
+
+'CART_ITEM_LIST': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Black Forest McFlurry Medium"]'),
+
+'BURGERS_AND_WRAPS_MENU': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Burgers & Wraps"]'),
+
+'CHICKEN_WRAP_ITEM': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Mexican Grilled Chicken & Cheese Burger"]'),
+
+'CART_ITEM_LIST_WRAP': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Mexican Grilled Chicken & Cheese Burger"]'),
+
+'SELECT_BURGER_CUSTOMIZATION_OPTION': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "Mexican")])[3]'),
+
+'EXTRA_ITEM': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[1]'),
+
+'DONE_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "Done"),
+
 }
 class OderingScreenIos(BasePage):
 
@@ -206,8 +233,112 @@ class OderingScreenIos(BasePage):
         time.sleep(2)
         item_name = self.actions.get_text(*locators['CART_ITEM_NAME'])  # Read the cart item
         print(f"Item in cart: {item_name}")
-        expected_item = "Veg McMuffin + Hashbrown"
+        expected_item = "Veg McMuffin with protein plus Meal"
         assert expected_item in item_name, f"Expected '{expected_item}' in cart but found '{item_name}'"
         print("Item successfully verified in cart.")
 
+
+    def select_3pc_meal_category(self):
+        time.sleep(2)
+        print("Attempting to select the 3Pc Meal category")
+        self.actions.click_button(*locators['THREE_PC_MEAL_CATEGORY_BUTTON'])
+        print("Navigated to the 3Pc Meal menu page")
+
+
+    
+    def verify_3pc_meal_item_in_cart(self):
+        time.sleep(2)  # Consider using explicit waits
+        item_visible = self.actions.is_element_displayed(*locators['THREE_PC_MEAL_CATEGORY_CLICK'])
+        print(f"3pc meal item visibility in cart: {item_visible}")
+        assert item_visible, "3pc meal item was not added to the cart"
+
+
+    def select_3pc_meal(self):
+        time.sleep(2)
+        print("Clicking on the 3Pc Meal category")
+        self.actions.click_button(*locators['THREE_PC_MEAL_CATEGORY_CLICK'])
+        print("3Pc Meal category selected successfully")
+
+    def select_desserts_category(self):
+        try:
+            print("Scrolling to 'Desserts' category in left menu...")
+            self.driver.execute_script("mobile: scroll", {
+                "direction": "down",
+                "predicateString": "label == 'Desserts'"
+            })
+            time.sleep(2)
+        except Exception as e:
+            print(f"Scroll to 'Desserts' failed: {e}")
         
+        try:
+            print("Clicking on 'Desserts' category...")
+            self.actions.click_button(*locators['DESSERTS_CATEGORY_BUTTON'])
+            print("Navigated to the Desserts menu page")
+        except Exception as e:
+            print(f"Click on 'Desserts' failed: {e}")
+
+
+    def select_random_dessert_item(self):
+        time.sleep(2)
+        print("Locating dessert items on the screen...")
+        self.actions.is_element_displayed(*locators['DESSERT_ITEM'])
+        print("Clicking on a dessert item...")
+        self.actions.click_button(*locators['DESSERT_ITEM'])
+        print("Dessert item selected successfully")
+
+
+    def verify_dessert_item_in_cart(self):
+        time.sleep(2)
+        print("Verifying that the dessert item is added to the cart...")
+        cart_items = self.driver.find_elements(*locators['CART_ITEM_LIST'])
+        for item in cart_items:
+            print("Cart contains:", item.get_attribute("name"))
+        dessert_found = any("McFlurry" in item.get_attribute("name") for item in cart_items)
+        if not dessert_found:
+            raise AssertionError("Dessert item not found in the cart.")
+        print("Dessert item verified in the cart successfully.")
+
+    def click_burgers_and_wraps_menu(self):
+        time.sleep(2)
+        print("Clicking on the 'Burgers & Wraps' menu...")
+        self.actions.click_button(*locators['BURGERS_AND_WRAPS_MENU'])
+        print("'Burgers & Wraps' menu clicked successfully.")
+        
+
+    def select_chicken_wrap_item(self):
+        time.sleep(2)
+        print("Selecting the 'Chicken Wrap' item...")
+        self.actions.click_button(*locators['CHICKEN_WRAP_ITEM'])
+        print("'Chicken Wrap' item selected successfully.")
+
+    def verify_chicken_wrap_item_in_cart(self):
+        time.sleep(2)
+        print("Verifying 'Mexican Grilled Chicken' item is in the cart...")
+        cart_items = self.driver.find_elements(*locators['CART_ITEM_LIST_WRAP'])
+        for item in cart_items:
+            item_name = item.get_attribute("name")
+            print("Cart item found:", item_name)
+        item_found = any("Mexican Grilled Chicken" in item.get_attribute("name") for item in cart_items)
+        if not item_found:
+            raise AssertionError("'Mexican Grilled Chicken' not found in cart.")
+
+        print("'Mexican Grilled Chicken' item successfully verified in cart.")
+
+    def select_burger_customization_option(self):
+        time.sleep(3)
+        print("Selecting the burger from customization options...")
+        self.actions.click_button(*locators['SELECT_BURGER_CUSTOMIZATION_OPTION'])
+        print("Burger customization option selected.")
+
+    def click_customize_button(self):
+        time.sleep(2)
+        print("Clicking on the 'Customize' button...")
+        self.actions.click_button(*locators['CLICK_CUSTOMIZATION_OPTION'])
+        print("'Customize' button clicked successfully.")
+
+    def add_extra_item(self):
+        time.sleep(2)
+        print("Adding extra item during customization...")
+        self.actions.click_button(*locators['EXTRA_ITEM'])
+        self.actions.click_button(*locators['DONE_BUTTON'])
+        print("Extra item added successfully.")
