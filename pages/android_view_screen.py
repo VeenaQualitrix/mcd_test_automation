@@ -21,6 +21,7 @@ locators = {
 class AndroidViewScreen(BasePage):
 
     def verify_view_screen_navigation(self):
+        time.sleep(3)
         is_displayed = self.actions.is_element_displayed(*locators['MYMCD_LOGO'])
         print(f"View screen element displayed: {is_displayed}")
         return is_displayed
@@ -44,7 +45,7 @@ class AndroidViewScreen(BasePage):
         # Click it
         logout_element.click()
         print("Clicked on Log out button")
-        #time.sleep(2)
+        time.sleep(2)
         #self.actions.click_button(*locators['POPUP_DO_LATER'])
 
     def click_profile_edit_icon(self):

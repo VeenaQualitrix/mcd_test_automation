@@ -9,32 +9,26 @@ from actions.ios_actions import iOSActions
 class BasePage:
 
     def __init__(self, driver):
+        if driver is None:
+            raise ValueError("Driver cannot be None")
         self.driver = driver
-        if isinstance(driver, webdriver.Remote):
-            print("Application Launched")
-            self.driver = driver
+
+        try:
             capabilities = driver.capabilities
+            print("DEBUG: Capabilities =", capabilities)
             platform_name = capabilities.get('platformName', '').lower()
-            if platform_name == 'android':
-                print("Inside Android")
-                self.actions = AndroidActions(driver)
-            elif platform_name == 'ios':
-                print("Inside iOS")
-                self.actions = iOSActions(driver)
-            else:
-                print("for WebBrowser")
-                self.actions = WebAppActions(driver)
-
-
-    '''
-    def launch_application(self, appURL):
-        if appURL:
-            self.actions.launch_browser_url(appURL)
-            print("Opened McD Website")
+        except AttributeError:
+            platform_name = ''
+        
+        if platform_name == 'android':
+            print("Inside Android")
+            self.actions = AndroidActions(driver)
+        elif platform_name == 'ios':
+            print("Inside iOS")
+            self.actions = iOSActions(driver)
         else:
-            self.actions.launch_app()
-            print("Opened McD App")  
-            '''
+            print("Inside Web/Default")
+            self.actions = WebAppActions(driver)
 
     def launch_application(self):
         self.actions.launch_app()
