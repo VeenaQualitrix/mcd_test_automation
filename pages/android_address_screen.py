@@ -714,5 +714,30 @@ class AndroidAddressScreen(BasePage):
             self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
             print("clicked back button ")
 
+    def select_Mumbai_address_from_list(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+        )
+
+        addresses = ["Dadar West Mcdonalds"]
+
+        for address in addresses:
+            try:
+                # Use UiScrollable to scroll until text is visible
+                ui_scrollable = (
+                    'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
+                    f'.scrollIntoView(new UiSelector().textContains("{address}").instance(0));'
+                )
+
+                address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
+
+                address_text = address_element.text.strip()
+                print(f"Captured address: {address_text}")
+                address_element.click()
+                return  # Stop after first successful selection
+
+            except Exception as e:
+                print(f"Could not find address '{address}': {e}")
+
     
 

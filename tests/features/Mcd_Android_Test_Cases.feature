@@ -1026,6 +1026,24 @@ Scenario: Place an order with available breakfast item
     Then  I verify the item is added to the cart
     When  I click on clear all to empty the cart
 
+@TC_Android_ORDER_002
+Scenario: Attempt to order an out-of-stock item
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the Mumbai address from the address list
+    And   I click on Menu icon
+    And   I click 'Sold out' items from McBreakfast category
+    Then  I very User is unable to add item and Sold out popup shown
+    When  I click on MyMcD hamburger icon
+    Then  I click on Log out button
+
 @TC_Android_ORDER_003 @OrderFlow
 Scenario: Check customization option availability
     Given I launch the native app
@@ -1034,6 +1052,17 @@ Scenario: Check customization option availability
     When  I click on Menu icon
     And   I click on 'Add +' for the customizable item
     Then  I verify the customization options should appear before adding the item to the cart
+
+@TC_Android_ORDER_004 @OrderFlow
+Scenario: Add multiple items to cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add multiple items to cart
+    And   I click on view cart option
+    Then  I verify all added items should be listed in the cart with correct price and quantities
+    When  I click on clear all to empty the cart
 
 
 @TC_Android_ORDER_005 @OrderFlow
@@ -1058,6 +1087,24 @@ Scenario: Ensure menu item prices are correctly displayed and reflected in cart
     Then  I verify the price in the cart should match the menu price
     When  I click on clear all to empty the cart
 
+@TC_Android_ORDER_007
+Scenario: Verify out-of-stock label prevents adding item
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the Mumbai address from the address list
+    And   I click on Menu icon
+    And   I click 'Sold out' items from McBreakfast category
+    Then  I very User is unable to add item and Sold out popup shown
+    When  I click on MyMcD hamburger icon
+    Then  I click on Log out button
+
 
 @TC_Android_ORDER_008 @OrderFlow
 Scenario: Add a McBreakfast item to cart
@@ -1069,6 +1116,24 @@ Scenario: Add a McBreakfast item to cart
     And   I click on view cart option
     Then  I verify the item is added to the cart
     When  I click on clear all to empty the cart
+
+@TC_Android_ORDER_009
+Scenario: Add a sold-out McBreakfast item
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the Mumbai address from the address list
+    And   I click on Menu icon
+    And   I click 'Sold out' items from McBreakfast category
+    Then  I very User is unable to add item and Sold out popup shown
+    When  I click on MyMcD hamburger icon
+    Then  I click on Log out button
 
 @TC_Android_ORDER_010 @OrderFlow
 Scenario: View 3Pc Meals
@@ -1195,6 +1260,64 @@ Scenario: View nutrition description of millet bun
     And   I click on 'Burgers with Millet Bun' menu option
     And   I click on millet bun burger
     Then  I verify nutritional info is displayed in the description
+
+@TC_Android_ORDER_024 
+Scenario: Remove item from the cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add multiple items to cart
+    And   I click on view cart option
+    When  I clicks the 'Remove' button for an item
+    Then  I verify the selected item should be removed from the cart
+    When  I click on clear all to empty the cart
+
+@TC_Android_ORDER_025
+Scenario: Update item quantity in cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I clicks the 'Add' button for an item
+    And   I clicks the 'Add' button for an item
+    And   I clicks the 'Remove' button for an item
+    Then  I verify the Quantity updates correctly
+    When  I click on clear all to empty the cart
+
+@TC_Android_ORDER_026 
+Scenario: Check total price calculation
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add multiple items to cart
+    And   I click on view cart option
+    Then  I verify the total payable amount should be displayed
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_ORDER_027
+Scenario: Scroll through all menu categories
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I selects the 'Desserts' category under menu
+    Then  I verify the Desserts category is accessible via scrolling
+    When  I click on 'Fries & Sides' menu option
+    Then  I verify the Fries & Sides category is accessible via scrolling
+
+@TC_Android_ORDER_029 
+Scenario: Validate cart icon does not appear on the homepage if the cart is empty
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    And   I verify the cart icon does not appear on the homepage if the cart is empty
+
     
 
 

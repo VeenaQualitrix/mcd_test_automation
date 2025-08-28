@@ -44,7 +44,9 @@ locators = {
         "COFFEE_AND_BEVERAGES_MENU": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Coffee & Beverages (Hot and Cold)'])[1]"),
         "MILLET_BUN_MENU": (AppiumBy.XPATH, "//android.widget.TextView[@text='Protein Plus and Burgers with Millet Bun']"),
         "MILLET_BUN_DESCRIPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Spice up your meal with a healthier bite! Try your McSpicy Paneer Burger with the nutritious multi-millet bun.']]"),
-        
+        "SOLD_OUT": (AppiumBy.XPATH, "//android.view.View[@text='Sold out']"),
+        "DESSERT_CATEGORY": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Desserts'])[2]"),
+        "FRIES_CATEGORY": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Fries & Sides'])[2]"),
        
     
 
@@ -118,16 +120,34 @@ class AndroidMenuScreen(BasePage):
 
     def add_multiple_items_to_cart(self):
         time.sleep(2)
+        self.actions.is_element_displayed(*locators['MENU_HEADER'])
+        print("Our Menu header is displayed")
+        time.sleep(1)
+
+        self.actions.is_element_displayed(*locators['MEXICAN_RANGE'])
+        self.actions.click_button(*locators['MEXICAN_RANGE'])
+
         # List of items to add
         item_names = [
-            "Sausage McMuffin + Hashbrown",
-            "Veg McMuffin + Hashbrown"
+            "Mexican Grilled Chicken & Cheese Burger",
+            "Mexican Corn & Cheese Burger"
         ]
+
         for burger_name in item_names:
-            self.click_add_for_customise_item(burger_name)
-        time.sleep(2)
-        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
-        print("'ADD to Cart' is clicked")
+            by, value = locators['BURGER_XPATH']
+            formatted_locator = (by, value.format(burger_name))
+            self.actions.click_button(*formatted_locator)
+            print(f"Clicked on item: {burger_name}")
+
+            # Click on Add and Add to Cart for each item
+            self.actions.click_button(*locators['ADD_BUTTON'])
+            print("'Add' button is clicked")
+            time.sleep(1)
+            self.actions.click_button(*locators['NEXT_BUTTON'])
+            time.sleep(1)
+            self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+            print("'ADD to Cart' is clicked")
+
 
     def add_single_item_in_cart(self, item_name):
         time.sleep(2)
@@ -567,5 +587,32 @@ class AndroidMenuScreen(BasePage):
         time.sleep(2)
         self.actions.is_element_displayed(*locators['MILLET_BUN_DESCRIPTION'])
         print("Millet bun descrption is displayed")
+
+    def add_sold_out_breakfast_item(self, item_name):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MENU_HEADER'])
+        print("Our Menu header is displayed")
+        time.sleep(1)
+        # Format burger/item locator dynamically
+        by, value = locators['BURGER_XPATH']
+        formatted_locator = (by, value.format(item_name))
+        self.actions.click_button(*formatted_locator)
+        print(f" Clicked on item: {item_name}")
+
+    def verify_sold_out_option_is_displayed(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['SOLD_OUT'])
+        print("The 'Sold out' is displayed and user unable to add item")
+        self.driver.back()
+
+    def verify_Desserts_category_is_accessble_via_scrolling(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['DESSERT_CATEGORY'])
+        print("The desserts items is displayed after clicking the category")
+
+    def verify_Fries_category_is_accessble_via_scrolling(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['FRIES_CATEGORY'])
+        print("The Fries items is displayed after clicking the category")
        
        

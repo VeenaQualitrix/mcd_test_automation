@@ -338,10 +338,21 @@ def setup_platform(env, request):
         yield driver
         print('After yielding driver, starting teardown')
 
-        safe_action(lambda: driver.quit())
+        try:
+            driver.quit()
+            print("[DEBUG] Driver quit cleanly.")
+        except Exception as e:
+            if "invalid session id" in str(e).lower():
+                print("[WARN] Driver session already ended, skipping quit().")
+            else:
+                print(f"[ERROR] Unexpected error during driver.quit(): {e}")
+
         if appium_service and appium_service.is_running:
-            appium_service.stop()
-            print("[DEBUG] Appium service stopped cleanly.")
+            try:
+                appium_service.stop()
+                print("[DEBUG] Appium service stopped cleanly.")
+            except Exception as e:
+                print(f"[WARN] Error stopping Appium service: {e}")
     else:
         print('Yielding None - no driver created')
         yield None

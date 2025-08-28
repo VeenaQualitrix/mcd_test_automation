@@ -1,4 +1,5 @@
 from pages.base_page import BasePage
+from actions.android_actions import AndroidActions
 from pages.android_view_screen import AndroidViewScreen
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -28,6 +29,13 @@ locators = {
         "HOT_COFFEE_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Hot Chocolate (S)']"),
         "BROWNIE_PRODUCT_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Chocochip Muffin']"),
         "MILLET_BUN_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='McSpicy Paneer Burger with Multi-Millet Bun']"),
+        "TOTAL_PAYABLE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Total Payable']/following-sibling::android.widget.TextView"),
+        "REMOVE_ITEM_FROM_CART_PAGE" : (AppiumBy.XPATH, " (//android.widget.Image[@text='ic-subtract'])[1]"),
+        "BURGER_XPATH": (AppiumBy.XPATH, "//android.widget.TextView[@text='{}']"),
+        "MEXICAN_BURGER_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mexican Grilled Chicken & Cheese Burger + Fries (M)']"),
+        "INCREASE_ITEM_QUANTITY_IN_CART" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-add'])[1]"),
+        "DECREASE_ITEM_QUANTITY_IN_CART" : (AppiumBy.XPATH, "//android.widget.Image[@text='ic-subtract']"),
+        "ITEM_QUANTITY" : (AppiumBy.XPATH, "//android.widget.TextView[@text='02']"),
 
 
          }
@@ -121,4 +129,88 @@ class AndroidViewCartScreen(BasePage):
         self.actions.is_element_displayed(*locators['MILLET_BUN_ADDED'])
         print("'McSpicy Paneer Burger with Multi-Millet Bun' is added to cart")
     
+
+    def get_all_cart_items(self):
+        time.sleep(2)  # wait for cart to load
+
+        names = self.driver.find_elements(AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Burger')]")
+        prices = self.driver.find_elements(AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '₹')]")
+        quantities = self.driver.find_elements(AppiumBy.XPATH, "//android.widget.TextView[contains(@resource-id, 'quantity') or @text='01']")
+
+        cart_items = []
+        for i in range(len(names)):
+            name = names[i].text.strip()
+            price = prices[i].text.strip() if i < len(prices) else "N/A"
+            quantity = quantities[i].text.strip() if i < len(quantities) else "N/A"
+
+            cart_items.append({"name": name, "price": price, "quantity": quantity})
+            print(f"Item {i+1}: {name}, Price: {price}, Quantity: {quantity}")
+
+        return cart_items
+    
+    def remove_cart_item(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['REMOVE_ITEM_FROM_CART_PAGE'])
+        self.actions.click_button(*locators['REMOVE_ITEM_FROM_CART_PAGE'])
+        print("Item removed from cart page")
+
+    def Verify_selected_items_removed_from_cart(self, product_name="Mexican Corn & Cheese Burger"):
+        time.sleep(2) 
+
+        by, value = locators['BURGER_XPATH']
+        formatted_locator = (by, value.format(product_name))
+
+        # Try to find matching elements
+        elements = self.driver.find_elements(*formatted_locator)
+
+        if len(elements) == 0:
+            print(f" Product '{product_name}' successfully removed from cart.")
+            return True
+        else:
+            print(f" Product '{product_name}' is still present in cart.")
+            return False
+
+    def increase_cart_item(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['INCREASE_ITEM_QUANTITY_IN_CART'])
+        self.actions.click_button(*locators['INCREASE_ITEM_QUANTITY_IN_CART'])
+        print("Item increased in the cart after clicking add sign")
+
+    def verify_item_quantity(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['ITEM_QUANTITY'])
+        print("Item quantity updated from 1 to 2")
+
+    def Verify_single_item_in_cart(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['MEXICAN_BURGER_ADDED'])
+        print("'Mexican Grilled Chicken & Cheese Burger + Fries (M)' is added to cart")
+
+    def Verify_total_payable_amount_is_displayed_in_cart_page(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+
+        # Step 2: Fetch the amount
+        by, value = locators['TOTAL_PAYABLE']
+        amount_element = self.driver.find_element(by, value)
+
+        if amount_element.is_displayed():
+            amount_text = amount_element.text.strip()
+            print(f" Total payable amount is displayed: {amount_text}")
+        else:
+            print(" Total payable amount not found")
+            amount_text = None
+
+        # Step 3: Swipe back to top to click "View Cart"
+        self.driver.back()
+        return amount_text
+
+
+
     

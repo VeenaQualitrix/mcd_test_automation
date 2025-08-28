@@ -5,7 +5,8 @@
         "appium:app": "D:\\\\UAT-v12.81.0-1754378379877.apk",
         "appium:automationName": "UiAutomator2",
         "appium:appPackage": "com.il.mcdelivery",
-        "appium:appActivity": "com.il.mcdelivery.MainActivity"
+        "appium:appActivity": "com.il.mcdelivery.MainActivity",
+        "appium:enforceXPath1": true
     },
 
     

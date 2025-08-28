@@ -1047,25 +1047,12 @@ def step_verify_customise_option_appear(setup_platform):
     print("Verifying the customization options should appear before adding the item to the cart")
     AndroidMenuScreen(setup_platform).verify_customise_option_appear()
 
-@when("I add 2 to 3 different available items to the cart")
-@allure.step("When I add 2 to 3 different available items to the cart")
-def add_multiple_items_to_the_cart(setup_platform):
-    print("add 2 to 3 different available items to the cart")
-    HomePage(setup_platform).add_multiple_items_to_cart()
-
-@then("I verify all added items should be listed in the cart with correct price and quantities")
-@allure.step("When I verify all added items should be listed in the cart with correct price and quantities")
-def verify_all_item_added_with_correct_price(setup_platform):
-    print("Verifying all added items should be listed in the cart with correct price and quantities")
-    ViewCartPage(setup_platform).verify_multiple_products_in_cart_with_correct_price()
-
 @when("I user adds the item to the cart")
 @allure.step("When I user adds the item to the cart")
 def Add_single_item_to_the_cart(setup_platform, context):
     print("User adds the item to the cart")
     menu_price = AndroidMenuScreen(setup_platform).add_item_in_cart(
-        "Mexican Grilled Chicken & Cheese Burger + Fries (M)"
-    )
+        "Mexican Grilled Chicken & Cheese Burger + Fries (M)")
     context["menu_price"] = menu_price  # Store price for later
 
 
@@ -1095,24 +1082,6 @@ def Add_or_remove_items_on_customise_page(setup_platform):
 def Verify_customisation_text_after_adding_or_removing_items(setup_platform):
     print("verify the customized item should be added to the cart with selected preferences")
     AndroidViewCartScreen(setup_platform).verify_customised_item_is_displayed_to_cart()
-
-@then("I verify the added items in cart")
-@allure.step("When I verify the added items in cart")
-def Verify_items_in_cart(setup_platform):
-    print("verify the added items in cart")
-    ViewCartPage(setup_platform).Verify_items_in_cart()
-
-@when("I clicks the 'Remove' button for an item")
-@allure.step("When I clicks the 'Remove' button for an item")
-def Click_remove_to_decrease_cart_item(setup_platform):
-    print("clicks the 'Remove' button for an item")
-    ViewCartPage(setup_platform).decrease_cart_item()
-
-@then("I verify the selected item should be removed from the cart")
-@allure.step("When I verify the selected item should be removed from the cart")
-def Verify_selected_items_removed_from_cart(setup_platform):
-    print("verify the selected item should be removed from the cart")
-    ViewCartPage(setup_platform).Verify_selected_items_removed_from_cart()
 
 @when("I selects the '3Pc Meals' category under menu")
 @allure.step("When I selects the '3Pc Meals' category under menu")
@@ -1269,6 +1238,96 @@ def click_on_millet_bun_burger(setup_platform):
 def verify_millet_bun_description_is_displayed(setup_platform):
     print("verify nutritional info is displayed in the description")
     AndroidMenuScreen(setup_platform).verify_millet_bun_description_is_displayed()
+
+@when("I selects the Mumbai address from the address list")
+@allure.step("When I selects the Mumbai address from the address list")
+def select_Mumbai_address_from_list(setup_platform):
+    print("I selects the Mumbai address from the address list")
+    AndroidAddressScreen(setup_platform).select_Mumbai_address_from_list()
+
+@when("I click 'Sold out' items from McBreakfast category")
+@allure.step("When I click 'Sold out' items from McBreakfast category")
+def add_sold_out_breakfast_item(setup_platform):
+    print("Click 'Sold out' items from McBreakfast category")
+    AndroidMenuScreen(setup_platform).add_sold_out_breakfast_item("Veg McMuffin with protein plus Meal")
+
+@then("I very User is unable to add item and Sold out popup shown")
+@allure.step("Then I very User is unable to add item and Sold out popup shown")
+def verify_millet_bun_description_is_displayed(setup_platform):
+    print("very User is unable to add item and Sold out popup shown")
+    AndroidMenuScreen(setup_platform).verify_sold_out_option_is_displayed()
+
+@when("I add single item to the cart")
+@allure.step("When I add single item to the cart")
+def add_single_item_in_cart(setup_platform):
+    print("add single item to the cart")
+    AndroidMenuScreen(setup_platform).add_single_item_in_cart("Mexican Grilled Chicken & Cheese Burger + Fries (M)")
+
+@when("I add multiple items to cart")
+@allure.step("When I add multiple items to cart")
+def add_multiple_items_to_the_cart(setup_platform):
+    print("add multiple items to cart")
+    AndroidMenuScreen(setup_platform).add_multiple_items_to_cart()
+
+@then("I verify all added items should be listed in the cart with correct price and quantities")
+@allure.step("Then I verify all added items should be listed in the cart with correct price and quantities")
+def verify_all_item_added_with_correct_price(setup_platform):
+    print("Verifying all added items should be listed in the cart with correct price and quantities")
+    AndroidViewCartScreen(setup_platform).get_all_cart_items()
+
+@when("I clicks the 'Remove' button for an item")
+@allure.step("When I clicks the 'Remove' button for an item")
+def Click_remove_to_decrease_cart_item(setup_platform):
+    print("clicks the 'Remove' button for an item")
+    AndroidViewCartScreen(setup_platform).remove_cart_item()
+
+@then("I verify the selected item should be removed from the cart")
+@allure.step("Then I verify the selected item should be removed from the cart")
+def Verify_selected_items_removed_from_cart(setup_platform):
+    print("verify the selected item should be removed from the cart")
+    AndroidViewCartScreen(setup_platform).Verify_selected_items_removed_from_cart()
+
+@then("I verify the single item in cart")
+@allure.step("Then I verify the single item in cart")
+def Verify_single_item_in_cart(setup_platform):
+    print("verify the single item in cart")
+    AndroidViewCartScreen(setup_platform).Verify_single_item_in_cart()
+
+@when("I clicks the 'Add' button for an item")
+@allure.step("When I clicks the 'Add' button for an item")
+def Click_add_to_increase_cart_item(setup_platform):
+    print("clicks the 'Add' button for an item")
+    AndroidViewCartScreen(setup_platform).increase_cart_item()
+
+@then("I verify the Quantity updates correctly")
+@allure.step("Then I verify the Quantity updates correctly")
+def verify_item_quantity(setup_platform):
+    print("Verifying quantity updated correctly")
+    AndroidViewCartScreen(setup_platform).verify_item_quantity()
+
+@then("I verify the total payable amount should be displayed")
+@allure.step("Then I verify the total payable amount should be displayed")
+def Verify_total_payable_amount_is_displayed_in_cart_page(setup_platform):
+    print("verify the total payable amount should be displayed")
+    AndroidViewCartScreen(setup_platform).Verify_total_payable_amount_is_displayed_in_cart_page()
+
+@then("I verify the Desserts category is accessible via scrolling")
+@allure.step("Then I verify the Desserts category is accessible via scrolling")
+def verify_Desserts_category_is_accessble_via_scrolling(setup_platform):
+    print("verify the Desserts category is accessible via scrolling")
+    AndroidMenuScreen(setup_platform).verify_Desserts_category_is_accessble_via_scrolling()
+
+@then("I verify the Fries & Sides category is accessible via scrolling")
+@allure.step("Then I verify the Fries & Sides category is accessible via scrolling")
+def verify_Fries_category_is_accessble_via_scrolling(setup_platform):
+    print("verify the Fries & Sides category is accessible via scrolling")
+    AndroidMenuScreen(setup_platform).verify_Fries_category_is_accessble_via_scrolling()
+
+@then("I verify the cart icon does not appear on the homepage if the cart is empty")
+@allure.step("Then I verify the cart icon does not appear on the homepage if the cart is empty")
+def verify_cart_icon_does_not_appear_if_cart_is_empty(setup_platform):
+    print("verify the cart icon does not appear on the homepage if the cart is empty")
+    AndroidHomeScreen(setup_platform).verify_cart_icon_does_not_appear_if_cart_is_empty()
 
     
 

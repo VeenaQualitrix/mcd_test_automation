@@ -14,10 +14,7 @@ locators = {
         "MYMCD_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='MyMcD']"),
         "HAMBURGER_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bottom-tab-mymcd']"),
         "MYMCD_LOGO": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-MyMcD_Logo']"),
-        "MENU_TITLE": (By.XPATH, "//h4[@class='menu__title']"),
-        "CONFIRM_ADD_TO_CART": (By.XPATH, "//button[contains(text(), 'Add to Cart')]"),
-        "CART_LIST": (By.XPATH, "//div[@class='cart-details__card-list']"),
-        "VIEW_CART": (By.XPATH, "//div[@class='cart-status-bar__cta' and contains(text(), 'View Cart')]"),
+        "VIEW_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='View Cart']"),
         "MCDELIVERY_OPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='McDelivery']"),
         "DINE_IN_OPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Dine-In']"),
         "ON_THE_GO_OPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='On the Go']"),
@@ -239,6 +236,17 @@ class AndroidHomeScreen(BasePage):
     def verify_recently_used_address_is_auto_selected_after_login(self):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['HOME_PAGE_ADDRESS'])
+    
+    def verify_cart_icon_does_not_appear_if_cart_is_empty(self):
+        time.sleep(5)
+        try:
+            if self.actions.is_element_displayed(*locators['VIEW_CART']):
+                self.actions.click_button(*locators['VIEW_CART'])
+                print("Cart icon clicked.")
+            else:
+                print("Cart icon is not displayed on the homepage.")
+        except Exception as e:
+            print("Cart icon not found. Exception:", str(e))
 
 
     

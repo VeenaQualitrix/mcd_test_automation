@@ -419,51 +419,34 @@ class AndroidActions(ActionsParent):
         actions.pointer_action.pause(hold_duration_ms / 1000)  # pause takes seconds
         actions.pointer_action.pointer_up()
 
-    def safe_action(action, retries=2, wait=3):
-        for attempt in range(retries):
-            try:
-                return action()
-            except WebDriverException as e:
-                if "socket hang up" in str(e).lower():
-                    print(f"[WARN] Socket hang up detected. Retrying... ({attempt + 1}/{retries})")
-                    time.sleep(wait)
-                else:
-                    raise
-        raise Exception("Failed due to repeated 'socket hang up' errors")
 
-    @pytest.fixture(scope="function")
-    def setup_platform(request):
-        platform = request.config.getoption("--platform")
+    def swipe_up(self, duration=800):
+        """Swipe up from bottom to top (scroll down)."""
+        screen_size = self.driver.get_window_size()
+        width = screen_size['width']
+        height = screen_size['height']
 
-        if platform == "android":
-            desired_caps = {
-                "platformName": "Android",
-                "deviceName": "RZ8N810NC1K",
-                "automationName": "UiAutomator2",
-                "app": "D:\\UAT-v12.81.0-1754378379877.apk",
-                "appPackage": "com.il.mcdelivery",
-                "appActivity": "com.il.mcdelivery.MainActivity",
-                "noReset": True,
-                "fullReset": False,
-                "uiautomator2ServerLaunchTimeout": 60000,
-                "uiautomator2ServerInstallTimeout": 60000,
-                "adbExecTimeout": 60000,
-                "newCommandTimeout": 300
-            }
-            driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
+        start_x = width / 2
+        start_y = height * 0.8
+        end_x = width / 2
+        end_y = height * 0.2
 
-        elif platform == "web":
-            from selenium import webdriver as selenium_webdriver
-            driver = selenium_webdriver.Chrome()
+        self.driver.swipe(start_x, start_y, end_x, end_y, duration)
+        print(" Swiped up (scroll down)")
 
-        else:
-            raise ValueError(f"Unknown platform: {platform}")
+    def swipe_down(self, duration=800):
+        """Swipe down from top to bottom (scroll up)."""
+        screen_size = self.driver.get_window_size()
+        width = screen_size['width']
+        height = screen_size['height']
 
-        print(f"[DEBUG] Created driver for {platform}")
-        yield driver
+        start_x = width / 2
+        start_y = height * 0.2
+        end_x = width / 2
+        end_y = height * 0.8
 
-        # ✅ Now this will work
-        safe_action(lambda: driver.quit())
+        self.driver.swipe(start_x, start_y, end_x, end_y, duration)
+        print(" Swiped down (scroll up)")
 
 
 
