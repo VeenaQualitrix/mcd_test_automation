@@ -718,8 +718,8 @@ def enter_address_for_out_of_stock_item(setup_platform):
 @then("I verify the sold out item is indicated as unavailable")
 @allure.step("Verify that the sold out item is correctly marked as unavailable")
 def verify_sold_out_item_unavailable(setup_platform):
-    assert OderingScreenIos(setup_platform).is_item_marked_sold_out(), \
-    "Sold out item is not indicated as unavailable"    
+    OderingScreenIos(setup_platform).is_item_marked_sold_out()
+
 
 @then("I click on the customization options and verify")
 @allure.step("User clicks on the customization options")

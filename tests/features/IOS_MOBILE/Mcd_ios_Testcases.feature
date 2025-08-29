@@ -25,16 +25,15 @@ Scenario Outline: Verify referral code input
     And  I enter referral code
     Then  I verify referral code accepted without error
 
-# @TC_IOS_Login_Mobile_0003
-# Feature: Validate Mobile Number Field Input
-# Scenario: Validate that alphabets are not accepted in the mobile number field
-#     Given I launch the mobile application
-#     Then I verify the app home screen is displayed
-#     When I tap on the My McD bottom tab
-#     Then I verify the Login Sign Up screen appears
-#     When I tap on the Login Sign Up button
-#     And I enter alphabets in mobile number field
-#     Then I confirm 'verify mobile' button is disabled
+@TC_IOS_Login_Mobile_0003 @TC_Demo
+Scenario: Validate that mobile nimber field
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    Then I verify the Login Sign Up screen appears
+    When I tap on the Login Sign Up Button
+    And I enter alphabets in mobile number field
+    Then I confirm 'verify mobile' button is disabled
 
 
 @TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo
@@ -339,7 +338,8 @@ Scenario: Cancel login from Add Address prompt
     And I click on View Cart
     And I tap on the login continue button
     And I close the login screen
-    Then I should be redirected back to the cart or checkout screen    
+    Then I should be redirected back to the cart or checkout screen
+    Then I clear the order    
       
             
 @TC_IOS_Address_Mobile_00013 @TC_03 @TC_Demo
@@ -353,7 +353,8 @@ Scenario: Incorrect login from Add Address screen
     And I click on View Cart
     And I tap on the login continue button
     When  I enter mobile number with special characters and click verify    
-
+    Then I should be redirected back to the cart or checkout screen
+    Then I clear the order
 
 @TC_IOS_Address_Mobile_00014 @TC_03 @TC_Demo
 Scenario: Add a new delivery address during checkout
@@ -366,11 +367,11 @@ Scenario: Add a new delivery address during checkout
     Then  I verify OTP screen navigation
     When  I enter the OTP and click verify 
     And   I click on Save button
-    When I click the Add Address button
-    And I tap on Add New Address
-    And I click on confirm location
-    And I enter valid address details
-    Then I tap on the Save Address
+    When    I click the Add Address button
+    And     I tap on Add New Address
+    And    I click on confirm location
+    And    I enter valid address details
+    Then    I tap on the Save Address
 
 @TC_IOS_Address_Mobile_00015 @TC_03 @TC_Demo
 Scenario: Add address with missing mandatory fields
@@ -548,6 +549,7 @@ Scenario: Validate different UI layouts for each business model
     Then I verify the app home screen is displayed
     When I click the Business Model dropdown  
 
+
 @TC_IOS_Address_Store_Mobile_0001 @TC_Demo
 Scenario: Select an existing delivery address
     Given I launch the mobile application
@@ -630,6 +632,7 @@ Scenario: Verify error message for undeliverable address
     Then I verify the app home screen is displayed
     When I click the Add Address button
     And I tap on Add New Address
+    And I search for the location
     And I click on confirm location
     And I enter unsupported address details
     Then I tap on the Save Address
@@ -637,7 +640,7 @@ Scenario: Verify error message for undeliverable address
     # need to off the location -21/25
 
 @TC_IOS_Address_Store_Mobile_0010 @TC_Demo
-Scenario: Select an existing delivery address
+Scenario: Select an Defalt address from saved list
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     When I click the Add Address button
@@ -688,7 +691,7 @@ Scenario: Test address tagging (“Home”, “Work”) feature
     And I select the Home tag and Work for the address and verify that the tag is applied
     Then I tap on the Save Address
 
-@TC_IOS_Ordering_Mobile_001
+@TC_IOS_Ordering_Mobile_001 @TC_Demo
 Scenario: Place an order with available breakfast item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -707,7 +710,7 @@ Scenario: Place an order with available breakfast item
     And  I verify the your order
     Then I clear the order 
 
-@TC_IOS_Ordering_Mobile_002
+@TC_IOS_Ordering_Mobile_002 @TC_Demo
 Scenario: User attempts to order an out-of-stock item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -721,7 +724,7 @@ Scenario: User attempts to order an out-of-stock item
     And I navigate to the McBreakfast menu page
     Then I verify the sold out item is indicated as unavailable
 
-@TC_IOS_Ordering_Mobile_003
+@TC_IOS_Ordering_Mobile_003 @TC_Demo
 Scenario: Verify customization options appear for customizable items
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -737,7 +740,7 @@ Scenario: Verify customization options appear for customizable items
     And I click on Add item
     Then I click on the customization options and verify
     
-@TC_IOS_Ordering_Mobile_004
+@TC_IOS_Ordering_Mobile_004 @TC_Demo
 Scenario: Add multiple items to the cart and verify cart contents
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -758,7 +761,7 @@ Scenario: Add multiple items to the cart and verify cart contents
     And I click on View Cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_005
+@TC_IOS_Ordering_Mobile_005 @TC_Demo
 Scenario: Place an order with only 1 item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -777,7 +780,7 @@ Scenario: Place an order with only 1 item
     And I verify the payment method and button
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_006
+@TC_IOS_Ordering_Mobile_006 @TC_Demo
 Scenario: Verify menu item pricing
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -796,7 +799,7 @@ Scenario: Verify menu item pricing
     And I verify the item price matches the listed menu price
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_007
+@TC_IOS_Ordering_Mobile_007 @TC_Demo
 Scenario: Verify out-of-stock label handling
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -811,7 +814,7 @@ Scenario: Verify out-of-stock label handling
     Then I verify the sold out item is indicated as unavailable
     Then I verify that sold out items cannot be added to cart
 
-@TC_IOS_Ordering_Mobile_008
+@TC_IOS_Ordering_Mobile_008 @TC_Demo
 Scenario: verify the item is added to the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -831,7 +834,7 @@ Scenario: verify the item is added to the cart
     Then I clear the order
     # only morning veg muffin is sold out and scripted for the protien meal test within 11am
 
-@TC_IOS_Ordering_Mobile_009
+@TC_IOS_Ordering_Mobile_009 @TC_Demo
 Scenario: Handle Sold Out McBreakfast Items
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -845,7 +848,7 @@ Scenario: Handle Sold Out McBreakfast Items
     And I navigate to the McBreakfast menu page    
     Then I verify the sold out item is indicated as unavailable
 
-@TC_IOS_Ordering_Mobile_0010
+@TC_IOS_Ordering_Mobile_0010 @TC_Demo1
 Scenario: View 3Pc Meals Category
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -863,7 +866,7 @@ Scenario: View 3Pc Meals Category
     And I verity the 3pc meal iteam is added to the cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_0011
+@TC_IOS_Ordering_Mobile_0011 @TC_Demo
 Scenario: user should selecet product from dessert
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -882,7 +885,7 @@ Scenario: user should selecet product from dessert
     And I verity the dessert iteam is added to the cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_0012
+@TC_IOS_Ordering_Mobile_0012 @TC_Demo
 Scenario: Add Chicken Wrap from Burgers & Wraps
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -901,7 +904,7 @@ Scenario: Add Chicken Wrap from Burgers & Wraps
     And I verity the Chicken Wrap iteam is added to the cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_0013
+@TC_IOS_Ordering_Mobile_0013 @TC_Demo
 Scenario: Customize a burger and add to cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
