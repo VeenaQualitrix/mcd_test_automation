@@ -821,3 +821,92 @@ def click_on_customize_button(setup_platform):
 @allure.step("Add an extra item in the customization options")
 def add_extra_item(setup_platform):
     OderingScreenIos(setup_platform).add_extra_item()
+
+@then("I click on the fries and sides menu")
+@allure.step("Click on the Fries and Sides menu")
+def click_on_fries_and_sides_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_fries_and_sides_menu()
+
+@then("I select the medium fries item")
+@allure.step("Select the Medium Fries item")
+def select_medium_fries_item(setup_platform):
+    OderingScreenIos(setup_platform).click_fries_medium()
+
+@then("I verify the fries item is added to the cart")
+@allure.step("Verify fries item is added to the cart")
+def verify_fries_item_in_cart(setup_platform):
+    added = OderingScreenIos(setup_platform).is_fries_item_in_cart()
+    print(f"Fries item added to cart: {added}")
+
+@then("I click on the Coffee & Beverages menu")
+@allure.step("Click on the Coffee & Beverages menu")
+def click_on_coffee_and_beverages_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_coffee_and_beverages_menu()
+
+@then("I select the cappuccino coffee item")
+@allure.step("Select the Cappuccino coffee item")
+def select_cappuccino_coffee_item(setup_platform):
+    OderingScreenIos(setup_platform).click_cappuccino_coffee()
+
+@then("I verify the cappuccino coffee item is added to the cart")
+@allure.step("Verify cappuccino coffee item is added to the cart")
+def verify_cappuccino_in_cart(setup_platform):
+    added = OderingScreenIos(setup_platform).is_cappuccino_in_cart()
+    print(f"Cappuccino coffee item added to cart: {added}")
+
+@then("I click on the Cakes brownies menu")
+@allure.step("Click on the Cakes, Brownies & Cookies menu")
+def click_on_cakes_brownies_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_cakes_brownies_menu()
+
+@then("I select the chcochip muffin brownie item")
+@allure.step("Select the Chocochip Muffin Brownie item")
+def select_chocochip_muffin_brownie(setup_platform):
+    OderingScreenIos(setup_platform).click_chocochip_muffin_brownie()
+
+@then("I verify the chcochip muffin brownie")
+@allure.step("Verify Chocochip Muffin Brownie item is added to the cart")
+def verify_chocochip_muffin_brownie_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).chocochip_muffin_brownie_in_cart()
+    print("Chocochip Muffin Brownie item added to cart")
+
+@then("I click on the Protein Plus and Burgers with Millet Bun menu")
+@allure.step("Click on the Protein Plus and Burgers with Millet Bun menu")
+def click_on_protein_plus_and_millet_bun_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_protein_plus_and_millet_bun_menu()
+
+@then("I select the Chicken Burger with Millet Bun item")
+@allure.step("Select the Chicken Burger with Millet Bun item")
+def select_chicken_burger_with_millet_bun(setup_platform):
+    OderingScreenIos(setup_platform).click_chicken_burger_with_millet_bun()
+
+@then("I verify the Chicken Burger with Millet Bun item is added to the cart")
+@allure.step("Verify Chicken Burger with Millet Bun item is added to the cart")
+def verify_chicken_burger_with_millet_bun_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).chicken_burger_with_millet_bun_in_cart()
+    print("Chicken Burger with Millet Bun item added to cart")
+
+@then("I verify that a larger image of the dessert is displayed when tapped")
+@allure.step("Verify larger dessert image is displayed after tapping")
+def verify_larger_dessert_image_displayed(setup_platform):
+    OderingScreenIos(setup_platform).verify_larger_dessert_image()
+
+@then("I verify that the nutrition information is displayed")
+@allure.step("Verify nutrition information is displayed")
+def verify_nutrition_info_displayed(setup_platform):
+    OderingScreenIos(setup_platform).is_nutrition_info_displayed()
+
+@then("I click on another item to Add")
+@allure.step("Click on another item to add to the cart")
+def click_on_another_item_to_add(setup_platform):
+    OderingScreenIos(setup_platform).click_another_item_to_add()
+
+@then("I remove the item from the cart")
+@allure.step("Remove the item from the cart")
+def remove_item_from_cart(setup_platform):
+    OderingScreenIos(setup_platform).remove_item_from_cart()
+
+@then("I update the item quantity in the cart")
+@allure.step("Update item quantity in the cart")
+def update_item_quantity_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).update_item_quantity()
