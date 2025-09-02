@@ -172,6 +172,7 @@ class AndroidLoginScreen(BasePage):
                 #self.click_verify_mobile()
                 # ✅ Since we're in the same class, this works
                 self.hide_keyboard_by_tapping_outside()
+                self.driver.tap([(100, 100)]) 
 
                 print("Entered referral code and clicked verify")
             else:
@@ -243,7 +244,6 @@ class AndroidLoginScreen(BasePage):
     def copy_mobile_number_to_clipboard(self, mobile_number):
         self.driver.set_clipboard_text(mobile_number)
         print(f"Set Mobile Number '{mobile_number}' to device clipboard")
-
 
     def paste_mobile_number_using_clipboard(self):
         input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
