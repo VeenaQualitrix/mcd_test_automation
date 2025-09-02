@@ -244,6 +244,7 @@ class AndroidLoginScreen(BasePage):
         self.driver.set_clipboard_text(mobile_number)
         print(f"Set Mobile Number '{mobile_number}' to device clipboard")
 
+
     def paste_mobile_number_using_clipboard(self):
         input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         input_field.click()
