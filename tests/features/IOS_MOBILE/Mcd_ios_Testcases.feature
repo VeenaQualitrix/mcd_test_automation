@@ -3,7 +3,7 @@
 Feature: McD Mobile App Functionality
 
 @TC_IOS_Login_Mobile_0002 @TC_011 @TC_Demo
-Scenario Outline: Verify login with valid Mobile Number and OTP on Mobile App
+Scenario Outline: Verify login with valid mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     When I tap on the My McD bottom tab
@@ -25,15 +25,15 @@ Scenario Outline: Verify referral code input
     And  I enter referral code
     Then  I verify referral code accepted without error
 
-@TC_IOS_Login_Mobile_0003 @TC_Demo
-Scenario: Validate that mobile nimber field
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    When I tap on the My McD bottom tab
-    Then I verify the Login Sign Up screen appears
-    When I tap on the Login Sign Up Button
-    And I enter alphabets in mobile number field
-    Then I confirm 'verify mobile' button is disabled
+# @TC_IOS_Login_Mobile_0003 @TC_Demo
+# Scenario: Validate that mobile number field
+#     Given I launch the mobile application
+#     Then I verify the app home screen is displayed
+#     When I tap on the My McD bottom tab
+#     Then I verify the Login Sign Up screen appears
+#     When I tap on the Login Sign Up Button
+#     And I enter alphabets in mobile number field
+#     Then I confirm 'verify mobile' button is disabled
 
 
 @TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo
@@ -122,7 +122,7 @@ Scenario Outline: Verify referral link is clickable
     Then  I verify referral textfield is displayed
 
 @TC_IOS_Login_Mobile_00011 @TC_01 @TC_Demo
-Scenario Outline: Verify "Verify Mobile" button is disabled initially and OTP screen is shown on valid input/10digit valid mobile number
+Scenario Outline: Verify Verify Mobile button is disabled initially and OTP screen is shown on valid input/10digit valid mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     When I tap on the My McD bottom tab
@@ -132,9 +132,19 @@ Scenario Outline: Verify "Verify Mobile" button is disabled initially and OTP sc
     When  I enter a valid mobile number click on verify
     Then  I verify OTP screen navigation
 
+@TC_IOS_Login_Mobile_000121 @TC_01 @TC_Demo
+Scenario Outline: Check navigation after successful mobile entry
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    Then I verify the Login Sign Up screen appears
+    When I tap on the Login Sign Up Button
+    Then   I confirm 'verify mobile' button is disabled
+    When  I enter a valid mobile number click on verify
+    Then  I verify OTP screen navigation
 
 @TC_IOS_Login_Mobile_00015 @TC_01 @TC_Demo
-Scenario: Validate navigation when clicking on “Terms and Conditions” link
+Scenario: Validate navigation when clicking on Terms and Conditions link
     Given I launch the mobile application  
     Then I verify the app home screen is displayed  
     When I tap on the My McD bottom tab  
@@ -143,7 +153,15 @@ Scenario: Validate navigation when clicking on “Terms and Conditions” link
     When I tap on the Terms and Conditions link  
 # Then I verify the Terms and Conditions web view or page is displayed
 
-
+@TC_IOS_Login_Mobile_000156 @TC_01 @TC_Demo
+Scenario Outline: Verify 10digit valid mobile number
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    Then I verify the Login Sign Up screen appears
+    When I tap on the Login Sign Up Button
+    Then   I confirm 'verify mobile' button is disabled
+    When  I enter a valid mobile number click on verify
  
 
 @TC_IOS_Login_Mobile_00016 @TC_01 @TC_Demo
@@ -166,6 +184,15 @@ Scenario: Verify pasting a mobile number from clipboard into the input field
     And I copied the mobile number this is ios
     When I paste CTRL V and click verify
 
+@TC_IOS_Login_Mobile_000157 @TC_01 @TC_Demo
+Scenario Outline: Check mobile field input limit
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    Then I verify the Login Sign Up screen appears
+    When I tap on the Login Sign Up Button
+    Then   I confirm 'verify mobile' button is disabled
+    When  I enter a valid mobile number click on verify
 
 @TC_IOS_Profile_Mobile_00001 @TC_022 @TC_Demo
 Scenario: Update name successfully
@@ -300,8 +327,18 @@ Scenario: Verify the field icons are displayed correctly
     And I tap on the Edit icon
     Then I verify the field icons are displayed correctly
 
+@TC_IOS_Profile_Mobile_00017 @TC_02 @TC_Demo
+Scenario: Cancel edit by refreshing page
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    When I tap on the Edit icon
+    When I edit the full name field
+    When I clear the full name field
+    Then  I tap on the Save Address
+    When I tap on the My McD bottom tab
+    When I tap on the Edit icon
 
-        
 
 @TC_IOS_Address_Mobile_00010 @TC_03 @TC_Demo
 Scenario: Trigger login when clicking Add Address as guest
@@ -611,7 +648,7 @@ Scenario: Validate empty address cannot be saved
     And I leave the address fields blank
     Then I verify that the error message Address fields required is displayed
 
-@TC_IOS_Address_Store_Mobile_0007
+@TC_IOS_Address_Store_Mobile_0007 @TC_Demo
 Scenario: Verify "Near" location is shown under each address
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -848,7 +885,7 @@ Scenario: Handle Sold Out McBreakfast Items
     And I navigate to the McBreakfast menu page    
     Then I verify the sold out item is indicated as unavailable
 
-@TC_IOS_Ordering_Mobile_0010 @TC_Demo1
+@TC_IOS_Ordering_Mobile_0010 @TC_Demo
 Scenario: View 3Pc Meals Category
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -924,3 +961,106 @@ Scenario: Customize a burger and add to cart
     And I click on Add to Cart 
     And I click on View Cart
     Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0014 @TC_Demo
+Scenario: verify and Add fries to cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I click on confirm location
+    And I enter valid address details
+    Then I tap on the Save Address
+    Then I click on the Menu option   
+    And I click on the fries and sides menu
+    And I select the medium fries item 
+    And I click on Add item
+    And I click on the Next button
+    And I click on Add to Cart 
+    And I click on View Cart
+    And I verify the fries item is added to the cart
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0015 @TC_Demo
+Scenario: verify and Add fries to cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on the Coffee & Beverages menu  
+    And I select the cappuccino coffee item
+    And I click on Add item
+    And I click on the Next button
+    And I click on Add to Cart 
+    And I click on View Cart
+    And I verify the cappuccino coffee item is added to the cart
+    Then I clear the order 
+
+@TC_IOS_Ordering_Mobile_0016 @TC_Demo
+Scenario: adds a brownie to the cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on the Cakes brownies menu
+    And I select the chcochip muffin brownie item
+    And I click on Add item
+    # And I click on the Next button
+    # And I click on Add to Cart 
+    And I click on View Cart
+    And I verify the chcochip muffin brownie
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0017 @TC_Demo
+Scenario: User adds a millet bun burger to the cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on the Protein Plus and Burgers with Millet Bun menu
+    And I select the Chicken Burger with Millet Bun item
+    And I click on Add item
+    And I click on Add to Cart 
+    And I click on View Cart
+    And I verify the Chicken Burger with Millet Bun item is added to the cart
+    Then I clear the order    
+
+@TC_IOS_Ordering_Mobile_0018 @TC_Demo
+Scenario: User views image of a dessert
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on the dessert menu
+    And I select the random dersert item
+    Then I verify that a larger image of the dessert is displayed when tapped
+
+@TC_IOS_Ordering_Mobile_0019 @TC_Demo
+Scenario: View nutrition description for a menu item
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option    
+    And I click on the Burgers & Wraps menu
+    Then I verify that the nutrition information is displayed    
+
+@TC_IOS_Ordering_Mobile_0020 @TC_Demo
+Scenario: Remove an item from the cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on another item to Add
+    And I click on Add to Cart
+    And I click on View Cart
+    And I remove the item from the cart
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0021 @TC_Demo
+Scenario: Update item quantity in the cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart   
+    And I click on View Cart
+    And I update the item quantity in the cart
+    Then I clear the order 

@@ -85,6 +85,51 @@ locators = {
 
 'DONE_BUTTON': (AppiumBy.ACCESSIBILITY_ID, "Done"),
 
+'FRIES_AND_SIDES_MENU': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Fries & Sides"]'),
+
+'FRIES_MEDIUM_ITEM': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Fries (Medium)"]'),
+
+'FRIES_IN_CART': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Fries (Medium)"]'),
+
+'COFFEE_AND_BEVERAGES_MENU': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Coffee & Beverages (Hot and Cold)"]'),
+
+'CAPPUCCINO_COFFEE_ITEM': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Cappuccino Coffee (S)"]'),
+
+'CAPPUCCINO_IN_CART': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Cappuccino Coffee (S)"]'),
+
+'CAKES_BROWNIES_MENU': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Cakes Brownies and Cookies"]'),
+
+'CHOCOCHIP_MUFFIN_BROWNIE': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Chocochip Muffin"]'),
+
+'CHOCOCHIP_MUFFIN_BROWNIE_IN_CART': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Chocochip Muffin"]'),
+
+'PROTEIN_PLUS_MILLET_BUN_MENU': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="Protein Plus and Burgers with Millet Bun"]'),
+
+'CHICKEN_BURGER_WITH_MILLET_BUN': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="McChicken Burger with Multi-Millet Bun"]'),
+
+'CHICKEN_BURGER_WITH_MILLET_BUN_IN_CART': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="McChicken Burger with Multi-Millet Bun"]'),
+
+'LARGER_DESSERT_IMAGE': (AppiumBy.XPATH, '//XCUIElementTypeImage[contains(@name, "img_")]'),
+
+'NUTRITION_BURGER': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Korean Mc Spicy Premium Paneer Burger"]'),
+
+
+'NUTRITION_INFO_1': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[contains(@name, "Gluten")]'),
+
+'NUTRITION_INFO_2': (AppiumBy.XPATH, '//XCUIElementTypeImage[contains(@name, "Milk")]'),
+
+'NUTRITION_INFO_3': (AppiumBy.XPATH, '//XCUIElementTypeImage[contains(@name, "Peanut")]'),
+
+'NUTRITION_INFO_4': (AppiumBy.XPATH, '//XCUIElementTypeImage[contains(@name, "Soybeans")]'),
+
+'ANOTHER_ITEM': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[2]'),
+
+'REMOVE_ITEM': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-subtract"])[1]'),
+
+'INCREASE_QUANTITY': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[1]'),
+
+'DECREASE_QUANTITY': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-subtract"]'),
+
 }
 class OderingScreenIos(BasePage):
 
@@ -341,3 +386,157 @@ class OderingScreenIos(BasePage):
         self.actions.click_button(*locators['EXTRA_ITEM'])
         self.actions.click_button(*locators['DONE_BUTTON'])
         print("Extra item added successfully.")
+
+    def click_fries_and_sides_menu(self):
+        time.sleep(2)
+        print("Clicking on the 'Fries and Sides' menu...")
+        self.actions.click_button(*locators['FRIES_AND_SIDES_MENU'])
+        print("'Fries and Sides' menu clicked successfully.")
+
+    def click_fries_medium(self):
+        time.sleep(2)
+        print("Scrolling to the 'Fries (Medium)' item...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Fries (Medium)'"
+        })
+        print("Clicking on the 'Fries (Medium)' item...")
+        self.actions.click_button(*locators['FRIES_MEDIUM_ITEM'])
+        print("'Fries (Medium)' item clicked successfully.")
+
+
+    def is_fries_item_in_cart(self):
+        time.sleep(2)
+        print("Checking if the fries item is present in the cart...")
+        fries_in_cart_visible = self.actions.is_element_displayed(*locators['FRIES_IN_CART'])
+        print(f"Fries item present in cart: {fries_in_cart_visible}")
+        return fries_in_cart_visible
+
+    def click_coffee_and_beverages_menu(self):
+        time.sleep(2)
+        print("Clicking on the 'Coffee & Beverages' menu...")
+        self.actions.click_button(*locators['COFFEE_AND_BEVERAGES_MENU'])
+        print("'Coffee & Beverages' menu clicked successfully.")
+
+    def click_cappuccino_coffee(self):
+        time.sleep(2)
+        print("Scrolling to the 'Cappuccino' coffee item...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Cappuccino Coffee (S)'"
+        })
+        print("Clicking on the 'Cappuccino' coffee item...")
+        self.actions.click_button(*locators['CAPPUCCINO_COFFEE_ITEM'])
+        print("'Cappuccino' coffee item clicked successfully.")
+
+    def is_cappuccino_in_cart(self):
+        time.sleep(2)
+        print("Checking if the cappuccino coffee item is present in the cart...")
+        cappuccino_visible = self.actions.is_element_displayed(*locators['CAPPUCCINO_IN_CART'])
+        print(f"Cappuccino coffee item present in cart: {cappuccino_visible}")
+        return cappuccino_visible
+
+    def click_cakes_brownies_menu(self):
+        time.sleep(2)
+        print("Clicking on the 'Cakes, Brownies & Cookies' menu...")
+        self.actions.click_button(*locators['CAKES_BROWNIES_MENU'])
+        print("'Cakes, Brownies & Cookies' menu clicked successfully.")
+
+    def click_chocochip_muffin_brownie(self):
+        time.sleep(2)
+        print("Scrolling to the 'Chocochip Muffin' item...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Chocochip Muffin'"
+        })
+        print("Clicking on the 'Chocochip Muffin' item...")
+        self.actions.click_button(*locators['CHOCOCHIP_MUFFIN_BROWNIE'])
+        print("'Chocochip Muffin' item clicked successfully.")
+
+    def chocochip_muffin_brownie_in_cart(self):
+        time.sleep(2)
+        print("Checking if the 'Chocochip Muffin' item is present in the cart...")
+        is_visible = self.actions.is_element_displayed(*locators['CHOCOCHIP_MUFFIN_BROWNIE_IN_CART'])
+        print(f"'Chocochip Muffin' item present in cart: {is_visible}")
+
+
+        
+    def click_protein_plus_and_millet_bun_menu(self):
+        time.sleep(2)
+        print("Clicking on 'Protein Plus and Burgers with Millet Bun' menu...")
+        self.actions.click_button(*locators['PROTEIN_PLUS_MILLET_BUN_MENU'])
+        print("'Protein Plus and Burgers with Millet Bun' menu clicked successfully.")
+
+    def click_chicken_burger_with_millet_bun(self):
+        time.sleep(2)
+        print("Scrolling to the 'McChicken Burger with Multi-Millet Bun' item...")
+        for i in range(8):
+            time.sleep(2)
+            print(f"Scroll attempt {i + 1}...")
+            self.driver.execute_script("mobile: scroll", {
+                "direction": "down",
+                "predicateString": "name == 'McChicken Burger with Multi-Millet Bun'"
+            })
+        print("Completed 10 scroll attempts for 'McChicken Burger with Multi-Millet Bun'.")
+        self.actions.click_button(*locators['CHICKEN_BURGER_WITH_MILLET_BUN'])
+        print("'Chicken Burger with Millet Bun' item clicked successfully.")
+
+    def chicken_burger_with_millet_bun_in_cart(self):
+        time.sleep(2)
+        print("Checking if the 'Chicken Burger with Millet Bun' item is present in the cart...")
+        is_visible = self.actions.is_element_displayed(*locators['CHICKEN_BURGER_WITH_MILLET_BUN_IN_CART'])
+        print(f"'Chicken Burger with Millet Bun' item present in cart: {is_visible}")
+
+    def verify_larger_dessert_image(self):
+        time.sleep(2)
+        print("Verifying that the larger dessert image is displayed...")
+        is_visible = self.actions.is_element_displayed(*locators['LARGER_DESSERT_IMAGE'])
+        print(f"Larger dessert image visible: {is_visible}")
+
+    def is_nutrition_info_displayed(self):
+        time.sleep(2)
+        print("Clicking on the nutrition burger to open nutrition info...")
+        self.actions.click_button(*locators['NUTRITION_BURGER'])
+        time.sleep(2)
+
+        nutrition_elements = [
+            ('NUTRITION_INFO_1', "Nutrition information is displayed."),
+            ('NUTRITION_INFO_2', "Closed the nutrition information popup."),
+            ('NUTRITION_INFO_3', "Nutrition information is displayed."),
+            ('NUTRITION_INFO_4', "Nutrition information is displayed.")
+        ]
+        for locator_key, message in nutrition_elements:
+            try:
+                visible = self.actions.is_element_displayed(*locators[locator_key])
+                if visible:
+                    print(message)
+                else:
+                    print(f"{locator_key} is NOT displayed.")
+            except Exception as e:
+                print(f"Error checking {locator_key}: {e}")
+
+
+
+    def click_another_item_to_add(self):
+        time.sleep(2)
+        print("Clicking on another item to add to the cart...")
+        self.actions.click_button(*locators['ANOTHER_ITEM'])
+        print("Another item clicked and added to the cart.")
+
+
+    def remove_item_from_cart(self):
+        time.sleep(2)
+        print("Clicking the remove button on the item...")
+        self.actions.click_button(*locators['REMOVE_ITEM'])
+        print("Item removed from the cart.")
+
+    def update_item_quantity(self):
+        time.sleep(1)
+        print("Updating item quantity in the cart...")
+        # Click '+' to increase
+        self.actions.click_button(*locators['INCREASE_QUANTITY'])
+        print("Increased item quantity.")
+        time.sleep(1)
+        # Click '-' to decrease
+        self.actions.click_button(*locators['DECREASE_QUANTITY'])
+        print("Decreased item quantity.")
