@@ -1,11 +1,12 @@
 {
     "android": {
         "platformName": "Android",
-        "appium:deviceName": "emulator-5554",
+        "appium:deviceName": "RZ8N810NC1K",
+        "appium:app": "D:\\\\UAT-v12.81.0-1754378379877.apk",
         "appium:automationName": "UiAutomator2",
-        "appium:app": "/Users/apple/Downloads/McDonalds_3.27.1_APKPure.apk",
-        "appium:noReset": true,
-        "appium:fullReset": false
+        "appium:appPackage": "com.il.mcdelivery",
+        "appium:appActivity": "com.il.mcdelivery.MainActivity",
+        "appium:enforceXPath1": true
     },
 
     

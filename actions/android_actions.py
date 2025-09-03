@@ -1,4 +1,5 @@
 import random
+import pytest
 import time
 import allure
 from allure_commons.types import AttachmentType
@@ -13,6 +14,8 @@ from selenium.webdriver.common.actions.pointer_input import PointerInput
 from selenium.webdriver.common.actions.interaction import Interaction
 from selenium.webdriver.common.actions.interaction import KEY
 from selenium.common.exceptions import NoSuchElementException
+from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from conftest import readConstants
 
 
@@ -140,7 +143,7 @@ class AndroidActions(ActionsParent):
         print(f"Attempting to click element using locator: {locator_type}, {locator_value}")
 
         try_count = 1
-        max_retries = 5
+        max_retries = 2
 
         while try_count <= max_retries:
             try:
@@ -415,6 +418,66 @@ class AndroidActions(ActionsParent):
         actions.pointer_action.pointer_down()
         actions.pointer_action.pause(hold_duration_ms / 1000)  # pause takes seconds
         actions.pointer_action.pointer_up()
+
+
+    def swipe_up(self, duration=800):
+        """Swipe up from bottom to top (scroll down)."""
+        screen_size = self.driver.get_window_size()
+        width = screen_size['width']
+        height = screen_size['height']
+
+        start_x = width / 2
+        start_y = height * 0.8
+        end_x = width / 2
+        end_y = height * 0.2
+
+        self.driver.swipe(start_x, start_y, end_x, end_y, duration)
+        print(" Swiped up (scroll down)")
+
+    def swipe_down(self, duration=800):
+        """Swipe down from top to bottom (scroll up)."""
+        screen_size = self.driver.get_window_size()
+        width = screen_size['width']
+        height = screen_size['height']
+
+        start_x = width / 2
+        start_y = height * 0.2
+        end_x = width / 2
+        end_y = height * 0.8
+
+        self.driver.swipe(start_x, start_y, end_x, end_y, duration)
+        print(" Swiped down (scroll up)")
+
+
+
+        '''
+    def setup_platform(request):
+        platform = request.config.getoption("--platform")  # Pass --platform=android or --platform=web
+
+            if platform == "android":
+                desired_caps = {
+                    "platformName": "Android",
+                        "deviceName": "RZ8N810NC1K",
+                        "automationName": "UiAutomator2",
+                        "app": "D:\\UAT-v12.81.0-1754378379877.apk",
+                        "appPackage": "com.il.mcdelivery",
+                        "appActivity": "com.il.mcdelivery.MainActivity"
+                    }
+                    driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
+
+                elif platform == "web":
+                    driver = webdriver.Chrome()
+
+                else:
+                    raise ValueError(f"Unknown platform: {platform}")
+
+                print(f"DEBUG: Created driver for {platform}")
+                yield driver
+                driver.quit()
+
+                '''
+
+        
 
 
     
