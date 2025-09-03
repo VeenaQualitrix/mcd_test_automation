@@ -392,6 +392,12 @@ def enter_invalid_char_in_name_field(setup_platform):
     print("verify entering invalid characters in name field")
     ProfilePage(setup_platform).enter_invalid_char_in_name_field()
 
+@when("I clear email field")
+@allure.step("When I clear email field")
+def Clear_name_field(setup_platform):
+    print("verify clearing the email field")
+    ProfilePage(setup_platform).clear_email_field()
+
 
 @when("I edits email address and clicks Save Changes")
 @allure.step("When I edits email address and clicks Save Changes")

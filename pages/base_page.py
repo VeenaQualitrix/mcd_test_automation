@@ -31,11 +31,13 @@ class BasePage:
             self.actions = WebAppActions(driver)
 
     def launch_application(self):
+        """Launch the mobile application."""
         self.actions.launch_app()
         print("Opened McD App")
 
 
     def open_mcd_website(self):
+        """Open the McD website in a browser."""
         url = readConstants("APP_URL")
         self.actions.launch_browser_url(url)
         self.driver.maximize_window()

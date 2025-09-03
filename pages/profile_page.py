@@ -171,6 +171,21 @@ class ProfilePage(BasePage):
         time.sleep(5)
         self.actions.click_button(*locators["SUBMIT_BUTTON"])
 
+    def clear_email_field(self):
+        email_field = self.driver.find_element(*locators['EMAIL_ID'])
+        email_field.send_keys(Keys.CONTROL + "a")   # Select all text
+        email_field.send_keys(Keys.BACKSPACE)       # Delete selected text
+        email_field.send_keys(Keys.TAB)
+        time.sleep(2)
+
+        submit_button = self.driver.find_element(*locators["SUBMIT_BUTTON"])
+        # Scroll into view
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", submit_button)
+        time.sleep(1)
+        submit_button.click()
+        print("✅ Submit button clicked after scrolling.")
+
+
     def edit_email_address(self):
         email_field = self.driver.find_element(*locators['EMAIL_ID'])
         email_field.clear()
@@ -459,6 +474,7 @@ class ProfilePage(BasePage):
         self.actions.click_button(*locators["SUBMIT_BUTTON"])
 
     def Click_log_out_on_profile_details_page(self):
+        time.sleep(5)
         log_out_button = self.driver.find_element(*locators["LOG_OUT_BUTTON"])
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", log_out_button)
         time.sleep(10)

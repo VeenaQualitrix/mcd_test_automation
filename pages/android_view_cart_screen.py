@@ -1,8 +1,7 @@
 from pages.base_page import BasePage
-from actions.android_actions import AndroidActions
-from pages.android_view_screen import AndroidViewScreen
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
@@ -36,6 +35,24 @@ locators = {
         "INCREASE_ITEM_QUANTITY_IN_CART" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-add'])[1]"),
         "DECREASE_ITEM_QUANTITY_IN_CART" : (AppiumBy.XPATH, "//android.widget.Image[@text='ic-subtract']"),
         "ITEM_QUANTITY" : (AppiumBy.XPATH, "//android.widget.TextView[@text='02']"),
+        "SUB_TOTAL" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Sub Total']"),
+        "HANDLING_CHARGES" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Handling Charges']"),
+        "CGST" : (AppiumBy.XPATH, "//android.widget.TextView[@text='CGST']"),
+        "SGST" : (AppiumBy.XPATH, "//android.widget.TextView[@text='SGST']"),
+        "ADD_DELIVERY_INSTRUCTIONS": (AppiumBy.XPATH, "//android.view.View[@text='Add Delivery Instructions ic-address__add']"),
+        "NOTE_TEXT_AREA": (AppiumBy.XPATH, "//android.widget.EditText"),
+        "RECOMMENDATION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Recommendation']"),
+        "RECOMMENDATION_ADD_BUTTON": (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-add'])[1]"),
+        "OFFERS_FOR_YOU": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offers For You']"),
+        "VIEW_ALL": (AppiumBy.XPATH, "//android.widget.TextView[@text='View All']"),
+        "KNOW_MORE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Know More']"),
+        "DONATE_CHECKBOX_CHECKED": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-checkeddonate']"),
+        "CHARITY_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Donate ₹ 3 for Ronald Mcdonald House of Charity.']"),
+        "CHARITY_INFO_HEADLINE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Donate for Ronald Mcdonald House Charities']"),
+        "CHARITY_INFO_DESCRIPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Your support will go a long way in keeping unwell children and their families together.']"),
+        "DONATION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Donation']"),
+        "DONATION_AMOUNT": (AppiumBy.XPATH, "//android.widget.TextView[@text='₹ 3.00']"),
+        "DONATE_CHECKBOX_UNCHECKED": (AppiumBy.XPATH, "(//android.widget.TextView)[15]"),
 
 
          }
@@ -210,6 +227,447 @@ class AndroidViewCartScreen(BasePage):
         # Step 3: Swipe back to top to click "View Cart"
         self.driver.back()
         return amount_text
+    
+    def verify_prices_breakdown_in_order_summary(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+
+        prices = {}
+        labels = ['Sub Total', 'Handling Charges', 'CGST', 'SGST']
+
+        for label in labels:
+            # Create dynamic XPath using the label
+            dynamic_xpath = (
+                f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+            )
+
+            # Wait for element and fetch text
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+            )
+
+            # Clean the price value and convert to float
+            price_value = float(element.text.strip().replace('₹', '').strip())
+
+            # Print label and price for debugging
+            print(f"{label} price is: ₹{price_value}")
+
+            # Store in dictionary with key as label in snake_case
+            prices[label.lower().replace(' ', '_')] = price_value
+
+        print("All prices fetched successfully:", prices)
+        return prices
+    
+    def verify_display_of_charges_and_total_amount_in_order_summary(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['SUB_TOTAL'])
+        print("Sub total is displayed")
+        self.actions.is_element_displayed(*locators['HANDLING_CHARGES'])
+        print("Handling charges is displayed")
+        self.actions.is_element_displayed(*locators['CGST'])
+        print("CGST is displayed")
+        self.actions.is_element_displayed(*locators['SGST'])
+        print("SGST is displayed")
+        element = WebDriverWait(self.driver, 10).until(
+             EC.visibility_of_element_located(locators['TOTAL_PAYABLE'])
+        )
+        # Extract and clean the amount text
+        amount_text = element.text.strip().replace('₹', '').strip()
+        total_amount = float(amount_text)
+        print(f"Total Payable amount is: {total_amount}")
+
+        self.driver.find_element(
+        AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiScrollable(new UiSelector().scrollable(true))'
+        '.scrollIntoView(new UiSelector().text("Clear All"));'
+    )
+
+        return total_amount
+    
+    def scroll_to_add_delivery_instructions_and_click(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("SGST"));'
+        )
+        print("'Scrolled to Add Delivery Instructions' successfully.")
+
+    def enter_notes_in_instructions_field(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ADD_DELIVERY_INSTRUCTIONS'])
+        print("Add sign is displayed")
+        self.actions.click_button(*locators['ADD_DELIVERY_INSTRUCTIONS'])
+        print("add sign button is clicked")
+        time.sleep(3)
+        self.actions.enter_text(*locators['NOTE_TEXT_AREA'], "Near Vipul Garden")
+        print("Entered notes in instruction field")
+
+    def verify_instructions_field_input(self):
+        expected_text = "Near Vipul Garden"
+
+        try:
+            # Step 1: Fetch and verify the text in the instructions field
+            actual_text = self.actions.get_element_attribute(*locators['NOTE_TEXT_AREA'], 'value')
+
+            if actual_text and actual_text.strip() == expected_text:
+                print("Instructions field accepted the input correctly.")
+            else:
+                print(f"Mismatch: Expected '{expected_text}', but found '{actual_text}'.")
+
+            # Step 2: Scroll until "Clear All" is visible
+            try:
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    'new UiScrollable(new UiSelector().scrollable(true))'
+                    '.scrollIntoView(new UiSelector().text("Clear All"));'
+                )
+                print("Scrolled to 'Clear All' successfully.")
+            except Exception as e:
+                print(f"Could not scroll to 'Clear All': {str(e)}")
+
+        except Exception as e:
+            print(f"Exception while verifying input: {str(e)}")
+
+    def verify_sub_total_for_single_added_item(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+
+        prices = {}
+        labels = ['Sub Total']
+
+        for label in labels:
+            # Create dynamic XPath using the label
+            dynamic_xpath = (
+                f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+            )
+
+            # Wait for element and fetch text
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+            )
+
+            # Clean the price value and convert to float
+            price_value = float(element.text.strip().replace('₹', '').strip())
+
+            # Print label and price for debugging
+            print(f"{label} price is: ₹{price_value}")
+
+            # Store in dictionary with key as label in snake_case
+            prices[label.lower().replace(' ', '_')] = price_value
+
+        print("All prices fetched successfully:", prices)
+        return prices
+    
+    def add_item_from_recommendation(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Recommendation"));'
+        )
+        print("Recommendation is displayed")
+        self.actions.is_element_displayed(*locators['RECOMMENDATION_ADD_BUTTON'])
+        self.actions.click_button(*locators['RECOMMENDATION_ADD_BUTTON'])
+        print("'Add' button clicked.")
+        time.sleep(2)
+        # Final Add to Cart
+        self.actions.is_element_displayed(*locators['ADD_TO_CART_BUTTON'])
+        self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
+        print("'ADD to Cart' is clicked")
+
+    def verify_sub_total_for_all_added_item(self):
+        prices = {}
+        labels = ['Sub Total']
+
+        for label in labels:
+            # Create dynamic XPath using the label
+            dynamic_xpath = (
+                f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+            )
+
+            # Wait for element and fetch text
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+            )
+
+            # Clean the price value and convert to float
+            price_value = float(element.text.strip().replace('₹', '').strip())
+
+            # Print label and price for debugging
+            print(f"{label} price is: ₹{price_value}")
+
+            # Store in dictionary with key as label in snake_case
+            prices[label.lower().replace(' ', '_')] = price_value
+
+        print("All prices fetched successfully:", prices)
+
+        self.driver.back()  
+        time.sleep(2)  
+        return prices
+
+    def Scroll_to_clear_all(self):
+        time.sleep(2)
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().text("Clear All"));'
+                )
+        print("Scrolled to 'Clear All' successfully.")
+
+    def verify_cgst_and_sgst_breakdown_in_order_summary(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+
+        prices = {}
+        labels = ['CGST', 'SGST']
+
+        for label in labels:
+            # Create dynamic XPath using the label
+            dynamic_xpath = (
+                f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+            )
+
+            # Wait for element and fetch text
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+            )
+
+            # Clean the price value and convert to float
+            price_value = float(element.text.strip().replace('₹', '').strip())
+
+            # Print label and price for debugging
+            print(f"{label} price is: ₹{price_value}")
+
+            # Store in dictionary with key as label in snake_case
+            prices[label.lower().replace(' ', '_')] = price_value
+
+        print("All prices fetched successfully:", prices)
+        return prices
+    
+    def verify_tax_percentage_calculation(self):
+        time.sleep(2)
+        # Labels we need
+        labels = ['Sub Total', 'CGST', 'SGST']
+        prices = {}
+
+        # Step 2: Dynamically fetch all required prices
+        for label in labels:
+            dynamic_xpath = (
+                f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+            )
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+            )
+
+            # Convert to float after cleaning ₹ symbol
+            price_value = float(element.text.strip().replace('₹', '').strip())
+            prices[label.lower().replace(' ', '_')] = price_value
+            print(f"{label} price fetched: ₹{price_value}")
+
+        # Step 3: Calculate tax percentage
+        subtotal = prices['sub_total']
+        cgst = prices['cgst']
+        sgst = prices['sgst']
+
+        total_tax = cgst + sgst
+        calculated_tax_percentage = (total_tax / subtotal) * 100
+
+        print(f"\nSub Total: ₹{subtotal}")
+        print(f"CGST: ₹{cgst}")
+        print(f"SGST: ₹{sgst}")
+        print(f"Total Tax: ₹{total_tax}")
+        print(f"Calculated Tax Percentage: {calculated_tax_percentage:.2f}%")
+
+        # Step 4: Validate tax percentage
+        expected_tax_percentage = 6.0  # can be dynamic if needed
+        tolerance = 0.1  # Allow a small margin for floating-point differences
+
+        if abs(calculated_tax_percentage - expected_tax_percentage) <= tolerance:
+            print(f" Tax percentage is correct: {calculated_tax_percentage:.2f}%")
+        else:
+            raise AssertionError(
+                f" Tax percentage mismatch! "
+                f"Expected: {expected_tax_percentage}%, "
+                f"Calculated: {calculated_tax_percentage:.2f}%"
+            )
+
+        # Step 5: Go back to the previous screen
+        print("Navigating back to the previous screen...")
+        self.driver.back()
+        time.sleep(1) 
+
+    def click_know_more_link(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['KNOW_MORE'])
+        self.actions.click_button(*locators['KNOW_MORE'])
+        print("Know more link is clicked")
+
+    def verify_charity_info_pop_up(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['CHARITY_INFO_HEADLINE'])
+        self.actions.is_element_displayed(*locators['CHARITY_INFO_DESCRIPTION'])
+        print("charity info description is displayed")
+        self.driver.back()
+        self.driver.back()
+        time.sleep(1)
+
+    def verify_charity_checkbox_is_selected(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+        time.sleep(1)
+        self.actions.click_button(*locators['DONATE_CHECKBOX_UNCHECKED'])
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['DONATE_CHECKBOX_CHECKED'])
+        print("Charity donate checkbox is checked")
+
+    def verify_Donation_amount_added_in_payable_amount(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['DONATION'])
+        print("Donation is displayed")
+        self.actions.is_element_displayed(*locators['DONATION_AMOUNT'])
+        print("Donation amount is displayed")
+        time.sleep(1)
+        self.driver.back()
+        time.sleep(1)
+
+    def uncheck_charity_checkbox(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+        time.sleep(1)
+        self.actions.click_button(*locators['DONATE_CHECKBOX_UNCHECKED'])
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['DONATE_CHECKBOX_CHECKED'])
+        print("Charity donate checkbox is checked")
+        time.sleep(2)
+        self.actions.click_button(*locators['DONATE_CHECKBOX_CHECKED'])
+        print("Charity donate checkbox is clicked to uncheck it")
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['DONATE_CHECKBOX_UNCHECKED'])
+        print("Charity donate checkbox is unchecked")
+
+    def verify_donation_amount_removed_from_payable_amount(self):
+        """
+        Verifies that the donation label and donation amount
+        are NOT visible on the screen.
+        """
+        time.sleep(5)  # Allow screen to load
+
+        try:
+            # Check if donation elements are visible
+            is_donation_present = self.actions.is_element_displayed(*locators['DONATION'])
+            is_donation_amount_present = self.actions.is_element_displayed(*locators['DONATION_AMOUNT'])
+        except Exception:
+            # If elements are not found at all, treat them as removed
+            is_donation_present = False
+            is_donation_amount_present = False
+
+        # Assertions
+        assert not is_donation_present, " Donation label is still displayed!"
+        assert not is_donation_amount_present, " Donation amount is still displayed!"
+
+        print("✅ Donation and donation amount are successfully removed from the payable section.")
+
+        # Navigate back after verification
+        self.driver.back()
+        time.sleep(1)
+
+    def click_view_all_link(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['VIEW_ALL'])
+        print("View all link is displayed")
+        time.sleep(1)
+        self.actions.click_button(*locators['VIEW_ALL'])
+        print("View all link is clicked")
+
+    def verify_all_prices_prefixed_with_currency_symbol(self):
+        """
+        Verify that all dynamically fetched prices (Sub Total, CGST, SGST) 
+        are prefixed with ₹, and navigate back after validation.
+        """
+        time.sleep(2)
+
+        # Labels we need to check
+        labels = ['Sub Total', 'Handling Charges', 'CGST', 'SGST']
+        prices = {}
+
+        try:
+            for label in labels:
+                # Step 1: Build dynamic XPath for each label
+                dynamic_xpath = (
+                    f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+                )
+
+                # Step 2: Wait for the element to be visible
+                element = WebDriverWait(self.driver, 10).until(
+                    EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+                )
+
+                # Fetch the raw text from the element
+                text = element.text.strip()
+
+                # Step 3: Verify the price is prefixed with ₹
+                assert text.startswith('₹'), f" Price '{text}' for '{label}' is not prefixed with ₹"
+                print(f" Verified: '{label}' price '{text}' is correctly prefixed with ₹")
+
+                # Step 4: Convert text to float for further use
+                price_value = float(text.replace('₹', '').strip())
+                prices[label.lower().replace(' ', '_')] = price_value
+
+            print(" All prices verified successfully.")
+
+        except TimeoutException:
+            raise AssertionError(f" Element with label '{label}' was not visible in time.")
+
+        finally:
+            # Step 5: Navigate back after validation
+            print("Navigating back to the previous screen...")
+            self.driver.back()
+            time.sleep(1)
+
+        
 
 
 

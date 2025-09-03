@@ -12,7 +12,7 @@ locators = {
         "PROFILE_EDIT_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-editIcon']"),
         "POPUP_DO_LATER": (AppiumBy.XPATH, "//android.widget.Button[@text='I'll Do It Later']"),
         "BACK_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
-        "PROFILE_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='Testuser01']"),
+        "PROFILE_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='Test User01']"),
         "PROFILE_MOBILE": (AppiumBy.XPATH, "//android.widget.TextView[@text='+917777777777']"),
     
     }
