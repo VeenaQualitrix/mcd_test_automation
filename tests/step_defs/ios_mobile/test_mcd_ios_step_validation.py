@@ -933,3 +933,68 @@ def verify_cart_item_details(setup_platform):
     CartScreenIos(setup_platform).validate_cart_items()
 
 
+@then("I add delivery instructions in the cart")
+@allure.step("Add delivery instructions in the cart")
+def add_delivery_instructions_in_cart(setup_platform):
+    CartScreenIos(setup_platform).add_delivery_instructions("Please leave it at the doorstep.")
+
+@then("I verify the subtotal reflects all additions accurately")
+@allure.step("Verify the subtotal reflects all added item prices accurately")
+def verify_subtotal_all_items(setup_platform):
+    CartScreenIos(setup_platform).verify_subtotal_reflects_all_items()
+
+@then("I verify the taxes are calculated correctly based on the subtotal")
+@allure.step("Verify CGST and SGST are calculated correctly based on the subtotal")
+def verify_taxes_calculated_correctly(setup_platform):
+    CartScreenIos(setup_platform).validate_tax_breakdown()
+
+@then("I click on the back button")
+@allure.step("Clicking on the back button")
+def step_click_back_button(setup_platform):
+    CartScreenIos(setup_platform).click_back_button()
+
+@then("I click on the Know More link in charity donation option")
+@allure.step("Click on the 'Know More' link in the charity donation section")
+def click_know_more_in_charity_section(setup_platform):
+    CartScreenIos(setup_platform).click_know_more_charity()
+
+@then("I verify that the charity donation information is displayed in the cart")
+@allure.step("Verify that the charity donation information is displayed in the cart")
+def verify_charity_info_displayed(setup_platform):
+    CartScreenIos(setup_platform).is_charity_info_visible()
+
+@then("I select the charity donation checkbox")
+@allure.step("Select charity donation checkbox")
+def select_charity_checkbox(setup_platform):
+    CartScreenIos(setup_platform).charity_checkbox()
+
+@then("I verify that the donation amount is added to the total price in the cart")
+@allure.step("Verify donation amount is included in total cart price")
+def verify_donation_amount_in_total(setup_platform):
+    CartScreenIos(setup_platform).validate_donation_amount()
+
+@then("I uncheck the charity donation checkbox")
+@allure.step("Uncheck the charity donation checkbox")
+def step_uncheck_charity_donation_checkbox(setup_platform):
+    CartScreenIos(setup_platform).uncheck_charity_donation()
+
+@then("I verify that the donation amount is removed from the total price in the cart")
+@allure.step("Verify donation amount is removed from the cart total")
+def verify_donation_amount_removed(setup_platform):
+    CartScreenIos(setup_platform).verify_donation_removed()
+
+
+@then("I tap on the View All Offers link")
+@allure.step("Tap on the 'View All Offers' link")
+def tap_view_all_offers_link(setup_platform):
+    CartScreenIos(setup_platform).click_view_all_offers()
+
+@then("I verify that the offers page is displayed")
+@allure.step("Verify that the offers page is displayed")
+def verify_offers_page_displayed(setup_platform):
+    CartScreenIos(setup_platform).verify_offers_page_is_visible()
+
+@then("I verify that all price components display the ₹ symbol")
+@allure.step("Verify ₹ symbol is displayed with all price components")
+def verify_currency_symbol_displayed(setup_platform):
+    CartScreenIos(setup_platform).validate_currency_symbols()

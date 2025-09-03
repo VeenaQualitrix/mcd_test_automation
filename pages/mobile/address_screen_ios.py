@@ -99,10 +99,12 @@ class AddressScreenIos(BasePage):
         print("Successfully clicked on Add")
     
     def click_next_button(self):
-        if self.actions.click_button(*locators['NEXT_BUTTON']):
-            print("Successfully clicked on the Next button.")
+        print("Attempting to click on the 'Next' button...")
+        if self.actions.is_element_displayed(*locators['NEXT_BUTTON']):
+            self.actions.click_button(*locators['NEXT_BUTTON'])
+            print(" Successfully clicked on the 'Next' button.")
         else:
-            print("Next button is not visible. Skipping the click.")
+            print("'Next' button is not visible. Skipping the click.")
 
 
         
@@ -241,4 +243,5 @@ class AddressScreenIos(BasePage):
 
     
     
+
 

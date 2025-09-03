@@ -477,3 +477,5 @@ class iOSActions(ActionsParent):
     
     def find_elements(self, by, value):
         return self.driver.find_elements(by, value)
+
+    
