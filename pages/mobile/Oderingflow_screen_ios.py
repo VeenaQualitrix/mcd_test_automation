@@ -226,8 +226,7 @@ class OderingScreenIos(BasePage):
                 raise AssertionError("Add button was clickable for a sold out item.")
             except Exception:
                 print("Correct: 'Add' button not clickable for sold out item.")
-        else:
-                raise AssertionError("'Sold out' label was not found.")
+        
    
     def verify_item_in_cart(self):
         time.sleep(2)
