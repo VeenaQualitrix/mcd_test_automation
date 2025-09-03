@@ -10,6 +10,7 @@ import time
 import allure
 import pytest
 import pyperclip
+import re
 
 
 locators = {
@@ -129,6 +130,18 @@ locators = {
 'INCREASE_QUANTITY': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[1]'),
 
 'DECREASE_QUANTITY': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-subtract"]'),
+
+'SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]'),
+
+'HANDLING_CHARGE': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[20]'),
+
+'CGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]'),
+
+'SGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[22]'),
+
+'CART_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[18]'),
+
+'EMPTY_CART_MESSAGE': (AppiumBy.XPATH, '(//XCUIElementTypeOther[@name="main"])[2]'),
 
 }
 class OderingScreenIos(BasePage):
@@ -540,3 +553,54 @@ class OderingScreenIos(BasePage):
         # Click '-' to decrease
         self.actions.click_button(*locators['DECREASE_QUANTITY'])
         print("Decreased item quantity.")
+
+    def verify_total_price_calculation(self):
+        print("Verifying if the total price in the cart is calculated correctly...")
+        time.sleep(2)
+        print("Scrolling to 'Total Payable' section...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name CONTAINS 'Total Payable'"
+        })
+        print("Fetching individual price components...")
+        # Get prices of individual components
+        item_prices = [
+            self.actions.get_text(*locators['SUB_TOTAL']),
+            self.actions.get_text(*locators['HANDLING_CHARGE']),
+            self.actions.get_text(*locators['CGST']),
+            self.actions.get_text(*locators['SGST'])
+        ]
+        # Convert price strings like "₹100.50" to float values
+        numeric_prices = [float(re.sub(r"[^\d.]", "", price)) for price in item_prices]
+        calculated_total = round(sum(numeric_prices), 2)
+        print(f"Sub Total: {numeric_prices[0]}")
+        print(f"Handling Charge: {numeric_prices[1]}")
+        print(f"CGST: {numeric_prices[2]}")
+        print(f"SGST: {numeric_prices[3]}")
+        print(f"Calculated Total: ₹{calculated_total}")
+        # Get displayed total from UI
+        displayed_total = self.actions.get_text(*locators['CART_TOTAL'])
+        displayed_total_value = float(re.sub(r"[^\d.]", "", displayed_total))
+        print(f"Displayed Total: ₹{displayed_total_value}")
+        if calculated_total == displayed_total_value:
+            print("Total price calculation is correct.")
+        else:
+            print("Mismatch in total price calculation.")
+
+    def scroll_through_all_menu_categories(self):
+        print("Scrolling through all menu categories...")
+        # Scroll multiple times to ensure all categories are revealed
+        for _ in range(55):  # Adjust the range based on app length
+            self.driver.execute_script("mobile: scroll", {
+                "direction": "down"
+            })
+            time.sleep(1)  # Small delay between scrolls
+        print("Completed scrolling through all menu categories.")
+
+    def validate_cart_is_empty(self):
+        print("Checking if the cart is empty on app launch...")
+        time.sleep(2)  # wait for UI to load
+        if self.actions.is_element_displayed(*locators['EMPTY_CART_MESSAGE']):
+            print("'Your cart is empty' message is displayed.")
+        else:
+            print("'Your cart is empty' message is NOT displayed.")

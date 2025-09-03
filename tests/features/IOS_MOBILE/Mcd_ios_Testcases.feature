@@ -1063,4 +1063,67 @@ Scenario: Update item quantity in the cart
     And I click on Add to Cart   
     And I click on View Cart
     And I update the item quantity in the cart
-    Then I clear the order 
+    Then I clear the order
+
+@TC_IOS_Ordering_Mobile_0022 @TC_Demo
+Scenario: Check total price calculation with multiple items in cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on another item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I verify the total price calculation is correct
+    Then I clear the order   
+
+@TC_IOS_Ordering_Mobile_0023 @TC_Demo
+Scenario: Scroll through all menu categories on smaller screen resolution
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    Then I scroll through all menu categories
+
+@TC_IOS_Ordering_Mobile_0024 @TC_Demo
+Scenario: Validate cart is empty on app launch
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I verify the cart is empty on app launch    
+
+@TC_IOS_Cart_Mobile_001 @TC_Demo
+Scenario: Verify cart item details
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I verify the cart item details including name, price, and quantity
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_002 @TC_Demo
+Scenario: Update item quantity in cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I update the item quantity in the cart 
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_003 @TC_Demo
+Scenario: Update item quantity in cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    Then I clear the order

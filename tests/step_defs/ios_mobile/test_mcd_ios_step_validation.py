@@ -8,6 +8,7 @@ from pages.mobile.address_screen_ios import AddressScreenIos
 from pages.mobile.switching_screen_ios import SwitchScreenIos
 from pages.mobile.address_store_screen_ios import AddressStoreScreenIos
 from pages.mobile.Oderingflow_screen_ios import OderingScreenIos
+from pages.mobile.Cart_screen_ios import CartScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -910,3 +911,25 @@ def remove_item_from_cart(setup_platform):
 @allure.step("Update item quantity in the cart")
 def update_item_quantity_in_cart(setup_platform):
     OderingScreenIos(setup_platform).update_item_quantity()
+
+@then("I verify the total price calculation is correct")
+@allure.step("Verify total price calculation in the cart")
+def verify_total_price_calculation(setup_platform):
+    OderingScreenIos(setup_platform).verify_total_price_calculation()
+
+@then("I scroll through all menu categories")
+@allure.step("Scroll through all menu categories")
+def scroll_through_all_menu_categories(setup_platform):
+    OderingScreenIos(setup_platform).scroll_through_all_menu_categories()
+
+@then("I verify the cart is empty on app launch")
+@allure.step("Verify the cart is empty on app launch")
+def verify_cart_is_empty_on_app_launch(setup_platform):
+    OderingScreenIos(setup_platform).validate_cart_is_empty()
+
+@then("I verify the cart item details including name, price, and quantity")
+@allure.step("Verify cart item details including name, price, and quantity")
+def verify_cart_item_details(setup_platform):
+    CartScreenIos(setup_platform).validate_cart_items()
+
+
