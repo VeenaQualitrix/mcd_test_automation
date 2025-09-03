@@ -170,7 +170,7 @@ def kill_process_on_port(port):
         print(f"Error killing process on port {port}: {e}")
 
 
-@pytest.fixture(scope="module", autouse=False)
+@pytest.fixture(scope="class", autouse=False)
 def setup_platform(env, request):
     driver = None
     """
