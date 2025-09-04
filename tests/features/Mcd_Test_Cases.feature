@@ -1,7 +1,7 @@
 @McdRegression
 Feature: McD App Functionality
 
-@TC_Login_001 @sanityweb
+@TC_Login_001 @sanityweb1
 Scenario Outline: Verify login with valid Mobile Number and OTP
     Given I open the Chrome browser
     When  I hit the URL
@@ -21,7 +21,7 @@ Scenario Outline: Verify login with valid Mobile Number and OTP
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_002 @sanityweb
+@TC_LOGIN_002 @sanityweb1
 Scenario Outline: Verify referral code input
     Given  I open the Chrome browser
     When   I hit the URL
@@ -39,7 +39,7 @@ Scenario Outline: Verify referral code input
 
 
 
-@TC_LOGIN_003 @sanityweb
+@TC_LOGIN_003 @sanityweb1
 Scenario Outline: Validate empty mobile number
     Given  I open the Chrome browser
     When   I hit the URL
@@ -56,7 +56,7 @@ Scenario Outline: Validate empty mobile number
 
 
 
-@TC_LOGIN_004 @sanityweb
+@TC_LOGIN_004 @sanityweb1
 Scenario Outline: Validate short mobile number
     Given  I open the Chrome browser
     When   I hit the URL
@@ -71,7 +71,7 @@ Scenario Outline: Validate short mobile number
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_005 @sanityweb
+@TC_LOGIN_005 @sanityweb1
 Scenario Outline: Validate alphabetic input in mobile field
     Given  I open the Chrome browser
     When   I hit the URL
@@ -86,7 +86,7 @@ Scenario Outline: Validate alphabetic input in mobile field
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_006 @sanityweb
+@TC_LOGIN_006 @sanityweb1
 Scenario Outline: Verify referral code without entering mobile number
     Given  I open the Chrome browser
     When   I hit the URL
@@ -102,7 +102,7 @@ Scenario Outline: Verify referral code without entering mobile number
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_007 @sanityweb
+@TC_LOGIN_007 @sanityweb1
 Scenario Outline: Verify mobile number with spaces
     Given  I open the Chrome browser
     When   I hit the URL
@@ -117,7 +117,7 @@ Scenario Outline: Verify mobile number with spaces
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_008 @sanityweb
+@TC_LOGIN_008 @sanityweb1
 Scenario Outline: Verify mobile number with special characters
     Given  I open the Chrome browser
     When   I hit the URL
@@ -195,7 +195,7 @@ Scenario Outline: Verify navigation after successfully entetered a valid mobile 
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_LOGIN_013 @sanityweb
+@TC_LOGIN_013 @sanityweb1
 Scenario Outline: Verify terms and conditions link
     Given  I open the Chrome browser
     When   I hit the URL
@@ -234,7 +234,7 @@ Scenario Outline: Enter 11 digits mobile number and verify
     Then   I verify view page navigation
     When   I click on login or signup button
     Then   I verify login page navigation
-    When   I enter 11 digits mobile number
+    When   I enter 11 digits mobile number and click verify
     Then   I verify field should restrict to 10 digits
     Examples:
         |appURL|
@@ -669,7 +669,7 @@ Scenario: Verify Incorrect login from “Add Address” screen
     Given  I open the Chrome browser
     When   I hit the URL
     Then   I verify website opened successfully
-    When   I click on add address
+    When   I click on add address in home page
     Then   I verify user redirected to login/signup prompt
     When   I click on login/signup prompt
     Then   I verify login page navigation
@@ -791,7 +791,7 @@ Scenario: Verify dropdown displays all business models
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_002
+@TC_BM_002 @sanityweb
 Scenario: Validate user can select “McDelivery” and proceed
     Given  I open the Chrome browser
     When   I hit the URL
@@ -802,7 +802,7 @@ Scenario: Validate user can select “McDelivery” and proceed
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_003
+@TC_BM_003 @sanityweb
 Scenario: Validate user can select “Dine-In” and proceed
     Given  I open the Chrome browser
     When   I hit the URL
@@ -813,7 +813,7 @@ Scenario: Validate user can select “Dine-In” and proceed
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_004
+@TC_BM_004 @sanityweb
 Scenario: Validate user can select “On the Go” and proceed
     Given  I open the Chrome browser
     When   I hit the URL
@@ -824,7 +824,7 @@ Scenario: Validate user can select “On the Go” and proceed
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_005
+@TC_BM_005 @sanityweb
 Scenario: Validate user can select “Take Away” and proceed
     Given  I open the Chrome browser
     When   I hit the URL
@@ -835,7 +835,7 @@ Scenario: Validate user can select “Take Away” and proceed
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_006
+@TC_BM_006 @sanityweb
 Scenario: Ensure selected model persists during session
     Given  I open the Chrome browser
     When   I hit the URL
@@ -848,19 +848,22 @@ Scenario: Ensure selected model persists during session
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_013
+@TC_BM_013 @sanityweb
 Scenario: Check location permission prompt for “On the Go” or “Dine-In”
     Given  I open the Chrome browser
     When   I hit the URL
     Then   I verify website opened successfully
     When   I click the business model dropdown
-    And    I select “On the Go” or “Dine-In” without granting location access
+    And    I select Dine-In option from dropdown
+    Then   I verify a prompt should appear requesting location permission
+    When   I click the business model dropdown
+    And    I select Take Away option from dropdown
     Then   I verify a prompt should appear requesting location permission
         |appURL|
         |https://www.uat.mcdapp.co|
 
 
-@TC_BM_012
+@TC_BM_012 @sanityweb
 Scenario: Verify default business model on first visit
     Given  I open the Chrome browser
     When   I hit the URL
@@ -869,7 +872,7 @@ Scenario: Verify default business model on first visit
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_014
+@TC_BM_014 @sanityweb
 Scenario: Validate no restaurant available for selected model
     Given  I open the Chrome browser
     When   I hit the URL
@@ -880,7 +883,7 @@ Scenario: Validate no restaurant available for selected model
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_015
+@TC_BM_015 @sanityweb
 Scenario: Ensure no multiple model selection at once
     Given  I open the Chrome browser
     When   I hit the URL
@@ -893,7 +896,7 @@ Scenario: Ensure no multiple model selection at once
         |https://www.uat.mcdapp.co|
 
 
-@TC_BM_019
+@TC_BM_019 @sanityweb
 Scenario: Verify model selection persists across tabs (same session)
     Given  I open the Chrome browser
     When   I hit the URL
@@ -911,11 +914,11 @@ Scenario: Verify model selection persists across tabs (same session)
     And    I open a new tab in the same session
     Then   I verify the same business model should remain selected
     When   I click on user profile icon
-    And    I click on Logout button
+    Then   I click on Logout button
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_020
+@TC_BM_020 @sanityweb
 Scenario: Test visual feedback on hover on desktop
     Given  I open the Chrome browser
     When   I hit the URL
@@ -926,7 +929,7 @@ Scenario: Test visual feedback on hover on desktop
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_021
+@TC_BM_021 @sanityweb
 Scenario: Verify Switching models does not alter profile information
     Given  I open the Chrome browser
     When   I hit the URL
@@ -948,7 +951,7 @@ Scenario: Verify Switching models does not alter profile information
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_BM_022
+@TC_BM_022 @sanityweb
 Scenario: Verify Switching between models updates the UI layout appropriately
     Given  I open the Chrome browser
     When   I hit the URL
@@ -975,7 +978,7 @@ Scenario: Verify Switching between models updates the UI layout appropriately
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_001
+@TC_AD_001 @sanityweb
 Scenario: verify selecting existing delivery address
     Given  I open the Chrome browser
     When   I hit the URL
@@ -996,7 +999,7 @@ Scenario: verify selecting existing delivery address
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_002
+@TC_AD_002 @sanityweb
 Scenario: Verify adding a new delivery address
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1019,7 +1022,7 @@ Scenario: Verify adding a new delivery address
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_003
+@TC_AD_003 @sanityweb
 Scenario: Verify editing an existing address
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1042,7 +1045,7 @@ Scenario: Verify editing an existing address
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_004
+@TC_AD_004 @sanityweb
 Scenario: Verify deleting an existing address
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1062,7 +1065,7 @@ Scenario: Verify deleting an existing address
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_005
+@TC_AD_005 @sanityweb
 Scenario: Ensure address selection updates nearby restaurant list
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1084,7 +1087,7 @@ Scenario: Ensure address selection updates nearby restaurant list
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_006
+@TC_AD_006 @sanityweb
 Scenario: Validate empty address cannot be saved
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1105,7 +1108,7 @@ Scenario: Validate empty address cannot be saved
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_007
+@TC_AD_007 @sanityweb
 Scenario: Verify "Near" location shown under each address
     Given  I open the Chrome browser
     When   I hit the URL

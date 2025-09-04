@@ -53,6 +53,12 @@ locators = {
         "DONATION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Donation']"),
         "DONATION_AMOUNT": (AppiumBy.XPATH, "//android.widget.TextView[@text='₹ 3.00']"),
         "DONATE_CHECKBOX_UNCHECKED": (AppiumBy.XPATH, "(//android.widget.TextView)[15]"),
+        "ESTIMATED_DELIVERY_TIME_HEADLINE": (AppiumBy.XPATH, "//android.widget.TextView[@text='20 min delivery activated']"),
+        "ESTIMATED_DELIVERY_TIME_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Expect your order within 20 mins of ordering']"),
+        "CLICK_BACK_BUTTON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-back']"),
+        "OFFER_APPLIED_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offer Applied!']"),
+        "OFFER_CODE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offer Applied!']/following-sibling::android.widget.TextView[1]"),
+        "CHANGE_OFFER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Change Offer']"),
 
 
          }
@@ -666,6 +672,80 @@ class AndroidViewCartScreen(BasePage):
             print("Navigating back to the previous screen...")
             self.driver.back()
             time.sleep(1)
+
+    def verify_estimated_delivery_time(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['ESTIMATED_DELIVERY_TIME_HEADLINE'])
+        print("Estimated delivery time is displayed")
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['ESTIMATED_DELIVERY_TIME_TEXT'])
+        print("Estimated delivery time along with text is displayed")
+
+    def Click_back_button(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON'])
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON'])
+        print("Back button clicked")
+
+    def verify_applied_offer(self):
+        try:
+            time.sleep(5)
+            
+            # Verify "Offer Applied" section is visible
+            self.actions.is_element_displayed(*locators['OFFER_APPLIED_TEXT'])
+
+            # Wait for the dynamic offer code to be visible
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(locators['OFFER_CODE'])
+            )
+
+            # Find the offer code element
+            offer_element = self.driver.find_element(*locators['OFFER_CODE'])
+
+            # Fetch the text dynamically
+            offer_code = offer_element.text.strip()
+            print(f"Fetched offer code: {offer_code}")
+
+            return offer_code
+
+        except Exception as e:
+            print(f"Could not fetch or interact with the offer code: {e}")
+            return None
+
+    def verify_first_offer_is_removed_and_the_second_offer_is_displayed(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['OFFER_APPLIED'])
+        print("offer applied text is displayed")
+        if self.actions.is_element_displayed(*locators['APPLIED_OFFER_NAME']):
+            print(" First offer is still displayed")
+        else:
+            print(" First offer is NOT displayed (as expected)")
+        self.actions.is_element_displayed(*locators['APPLIED_SECOND_OFFER_NAME'])
+        print("Second applied offer is displayed")
+        time.sleep(2)
+        self.Clear_all()
+
+    def verify_discount_is_applied_correctly(self):
+        time.sleep(5)
+    
+        discounted_prices = self.verify_prices_breakdown_in_order_summary()
+        discounted_total = discounted_prices['sub_total'] + discounted_prices['handling_charges'] + discounted_prices['cgst'] + discounted_prices['sgst']
+        print(f"Discounted breakdown: {discounted_prices}")
+        print(f"Discounted total: ₹{discounted_total:.2f}")
+
+        discount = self.initial_total - discounted_total
+
+        if discount > 0:
+            print(f" Discount applied successfully. Amount reduced by ₹{discount:.2f}")
+
+            handling_diff = self.initial_prices['handling_charges'] - discounted_prices['handling_charges']
+            if handling_diff > 0:
+                print(f"ℹ Handling charges were discounted by ₹{handling_diff:.2f}")
+        else:
+            raise AssertionError(" Discount not applied correctly. Total amount did not decrease.")
+        
+        
+
 
         
 

@@ -47,6 +47,7 @@ locators = {
         "VERIFY_HOME_TAG_NEXT_ADDRESS" : (By.XPATH, "//div[contains(@class, 'address__title') and normalize-space(text())='Home']/following::div[@class='address__row-2']/div[contains(text(), 'Vipul greens')]"),
         "ADD_NEW_ADDRESS" : (By.XPATH, "  //div[contains(text(), 'Add new address')]"),
         "ADDED_ADDRESS_FROM_LIST" : (By.XPATH, " //div[contains(@class, 'address__title') and contains(normalize-space(.), '{}')]"),
+        "ADD_ITEM_TO_CART" : (By.XPATH, "//div[contains(@class, 'menu__title') and normalize-space(text())='{burger_name}']/following::div[contains(@class, 'add-to-cart')][1]"),
         
     }
 

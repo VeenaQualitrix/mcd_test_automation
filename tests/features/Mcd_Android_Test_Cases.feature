@@ -1494,6 +1494,151 @@ Scenario: Ensure currency symbol is correctly shown for all price components
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
+@TC_Android_CO_015 @testmcd1
+Scenario: Redirect user to login when attempting checkout without being logged in
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enter burger name and click search icon
+    Then  I verify item displayed
+    When  I click on add+ button
+    And   I click on Add to cart option
+    And   I click on view cart option
+    And   I click on add address in home screen
+    Then  I verify user redirected to login/signup prompt
+   
+@TC_Android_CO_016 @testmcd1
+Scenario: Remove item from cart by decreasing quantity to zero
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add multiple items to cart
+    And   I click on view cart option
+    When  I clicks the 'Remove' button for an item
+    Then  I verify the selected item should be removed from the cart
+    And   I verify the total payable amount should be displayed
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_CO_018 @testmcd1
+Scenario: Verify that payment is not allowed to process with a sold-out item.
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the Mumbai address from the address list
+    And   I click on Menu icon
+    And   I click 'Sold out' items from McBreakfast category
+    Then  I very User is unable to add item and Sold out popup shown
+    When  I click on MyMcD hamburger icon
+    Then  I click on Log out button
+
+@TC_Android_CO_019 @testmcd1
+Scenario: Validate estimated delivery time visibility
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the Mumbai address from the address list
+    And   I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the estimated delivery time displayed below the delivery address
+    When  I click on clear all to empty the cart
+
+@TC_Android_CO_020 @testmcd1
+Scenario: Verify cart persists after browser refresh
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    And   I click back button
+    When  I click on view cart option
+    Then  I verify the cart should retain the previously added items
+    When  I click on clear all to empty the cart
+
+@TC_Android_CO_021 @newtestmcd1
+Scenario: Apply Multiple Promo Codes
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    And   I apply multiple promo codes
+    Then  I verify only one code applied at a time
+
+@TC_Android_CO_022 @testmcd1
+Scenario: Update quantity for multiple items in cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add multiple items to cart
+    And   I click on view cart option
+    And   I clicks the 'Add' button for an item
+    And   I clicks the 'Remove' button for an item
+    Then  I verify the Quantity updates correctly
+    And   I verify the total payable amount should be displayed
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_CO_023 @newtestmcd1
+Scenario: Display applied offer discount in the order summary
+    Given  I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    And   I verify the total payable amount should be displayed
+    When  I click on 'View All' link
+    Then  I verify the user should be redirected to a page displaying all available offers
+    When  I apply the first promo code
+    Then  I verify the discount should be clearly shown and deducted in the order summary
+
+@TC_Android_CO_028 @testmcd1
+Scenario: Ensure guest checkout not allowed
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enter burger name and click search icon
+    Then  I verify item displayed
+    When  I click on add+ button
+    And   I click on Add to cart option
+    And   I click on view cart option
+    And   I click on add address in home screen
+    Then  I verify user redirected to login/signup prompt
+       
+
 @TC_Android_AD_017  
 Scenario: Verify behavior when all addresses are deleted
     Given I launch the native app
@@ -1509,6 +1654,8 @@ Scenario: Verify behavior when all addresses are deleted
     Then  I verify the address list should be empty and the Add Address prompt should be visible
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
+
+
 
     
 
