@@ -1127,3 +1127,116 @@ Scenario: Update item quantity in cart
     And I click on Add to Cart    
     And I click on View Cart
     Then I clear the order
+
+@TC_IOS_Cart_Mobile_004 @TC_Demo
+Scenario: Validate total price breakdown
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on another item to Add
+    # And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I verify the total price calculation is correct
+    Then I clear the order 
+
+@TC_IOS_Cart_Mobile_005 @TC_Demo
+Scenario: Add delivery instructions
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I add delivery instructions in the cart
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_006 @TC_Demo
+Scenario: Validate subtotal after all additions
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I verify the subtotal reflects all additions accurately
+    Then I clear the order    
+
+@TC_IOS_Cart_Mobile_007 @TC_Demo
+Scenario: Validate taxes
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart  
+    And I verify the taxes are calculated correctly based on the subtotal
+    Then I clear the order  
+
+@TC_IOS_Cart_Mobile_008 @TC_03 @TC_Demo
+Scenario: Log in to Proceed with Order
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    And I log out of the application
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the login continue button
+    When  I enter a valid mobile number click on verify
+    Then  I verify OTP screen navigation
+    When  I enter the OTP and click verify
+    Then  I click on the back button
+    And I click on View Cart
+    Then I clear the order     
+
+@TC_IOS_Cart_Mobile_009 @TC_Demo
+Scenario: Charity Donation Info
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I click on the Know More link in charity donation option 
+    And  I verify that the charity donation information is displayed in the cart
+
+@TC_IOS_Cart_Mobile_0010 @TC_Demo
+Scenario: Select charity donation checkbox
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    And I select the charity donation checkbox
+    Then I verify that the donation amount is added to the total price in the cart
+
+@TC_IOS_Cart_Mobile_0011 @TC_Demo
+Scenario: Uncheck charity donation and verify ₹3 is removed from total
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    And  I uncheck the charity donation checkbox
+    Then I verify that the donation amount is removed from the total price in the cart    
+
+@TC_IOS_Cart_Mobile_0012 @TC_Demo
+Scenario: View All Offers Functionality
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    And I tap on the View All Offers link
+    Then I verify that the offers page is displayed
+
+@TC_IOS_Cart_Mobile_0013 @TC_Demo
+Scenario: verify that all price components display the ₹ symbol
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    Then I verify that all price components display the ₹ symbol    
