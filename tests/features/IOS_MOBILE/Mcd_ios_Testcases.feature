@@ -2,7 +2,7 @@
 
 Feature: McD Mobile App Functionality
 
-@TC_IOS_Login_Mobile_0002 @TC_011 @TC_Demo
+@TC_IOS_Login_Mobile_0002 @TC_011 @TC_Demo1
 Scenario Outline: Verify login with valid mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -13,7 +13,7 @@ Scenario Outline: Verify login with valid mobile number
     
     
     
-@TC_IOS_Login_Mobile_0002 @TC_01 @TC_Demo
+@TC_IOS_Login_Mobile_0002 @TC_01 @TC_Demo1
 Scenario Outline: Verify referral code input
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -36,7 +36,7 @@ Scenario Outline: Verify referral code input
 #     Then I confirm 'verify mobile' button is disabled
 
 
-@TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo
+@TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo1
 Scenario Outline: Validate empty mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -48,7 +48,7 @@ Scenario Outline: Validate empty mobile number
     
     
 
-@TC_IOS_Login_Mobile_0004 @TC_01 @TC_Demo
+@TC_IOS_Login_Mobile_0004 @TC_01 @TC_Demo1
 Scenario Outline: Validate short mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -393,7 +393,7 @@ Scenario: Incorrect login from Add Address screen
     Then I should be redirected back to the cart or checkout screen
     Then I clear the order
 
-@TC_IOS_Address_Mobile_00014 @TC_03 @TC_Demo
+@TC_IOS_Address_Mobile_00014 @TC_03 @TC_Demo2
 Scenario: Add a new delivery address during checkout
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1239,4 +1239,128 @@ Scenario: verify that all price components display the ₹ symbol
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
     And I click on View Cart
-    Then I verify that all price components display the ₹ symbol    
+    Then I verify that all price components display the ₹ symbol
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_0014  @TC_Demo
+Scenario: Attempt checkout without login
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    And I log out of the application
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the login continue button
+    When  I enter a valid mobile number click on verify
+    Then  I verify OTP screen navigation
+    When  I enter the OTP and click verify
+    Then  I click on the back button
+    And I click on View Cart
+    Then I clear the order 
+
+
+@TC_IOS_Cart_Mobile_0015 @TC_Demo
+Scenario: Remove item from cart and total price should update correctly
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I update the item quantity in the cart
+    And I verify the total price should update correctly
+    Then I clear the order
+    
+
+@TC_IOS_Cart_Mobile_0016 @TC_Demo
+Scenario: Verify that not allwoing to process with sold out item
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    And I tap on Add New Address
+    And I search for out of stock item location
+    And I click on confirm location
+    And I enter  out of stock item address details
+    Then I tap on the Save Address
+    Then I click on the Menu option
+    And I navigate to the McBreakfast menu page
+    Then I verify the sold out item is indicated as unavailable
+
+@TC_IOS_Cart_Mobile_0017 @TC_Demo
+Scenario: Validate Estimated Delivery Time at Checkout
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart    
+    And I verify the estimated delivery time is displayed below the delivery address
+    Then I clear the order
+
+
+@TC_IOS_Cart_Mobile_0018 @TC_Demo
+Scenario: Cart Persistence on Refresh
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    Then  I click on the back button
+    And I click on View Cart
+    Then I clear the order   
+
+
+@TC_IOS_Cart_Mobile_0019 @TC_Demo
+Scenario: Promo Code Application
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link
+    And I apply the first promo code
+    And I apply the second promo code
+    Then I verify only one promo code is applied
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_0020 @TC_Demo
+Scenario: Update quantity for multiple items in cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on another item to Add
+    # And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I verify the total price calculation is correct
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_0021 @TC_Demo
+Scenario: Validate discount shown in order summary
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I add multiple quantity items
+    And I tap on the View All Offers link
+    And I click on the discount flat 
+    Then I verify the discount is correctly deducted from the subtotal
+    Then I clear the order
+    # need to check the discount is displaying wrong
+
+    

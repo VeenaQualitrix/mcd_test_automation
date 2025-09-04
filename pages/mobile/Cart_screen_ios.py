@@ -30,9 +30,9 @@ locators = {
 
 'CART_ITEM_PRICE_LIST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[1]'),
 
-'CGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]'),
+'CGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[20]'),
 
-'SGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[22]'),
+'SGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]'),
 
 'BACK_BUTTON': (AppiumBy.ACCESSIBILITY_ID, 'ic-arrow-back'),
 
@@ -48,9 +48,28 @@ locators = {
 
 'OFFERS_PAGE_HEADER': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Offers For You"]'),
 
-'HANDLING_CHARGE': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]'),
+'ESTIMATED_DELIVERY_TIME': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[contains(@name, "mins")]'),
 
-'CART_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[18]')
+'APPLY_PROMO_BUTTON': (AppiumBy.XPATH, '(//XCUIElementTypeButton[@name="Apply"])[1]'),
+
+'CHOOSE_ITEM':  (AppiumBy.XPATH, '(//XCUIElementTypeButton[@name="Select"])[1]'),
+
+'CLICK_OK': (AppiumBy.ACCESSIBILITY_ID, 'OK'),
+
+'CLICK_CHANGE_OFFER': (AppiumBy.ACCESSIBILITY_ID, 'Change Offer'),
+
+'APPLY_PROMO2_BUTTON':  (AppiumBy.XPATH, '(//XCUIElementTypeButton[@name="Apply"])[2]'),
+
+'APPLIED_PROMO_CODES':  (AppiumBy.XPATH, '//XCUIElementTypeStaticText[6]'),
+
+'DISCOUNT_FLAT':  (AppiumBy.XPATH, '(//XCUIElementTypeButton[@name="Apply"])[7]'),
+
+'DISCOUNT_LABEL': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="10% Discount on purchase of ₹300"]'),
+
+'INCREASE_QUANTITY': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[1]'),
+
+'DISCOUNT_SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]')
+
 }
 class CartScreenIos(BasePage):
 
@@ -239,38 +258,219 @@ class CartScreenIos(BasePage):
 
     
 
-    def validate_currency_symbols(self):
-        wait = WebDriverWait(self.driver, 15)  # 15 seconds timeout
-        
-        print("Waiting for ₹ symbol in Subtotal element...")
-        try:
-            wait.until(EC.visibility_of_element_located(locators['SUB_TOTAL']))
-        except TimeoutException:
-            raise AssertionError("Subtotal element not visible or ₹ symbol missing.")
+    def validate_currency_symbols(self, timeout=15):
+        print("Scrolling to 'Add Delivery Instructions'...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Add Delivery Instructions'"
+        })
+        """
+        Validates that specific elements (using XPath with ₹) are visible
+        and correctly prefixed with the ₹ symbol.
+        """
+        wait = WebDriverWait(self.driver, timeout)
+        print("Validating ₹ symbol on specific cart price elements...")
 
-        print("Validating ₹ symbol presence in all price components...")
-        price_elements = [
-            locators['SUB_TOTAL'],
-            locators['HANDLING_CHARGE'],
-            locators['CGST'],
-            locators['SGST'],
-            locators['CART_TOTAL']
-        ]
-        
-        missing_symbols = []
-        for locator in price_elements:
-            # Wait for element visibility before interaction
+        price_elements = {
+            "Subtotal":        (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[18]'),
+            "CGST":            (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[20]'),
+            "SGST":            (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]')
+        }
+        failures = []
+        for label, locator in price_elements.items():
             try:
-                elem = wait.until(EC.visibility_of_element_located(locator))
-                price_text = elem.text
-                if "₹" not in price_text:
-                    missing_symbols.append(f"{locator} with text '{price_text}'")
+                print(f"Waiting for '{label}' element: {locator[1]}")
+                element = wait.until(EC.visibility_of_element_located(locator))
+                price_text = element.text.strip()
+                print(f"{label}: '{price_text}'")
+
+                # Validate ₹ is at the start of the text
+                if not re.match(r"^₹\s?\d", price_text):
+                    failures.append(f"{label}: '{price_text}' (invalid or missing ₹ symbol)")
             except TimeoutException:
-                missing_symbols.append(f"{locator} not found or not visible")
-                
-        if missing_symbols:
-            raise AssertionError(f"₹ symbol missing or elements not found: {missing_symbols}")
-        print("All price components have ₹ symbol.")
+                failures.append(f"{label}: Element not visible or not found")
+        if failures:
+            print("Validation failed for the following price components:")
+            for issue in failures:
+                print(" -", issue)
+            raise AssertionError("₹ symbol validation failed:\n" + "\n".join(failures))
+        print("All specified price elements correctly display the ₹ symbol.")
+
+
+
+    def is_total_price_correct(self):
+        print("Fetching all item prices...")
+        item_price_elements = self.driver.find_elements(*locators['CART_ITEM_PRICE_LIST'])
+
+        item_prices = []
+        for elem in item_price_elements:
+            price_text = elem.text.strip()
+            print(f"Item price: {price_text}")
+            if not price_text.startswith("₹"):
+                raise AssertionError(f"Price does not start with ₹: {price_text}")
+            # Extract price as float
+            price = float(price_text.replace("₹", "").strip())
+            item_prices.append(price)
+
+        # Sum item prices and convert to int to ignore decimals
+        expected_total_int = int(round(sum(item_prices), 0))
+        print(f"Expected total price (integer part): ₹{expected_total_int}")
+
+        # Scroll to total price element to make sure it's visible
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Add Delivery Instructions'"
+        })
+
+        print("Fetching displayed total price...")
+        total_element = self.driver.find_element(*locators['SUB_TOTAL'])
+        displayed_total_text = total_element.text.strip()
+        print(f"Displayed total text: {displayed_total_text}")
+
+        if not displayed_total_text.startswith("₹"):
+            raise AssertionError(f"Displayed total does not start with ₹: {displayed_total_text}")
+
+        displayed_total = float(displayed_total_text.replace("₹", "").strip())
+        displayed_total_int = int(round(displayed_total, 0))
+
+        if expected_total_int != displayed_total_int:
+            raise AssertionError(f"Total mismatch: Expected ₹{expected_total_int}, but found ₹{displayed_total_int}")
+
+        print(f"Total price matches (ignoring decimals): ₹{displayed_total_int}")
+    
+        
+    def validate_estimated_delivery_time(self):
+        print("Validating visibility of 'Estimated Delivery Time' below the delivery address...")
+        element = self.driver.find_element(*locators['ESTIMATED_DELIVERY_TIME'])
+        if element.is_displayed():
+            print("'Estimated Delivery Time' is displayed correctly.")
+        else:
+            raise AssertionError("'Estimated Delivery Time' is not visible on the screen.")
+
+    
+    def apply_first_promo_code(self):
+        print("Clicking on 'Apply Promo Code' button...")
+        self.actions.click_button(*locators['APPLY_PROMO_BUTTON'])
+        print("Promo code applied successfully.")
+        print("Selecting an item after applying promo code...")
+        self.actions.click_button(*locators['CHOOSE_ITEM'])
+        print("Item selected.")
+        print("Clicking OK to confirm...")
+        self.actions.click_button(*locators['CLICK_OK'])
+        print("Confirmation completed.")
+
+    def apply_second_promo_code(self):
+        print("Clicking 'Change Offer' to apply second promo code...")
+        self.actions.click_button(*locators['CLICK_CHANGE_OFFER'])
+        print("Clicked 'Change Offer' button.")
+        print("Clicking 'Apply Second Promo' button...")
+        self.actions.click_button(*locators['APPLY_PROMO2_BUTTON'])
+        print("Second promo code applied.")
+        print("Selecting item after applying second promo...")
+        self.actions.click_button(*locators['CHOOSE_ITEM'])
+        print("Item selected for second promo.")
+        print("Clicking 'OK' to confirm second promo...")
+        self.actions.click_button(*locators['CLICK_OK'])
+        print("Second promo code application confirmed.")
+
+    
+    def validate_single_promo_code_applied(self):
+        applied_promo_elements = self.driver.find_elements(*locators['APPLIED_PROMO_CODES'])
+        visible_promo_codes = [elem for elem in applied_promo_elements if elem.is_displayed()]
+        print(f"Number of visible applied promo codes: {len(visible_promo_codes)}")
+        return len(visible_promo_codes) == 1
+
+
+    def add_multiple_item_quantities(self):
+        time.sleep(1)
+        print("Updating item quantity in the cart...")
+        for i in range(5):
+            print(f"Clicking '+' to increase quantity ({i + 1}/5)...")
+            self.actions.click_button(*locators['INCREASE_QUANTITY'])
+            time.sleep(0.5)  # Optional: small delay between clicks
+        print("Increased item quantity 5 times.")
+
+
+    def click_flat_discount(self):
+        print("Scrolling to bring the flat discount offer into view...")
+        # Scroll to the discount code using predicateString (e.g., FLAT10 or part of it)
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name CONTAINS 'FLAT10'"
+        })
+        print("Clicking on the flat discount offer...")
+        self.actions.click_button(*locators['DISCOUNT_FLAT'])
+        print("Flat discount offer clicked successfully.")
+        self.actions.click_button(*locators['CLICK_OK'])
+        print("Second promo code application confirmed.")
+
+    
+
+
+
+
+
+    def validate_discount_deduction(self):
+        print("Fetching all cart item prices...")
+        
+        # Fetch all item prices
+        item_price_elements = self.driver.find_elements(*locators['CART_ITEM_PRICE_LIST'])
+        item_prices = []
+
+        for elem in item_price_elements:
+            price_text = elem.text.strip()
+            print(f"Item price: {price_text}")
+            
+            if not price_text.startswith("₹"):
+                raise AssertionError(f"Item price does not start with ₹: {price_text}")
+            
+            # Remove ₹ and comma, convert to float, then to int (removes decimals)
+            price = int(float(price_text.replace("₹", "").replace(",", "").strip()))
+            item_prices.append(price)
+
+        # Fetch discount percentage text
+        discount_text = self.driver.find_element(*locators['DISCOUNT_LABEL']).text.strip()
+        print(f"Discount text: {discount_text}")
+        
+        # Extract numeric part from discount (e.g., "10%" or "10per")
+        match = re.search(r"(\d+)", discount_text)
+        if not match:
+            raise AssertionError(f"Discount text does not contain a number: {discount_text}")
+        discount_percentage = float(match.group(1))
+        print(f"Discount percentage extracted: {discount_percentage}%")
+
+        # Calculate discount amount
+        total_price = sum(item_prices)
+        discount = (discount_percentage / 100) * total_price
+        print(f"Calculated discount: ₹{discount:.2f}")
+
+        # Scroll to bring subtotal into view
+        print("Scrolling to subtotal section...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Subtotal'"
+        })
+
+        # Fetch subtotal
+        subtotal_text = self.driver.find_element(*locators['DISCOUNT_SUB_TOTAL']).text.strip()
+        print(f"Subtotal text: {subtotal_text}")
+        if not subtotal_text.startswith("₹"):
+            raise AssertionError(f"Subtotal text does not start with ₹: {subtotal_text}")
+        subtotal = float(subtotal_text.replace("₹", "").replace(",", "").strip())
+
+        # Print summary
+        print(f"Total of all item prices: ₹{total_price:.2f}")
+        print(f"Discount applied: ₹{discount:.2f}")
+        print(f"Subtotal displayed: ₹{subtotal:.2f}")
+
+        # Validate subtotal correctness (rounded to integer for no decimals)
+        expected_subtotal = int(round(total_price - discount))
+        displayed_subtotal = int(round(subtotal))
+        if expected_subtotal != displayed_subtotal:
+            raise AssertionError(f"Subtotal mismatch: Expected ₹{expected_subtotal}, but found ₹{displayed_subtotal}")
+
+        print("Cart prices, discount, and subtotal validated successfully.")
+
 
 
                 

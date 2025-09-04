@@ -604,3 +604,26 @@ class OderingScreenIos(BasePage):
             print("'Your cart is empty' message is displayed.")
         else:
             print("'Your cart is empty' message is NOT displayed.")
+
+
+    def add_multiple_item_quantities(self):
+        time.sleep(1)
+        print("Updating item quantity in the cart...")
+        for i in range(5):
+            print(f"Clicking '+' to increase quantity ({i + 1}/5)...")
+            self.actions.click_button(*locators['INCREASE_QUANTITY'])
+            time.sleep(0.5)  # Optional: small delay between clicks
+        print("Increased item quantity 5 times.")
+
+
+    def click_flat_discount(self):
+        print("Scrolling to bring the flat discount offer into view...")
+        # Scroll to the discount code using predicateString (e.g., FLAT10 or part of it)
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name CONTAINS 'FLAT10'"
+        })
+        print("Clicking on the flat discount offer...")
+        self.actions.click_button(*locators['DISCOUNT_FLAT'])
+        print("Flat discount offer clicked successfully.")
+
