@@ -449,33 +449,8 @@ class AndroidActions(ActionsParent):
         print(" Swiped down (scroll up)")
 
 
+    
 
-        '''
-    def setup_platform(request):
-        platform = request.config.getoption("--platform")  # Pass --platform=android or --platform=web
-
-            if platform == "android":
-                desired_caps = {
-                    "platformName": "Android",
-                        "deviceName": "RZ8N810NC1K",
-                        "automationName": "UiAutomator2",
-                        "app": "D:\\UAT-v12.81.0-1754378379877.apk",
-                        "appPackage": "com.il.mcdelivery",
-                        "appActivity": "com.il.mcdelivery.MainActivity"
-                    }
-                    driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
-
-                elif platform == "web":
-                    driver = webdriver.Chrome()
-
-                else:
-                    raise ValueError(f"Unknown platform: {platform}")
-
-                print(f"DEBUG: Created driver for {platform}")
-                yield driver
-                driver.quit()
-
-                '''
 
         
 

@@ -100,7 +100,7 @@ def verify_home_page_navigation(setup_platform):
     Home_Page = HomePage(setup_platform).verify_website_header_banner()
     assert Home_Page, "Home Page Is Not Reached After Logged In"
 
-@then('I click on Logout button')
+@then("I click on Logout button")
 @allure.step("Then I click on Logout button")
 def Click_log_out_on_profile_details_page(setup_platform):
     print("click on Logout button")
@@ -391,6 +391,12 @@ def verify_profile_name_field_error_message(setup_platform):
 def enter_invalid_char_in_name_field(setup_platform):
     print("verify entering invalid characters in name field")
     ProfilePage(setup_platform).enter_invalid_char_in_name_field()
+
+@when("I clear email field")
+@allure.step("When I clear email field")
+def Clear_name_field(setup_platform):
+    print("verify clearing the email field")
+    ProfilePage(setup_platform).clear_email_field()
 
 
 @when("I edits email address and clicks Save Changes")
@@ -761,6 +767,12 @@ def select_take_away_from_dropdown(setup_platform):
 def verify_redirection_to_take_away_location_flow(setup_platform):
     print("Verifying User proceeds to place an order for take away")
     HomePage(setup_platform).verify_user_redirect_to_take_away_location_flow()
+
+@then("I verify a prompt should appear requesting location permission")
+@allure.step("Then I verify a prompt should appear requesting location permission")
+def verify_location_popup(setup_platform):
+    print("verify a prompt should appear requesting location permission")
+    HomePage(setup_platform).show_toast()
 
 @then("I verify “McDelivery” should be selected by default")
 @allure.step("When I verify “McDelivery” should be selected by default")

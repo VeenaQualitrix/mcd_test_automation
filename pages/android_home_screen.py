@@ -62,20 +62,39 @@ class AndroidHomeScreen(BasePage):
             return False
 
     
-    def click_on_MyMcD_hamburger_icon(self):
-        time.sleep(10)
-        self.actions.is_element_displayed(*locators['HAMBURGER_ICON'])
-        time.sleep(5)
-        self.actions.click_button(*locators["HAMBURGER_ICON"])
-        time.sleep(1)
-        print("Clicked on MyMcD hamburger icon")
+    def click_on_MyMcD_hamburger_icon(self, timeout=15):
+        try:
+            # Wait until the hamburger icon is visible
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locators['HAMBURGER_ICON'])
+            )
 
-    def click_on_Menu_icon(self):
-        time.sleep(2)
-        self.actions.is_element_displayed(*locators['MENU_ICON'])
-        self.actions.click_button(*locators["MENU_ICON"])
-        time.sleep(1)
-        print("Clicked on Menu icon")
+            # Wait until it is clickable and then click
+            WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable(locators['HAMBURGER_ICON'])
+            )
+            self.actions.click_button(*locators["HAMBURGER_ICON"])
+
+            print(" Clicked on MyMcD hamburger icon")
+            return True
+
+        except TimeoutException:
+            print(" Hamburger icon not clickable/visible within timeout")
+            return False
+
+    def click_on_Menu_icon(self, timeout=10):
+        try:
+            # Wait until the menu icon is clickable
+            WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable(locators['MENU_ICON'])
+            )
+            self.actions.click_button(*locators["MENU_ICON"])
+            print(" Clicked on Menu icon")
+            return True
+
+        except TimeoutException:
+            print(" Menu icon not clickable/visible within timeout")
+            return False
 
     def verify_displays_of_all_business_model(self):
         time.sleep(5)

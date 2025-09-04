@@ -353,8 +353,14 @@ class AndroidMenuScreen(BasePage):
         time.sleep(1)
         self.actions.is_element_displayed(*locators['DESSERTS_ITEM'])
         self.actions.click_button(*locators['DESSERTS_ITEM'])
-        self.actions.click_button(*locators['ADD_BUTTON'])
+        # Now click on Add button
+        add_btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['ADD_BUTTON'])
+        )
+        add_btn.click()
         print(" 'Add' button is clicked")
+        time.sleep(1)
+        self.actions.click_button(*locators['NEXT_BUTTON'])
         time.sleep(1)
         self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
         print(" 'Add to cart' button is clicked")
