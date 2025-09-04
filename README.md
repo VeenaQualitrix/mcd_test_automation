@@ -5,28 +5,22 @@ Allure is added for reporting.
 ###  PreRequisites 
 
 
-
-
- 
-
- 
-
-
- 
-
 # Install:
 
 pip install -r requirements.txt
 
 
+# Execute - command :
 
-# Execute - for Android :
+pytest -m <tagName> --plateform=<platform_name> 
 
-pytest -m <tagName> --plateform=android  --appFileName=apkfile_name
+For web : pytest -m McdRegression --platform=web
+For Android : pytest -m McdRegression --platform=android
+For iOS : pytest -m McdRegression --platform=ios
+
+
 * Valid Plateform Names - web,android,ios 
 * file should place under src\builds*
-* additional Params : 
-**--qaserver ** : defailt q8 , server name to connect Admin 
 **--consecutive_failure_abort**- default is True , False -to  disable execution abortion
 **--consecutive_failure_count** -default is 5, if consecutive_failure_abort is true then execution abort after 5 consequitive failure
 **--screenShotToggle** -- default is False - to add All Screen shot for passed Test cases too (before and after every action)
@@ -49,9 +43,6 @@ pip install -r requirements.txt
 touch /root/.Xauthority 
 Xvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99  
 
-pytest -m GDAppValidations --platform=fire_tv --appFileName=/home/builds/Paramount_GD_QA8_7.0.1.apk
-
-pytest -m GDAppValidations --platform=roku_tv --roku_ip=192.168.1.68 --rokuUser=rokudev --rokuPass=Auto9876 --appFileName=/home/builds/Indee_Paramount_GD_Staff_Login_2024_07_10.zip
 
 # References:
 appium-python-client: https://pypi.org/project/Appium-Python-Client/
