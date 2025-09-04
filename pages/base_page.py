@@ -46,3 +46,6 @@ class BasePage:
     def quit_driver(self):
         self.actions.quit_Driver()
         print("Closed McD App")
+
+
+
