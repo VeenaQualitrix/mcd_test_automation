@@ -446,7 +446,6 @@ def mobile_driver():
     appium_service = AppiumService()
     appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
     if not appium_service.is_running:
-        raise Exception("Appium server did not start!") 
-    
+        raise Exception("Appium server did not start!")
 
-    
+
