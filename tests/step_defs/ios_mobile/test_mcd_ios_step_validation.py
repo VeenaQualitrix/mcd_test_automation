@@ -998,3 +998,44 @@ def verify_offers_page_displayed(setup_platform):
 @allure.step("Verify ₹ symbol is displayed with all price components")
 def verify_currency_symbol_displayed(setup_platform):
     CartScreenIos(setup_platform).validate_currency_symbols()
+
+@then("I verify the total price should update correctly")
+@allure.step("Verify total price is updated correctly after item removal")
+def verify_total_price_updated(setup_platform):
+    CartScreenIos(setup_platform).is_total_price_correct()
+    
+@then("I verify the estimated delivery time is displayed below the delivery address")
+@allure.step("Verify estimated delivery time is visible below the delivery address")
+def verify_estimated_delivery_time_visible(setup_platform):
+    CartScreenIos(setup_platform).validate_estimated_delivery_time()
+
+
+@then("I apply the first promo code")
+@allure.step("Apply the first promo code")
+def apply_first_promo_code(setup_platform):
+    CartScreenIos(setup_platform).apply_first_promo_code()
+
+@then("I apply the second promo code")
+@allure.step("Apply the second promo code")
+def apply_second_promo_code_step(setup_platform):
+    CartScreenIos(setup_platform).apply_second_promo_code()
+
+@then("I verify only one promo code is applied")
+@allure.step("Verify only one promo code is applied")
+def verify_only_one_promo_code_applied(setup_platform):
+    CartScreenIos(setup_platform).validate_single_promo_code_applied()
+
+@then("I add multiple quantity items")
+@allure.step("Add multiple quantity items to the cart")
+def add_multiple_quantity_items(setup_platform):
+    CartScreenIos(setup_platform).add_multiple_item_quantities()
+
+@then("I click on the discount flat")
+@allure.step("Click on the flat discount offer")
+def click_discount_flat(setup_platform):
+    CartScreenIos(setup_platform).click_flat_discount()
+
+@then("I verify the discount is correctly deducted from the subtotal")
+@allure.step("Verify discount is correctly deducted from subtotal in order summary")
+def verify_discount_deduction(setup_platform):
+    CartScreenIos(setup_platform).validate_discount_deduction()
