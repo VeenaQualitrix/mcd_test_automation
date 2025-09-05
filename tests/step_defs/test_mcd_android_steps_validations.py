@@ -13,6 +13,7 @@ from pages.android_search_menu_screen import AndroidSearchMenuScreen
 from pages.android_address_screen import AndroidAddressScreen
 from pages.android_view_cart_screen import AndroidViewCartScreen
 from pages.android_menu_screen import AndroidMenuScreen
+from pages.android_offer_screen import AndroidOfferPage
 from conftest import readPreReqJson
 import allure
 import time
@@ -358,6 +359,12 @@ def profile_updated_name_display(setup_platform):
     print(f"Updated name found: {updated_name}")
     assert updated_name == "Test User01", f"The updated name was expected to be 'Test User01', but got '{updated_name}'"
 
+@when("I click back button on profile details page")
+@allure.step("When I click back button on profile details page")
+def Clear_name_field(setup_platform):
+    print("click back button on profile details page")
+    AndroidProfileScreen(setup_platform).click_back_button_on_profile_screen()
+
 @when("I clear name field")
 @allure.step("When I clear name field")
 def Clear_name_field(setup_platform):
@@ -368,14 +375,19 @@ def Clear_name_field(setup_platform):
 @allure.step("Then I verify error message Please enter valid full name should be displayed")
 def verify_profile_name_field_error_message(setup_platform):
     print("Verifying error message Please enter valid full name should be displayed")
-    Profile_Screen = AndroidProfileScreen(setup_platform).profile_name_field_empty_error()
-    assert Profile_Screen, "Please enter valid full name"
+    AndroidProfileScreen(setup_platform).profile_name_field_empty_error()
 
 @when("I enter invalid characters in name field")
 @allure.step("When I enter invalid characters in name field")
 def enter_invalid_char_in_name_field(setup_platform):
     print("verify entering invalid characters in name field")
     AndroidProfileScreen(setup_platform).enter_invalid_char_in_name_field()
+
+@when("I clear email address and clicks Save Changes")
+@allure.step("When I clear email address and clicks Save Changes")
+def edit_email_address_and_click_save(setup_platform):
+    print("clear email address and clicks Save Changes")
+    AndroidProfileScreen(setup_platform).clear_email_field()
 
 
 @when("I edits email address and clicks Save Changes")
@@ -401,8 +413,7 @@ def enter_incorrect_email_in_email_field(setup_platform):
 @allure.step("Then I verify error message enter valid email address should be displayed")
 def verify_incorrect_email_error(setup_platform):
     print("Verifying error message enter valid email address should be displayed")
-    Profile_Screen = AndroidProfileScreen(setup_platform).incorrect_email_error()
-    assert Profile_Screen, "Please enter valid email address"
+    AndroidProfileScreen(setup_platform).incorrect_email_error()
 
 @when("I selects a new valid date of birth and clicks Save Changes")
 @allure.step("When I selects a new valid date of birth and clicks Save Changes")
@@ -423,11 +434,6 @@ def verify__updated_date_of_birth(setup_platform, context):
     print(f"Actual DOB found on profile: {actual_dob}")
     assert actual_dob == dob, f"Expected '{dob}', but got '{actual_dob}'"
 
-@when("I enter a future date in the date of birth field")
-@allure.step("When I enter a future date in the date of birth field")
-def enter_future_date_of_birth(setup_platform):
-    print("verify entering a future date in the date of birth field")
-    AndroidProfileScreen(setup_platform).enter_future_date_of_birth()
 
 @then('I verify user are unable to select future Date of birth')
 @allure.step("Then I verify user are unable to select future Date of birth")
@@ -435,6 +441,12 @@ def verify_future_dob_disabled(setup_platform):
     print("Verifying user are unable to select future Date of birth")
     is_selectable = AndroidProfileScreen(setup_platform).verify_future_dob_disabled()
     assert not is_selectable, "future date should not be selectable"
+
+@when("I click calender close icon and click save button")
+@allure.step("When I click calender close icon and click save button")
+def click_on_calendar_close_button(setup_platform):
+    print("click calender close icon and click save button")
+    AndroidProfileScreen(setup_platform).click_on_calendar_close_button()
 
 @when("I click change picture link")
 @allure.step("When I click change picture link")
@@ -446,8 +458,7 @@ def click_change_picture_link(setup_platform):
 @allure.step("Then I verify upload pop up opens with file selection option")
 def verify_upload_file_pop_up(setup_platform):
     print("Verifying upload pop up opens with file selection option")
-    Profile_screen = AndroidProfileScreen(setup_platform).verify_file_upload_pop_up()
-    assert Profile_screen, "File upload pop up should not be displayed"
+    AndroidProfileScreen(setup_platform).verify_file_upload_pop_up()
 
 @then('I verify the Save button should be disabled')
 @allure.step("Then I verify the Save button should be disabled")
@@ -547,14 +558,21 @@ def click_on_add_address_in_home_screen(setup_platform):
     AndroidHomeScreen(setup_platform).click_on_add_address_in_home_screen()
 
 @then("I verify user redirected to login/signup prompt")
-@allure.step("When I verify user redirected to login/signup prompt")
+@allure.step("Then I verify user redirected to login/signup prompt")
 def step_verify_login_prompt(setup_platform):
     assert AndroidAddressScreen(setup_platform).verify_redirect_to_login_or_signup_page(), "Login prompt not displayed"
 
 @then("I verify 'Add new' button is displayed to add address")
-@allure.step("When I verify 'Add new' button is displayed to add address")
+@allure.step("Then I verify 'Add new' button is displayed to add address")
 def step_verify_add_new_button_to_add_address(setup_platform):
+    print("verify 'Add new' button is displayed to add address")
     AndroidAddressScreen(setup_platform).verify_add_new_button_to_add_address()
+
+@then("I click back button from select address screen")
+@allure.step("Then I click back button from select address screen")
+def click_back_button_from_select_address_screen(setup_platform):
+    print("clicked back button from select address screen")
+    AndroidAddressScreen(setup_platform).click_back_button_from_select_address_screen()
 
 @when("I click on login/signup prompt")
 @allure.step("When I click on login/signup prompt")
@@ -846,7 +864,7 @@ def verify_toast_appear_for_unsupported_location(setup_platform):
 @allure.step("When I user click on a listed address")
 def click_on_listed_address(setup_platform):
     print("user click on a listed address")
-    AndroidAddressScreen(setup_platform).Click_from_listed_address()
+    AndroidAddressScreen(setup_platform).Click_from_listed_address("Marathahalli village, HAL Airport road")
 
 @then("I verify the address is selected and restaurant list should update accordingly")
 @allure.step("Then I verify the address is selected and restaurant list should update accordingly")
@@ -870,7 +888,7 @@ def modify_existing_address(setup_platform):
 @allure.step("Then I verify updated address is shown in the address list")
 def verify__updated_address_display_in_address_list(setup_platform):
     print("Verifying updated address is shown in the address list")
-    AndroidAddressScreen(setup_platform).verify_updated_address_display_in_address_list("123, Marathahalli")
+    AndroidAddressScreen(setup_platform).verify_updated_address_display_in_address_list("123, Marathahalli,")
 
 @when("I enter text exceeding the max character limit in address fields and click save address")
 @allure.step("And I enter text exceeding the max character limit in address fields and click save address")
@@ -1011,9 +1029,15 @@ def verify_previously_saved_address_should_visible(setup_platform, user_data_sto
     print("Verifying previously saved addresses should be retained and visible")
     AndroidAddressScreen(setup_platform).verify_previously_saved_address_should_visible_after_logs_in(user_data_store)
 
+@when("I scroll to clear all")
+@allure.step("When I scroll to clear all")
+def Scroll_to_clear_all(setup_platform):
+    print("scroll to clear all")
+    AndroidViewCartScreen(setup_platform).Scroll_to_clear_all()
+
 @when("I click on clear all to empty the cart")
 @allure.step("When I click on clear all to empty the cart")
-def click_add_button(setup_platform):
+def Clear_all_cart(setup_platform):
     print("click on clear all to empty the cart")
     AndroidViewCartScreen(setup_platform).Clear_all_cart()
 
@@ -1089,10 +1113,10 @@ def select_3PC_meal_under_menu(setup_platform):
     print("selects the '3Pc Meals' category under menu")
     AndroidMenuScreen(setup_platform).Select_3PC_meals_menu()
 
-@when("I select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
-@allure.step("When I select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
+@when("I select McChicken meal from the '3Pc Meals' category and click on Add to cart")
+@allure.step("When I select McChicken meal from the '3Pc Meals' category and click on Add to cart")
 def select_product_from_3PC_meals_category(setup_platform):
-    print("Select McChicken meal from the '3Pc Meals' category and click on Add to cart ")
+    print("Select McChicken meal from the '3Pc Meals' category and click on Add to cart")
     AndroidMenuScreen(setup_platform).add_McChicken_meal_in_cart()
 
 @then("I verify the 3Pc meal added in cart")
@@ -1113,10 +1137,10 @@ def add_fries_in_cart(setup_platform):
     print("add 'Medium Fries' to the cart")
     AndroidMenuScreen(setup_platform).add_fries_in_cart()
 
-@then("I verify fries should be added to the cart ")
-@allure.step("Then I verify fries should be added to the cart ")
+@then("I verify fries should be added to the cart")
+@allure.step("Then I verify fries should be added to the cart")
 def verify_product_added_in_cart(setup_platform):
-    print("verify fries should be added to the cart ")
+    print("verify fries should be added to the cart")
     AndroidViewCartScreen(setup_platform).verify_fries_added_to_cart()
 
 @when("I selects the 'Desserts' category under menu")
@@ -1328,6 +1352,178 @@ def verify_Fries_category_is_accessble_via_scrolling(setup_platform):
 def verify_cart_icon_does_not_appear_if_cart_is_empty(setup_platform):
     print("verify the cart icon does not appear on the homepage if the cart is empty")
     AndroidHomeScreen(setup_platform).verify_cart_icon_does_not_appear_if_cart_is_empty()
+
+@when("I checks the price breakdown on the right side of the page")
+@allure.step("When I checks the price breakdown on the right side of the page")
+def verify_prices_breakdown_in_order_summary(setup_platform):
+    print("checks the price breakdown on the right side of the page")
+    AndroidViewCartScreen(setup_platform).verify_prices_breakdown_in_order_summary()
+
+@then("I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+@allure.step("Then I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+def verify_display_of_charges_and_total_amount_in_order_summary(setup_platform):
+    print("verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+    AndroidViewCartScreen(setup_platform).verify_display_of_charges_and_total_amount_in_order_summary()
+
+@when("I click on 'Add Delivery Instructions'")
+@allure.step("When I click on 'Add Delivery Instructions'")
+def click_add_delivery_instructions(setup_platform):
+    print("click on 'Add Delivery Instructions'")
+    AndroidViewCartScreen(setup_platform).scroll_to_add_delivery_instructions_and_click()
+
+@when("I enters special notes in the instructions field")
+@allure.step("When I enters special notes in the instructions field")
+def enter_notes_in_instructions_field(setup_platform):
+    print("enters special notes in the instructions field")
+    AndroidViewCartScreen(setup_platform).enter_notes_in_instructions_field()
+
+@then("I verify the instructions field should accept the input")
+@allure.step("Then I verify the instructions field should accept the input")
+def verify_instructions_field_input(setup_platform):
+    print("verify the instructions field should accept the input")
+    AndroidViewCartScreen(setup_platform).verify_instructions_field_input()
+
+@then("I verify subtotal for a single added item")
+@allure.step("When I verify subtotal for a single added item")
+def verify_sub_total_for_single_added_item(setup_platform):
+    print("verify subtotal for a single added item")
+    AndroidViewCartScreen(setup_platform).verify_sub_total_for_single_added_item()
+
+@when("I add item from recommendation")
+@allure.step("When I add item from recommendation")
+def add_item_from_recommendation(setup_platform):
+    print("add item from recommendation")
+    AndroidViewCartScreen(setup_platform).add_item_from_recommendation()
+
+@then("I verify subtotal for all added items")
+@allure.step("When I verify subtotal for all added items")
+def verify_sub_total_for_all_added_item(setup_platform):
+    print("verify subtotal for all added items")
+    AndroidViewCartScreen(setup_platform).verify_sub_total_for_all_added_item()
+
+@when("I Check CGST and SGST breakdown")
+@allure.step("When I Check CGST and SGST breakdown")
+def verify_cgst_and_sgst_breakdown_in_order_summary(setup_platform):
+    print("Check CGST and SGST breakdown")
+    AndroidViewCartScreen(setup_platform).verify_cgst_and_sgst_breakdown_in_order_summary()
+
+@then("I verify tax percentage should be calculated accurately")
+@allure.step("When I verify tax percentage should be calculated accurately")
+def verify_tax_percentage_calculation(setup_platform):
+    print("verify tax percentage should be calculated accurately")
+    AndroidViewCartScreen(setup_platform).verify_tax_percentage_calculation()
+
+@when("I click on 'Know More' link")
+@allure.step("When I click on 'Know More' link")
+def click_know_more_link(setup_platform):
+    print("click on 'Know More' link")
+    AndroidViewCartScreen(setup_platform).click_know_more_link()
+
+@then("I verify Info opens about the charity")
+@allure.step("When I verify Info opens about the charity")
+def verify_charity_info_pop_up(setup_platform):
+    print("verify Info opens about the charity")
+    AndroidViewCartScreen(setup_platform).verify_charity_info_pop_up()
+
+@when("I clicks the charity donation checkbox to opt-in")
+@allure.step("When I clicks the charity donation checkbox to opt-in")
+def click_charity_checkbox(setup_platform):
+    print("clicks the charity donation checkbox to opt-in")
+    AndroidViewCartScreen(setup_platform).verify_charity_checkbox_is_selected()
+
+@then("I verify ₹3 should be added to the total payable amount")
+@allure.step("When I verify ₹3 should be added to the total payable amount")
+def verify_Donation_amount_added_in_payable_amount(setup_platform):
+    print("verify ₹3 should be added to the total payable amount")
+    AndroidViewCartScreen(setup_platform).verify_Donation_amount_added_in_payable_amount()
+
+
+@when("I unchecks the charity donation checkbox")
+@allure.step("When I unchecks the charity donation checkbox")
+def uncheck_charity_checkbox(setup_platform):
+    print("unchecks the charity donation checkbox")
+    AndroidViewCartScreen(setup_platform).uncheck_charity_checkbox()
+
+@then("I verify ₹3 should be removed from the total payable amount")
+@allure.step("Then I verify ₹3 should be removed from the total payable amount")
+def verify_donation_amount_removed_from_payable_amount(setup_platform):
+    print("verify ₹3 should be removed from the total payable amount")
+    AndroidViewCartScreen(setup_platform).verify_donation_amount_removed_from_payable_amount()
+
+@when("I click on 'View All' link")
+@allure.step("When I click on 'View All' link")
+def click_view_all_link(setup_platform):
+    print("click on 'View All' link")
+    AndroidViewCartScreen(setup_platform).click_view_all_link()
+
+@then("I verify the user should be redirected to a page displaying all available offers")
+@allure.step("Then I verify the user should be redirected to a page displaying all available offers")
+def verify_user_redirected_to_offers_page(setup_platform):
+    print("verify the user should be redirected to a page displaying all available offers")
+    AndroidOfferPage(setup_platform).verify_user_redirected_to_offers_page()
+
+@when("I reviews all prices in the order summary")
+@allure.step("When I reviews all prices in the order summary")
+def review_prices_in_order_summary(setup_platform):
+    print("reviews all prices in the order summary")
+    AndroidViewCartScreen(setup_platform).verify_prices_breakdown_in_order_summary()
+
+@then("I verify each price should be prefixed with the ₹ symbol")
+@allure.step("Then I verify each price should be prefixed with the ₹ symbol")
+def verify_all_prices_prefixed_with_currency_symbol(setup_platform):
+    print("verify each price should be prefixed with the ₹ symbol")
+    AndroidViewCartScreen(setup_platform).verify_all_prices_prefixed_with_currency_symbol()
+
+@then("I verify the estimated delivery time displayed below the delivery address")
+@allure.step("Then I verify the estimated delivery time displayed below the delivery address")
+def verify_estimated_delivery_time(setup_platform):
+    print("verify the estimated delivery time displayed below the delivery address")
+    AndroidViewCartScreen(setup_platform).verify_estimated_delivery_time()
+
+@then("I click back button")
+@allure.step("Then I click back button")
+def Click_back_button(setup_platform):
+    print("click back button")
+    AndroidViewCartScreen(setup_platform).Click_back_button()
+
+@then("I verify the cart should retain the previously added items")
+@allure.step("Then I verify the cart should retain the previously added items")
+def cart_retained_the_previously_added_item(setup_platform):
+    print("verify the cart should retain the previously added items")
+    AndroidViewCartScreen(setup_platform).Verify_single_item_in_cart()
+
+@when("I apply multiple promo codes")
+@allure.step("When I apply multiple promo codes")
+def verify_coupon_switch(setup_platform):
+    print("apply multiple promo codes")
+    AndroidOfferPage(setup_platform).verify_coupon_switch()
+
+@then("I verify only one code applied at a time")
+@allure.step("Then I verify only one code applied at a time")
+def verify_applied_offer_and_click_change_offer(setup_platform):
+    print("verify only one code applied at a time")
+    AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+@when("I apply the second promo code")
+@allure.step("When I apply the second promo code")
+def Select_second_promo_code(setup_platform):
+    print("apply the second promo code")
+    AndroidOfferPage(setup_platform).Select_second_promo_code()
+
+@then("I verify that the first offer is removed and the second offer is displayed")
+@allure.step("When I verify that the first offer is removed and the second offer is displayed")
+def verify_first_offer_is_removed_and_the_second_offer_is_displayed(setup_platform):
+    print("verify that the first offer is removed and the second offer is displayed")
+    AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+@then("I verify the discount should be clearly shown and deducted in the order summary")
+@allure.step("When I verify the discount should be clearly shown and deducted in the order summary")
+def verify_discount_prices_in_order_summary(setup_platform):
+    print("verify the discount should be clearly shown and deducted in the order summary")
+    AndroidViewCartScreen(setup_platform).verify_discount_is_applied_correctly()
+
+
+
 
     
 

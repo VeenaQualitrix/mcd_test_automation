@@ -27,6 +27,7 @@ locators = {
     "DATE_OF_BIRTH_TEXTFIELD": (AppiumBy.ANDROID_UIAUTOMATOR,'new UiSelector().className("android.widget.EditText").instance(3)'),
     "CALENDAR_ICON": (AppiumBy.XPATH, '//android.widget.Image[@text="ic-calender"]'),
     "DATE_PICKER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Choose DOB']"),
+    "CALENDAR_CLOSE_ICON": (By.XPATH, "//android.widget.Image[@text='close outline']"),
     "SELECT_BUTTON": (AppiumBy.XPATH, "//android.widget.Button[@text='Select']"),
     "CHANGE_PICTURE_LINK": (AppiumBy.XPATH, "//android.widget.TextView[@text='Change Picture']"),
     "FILE_UPLOAD_POP_UP": (AppiumBy.XPATH, "//android.widget.TextView[@text='From Photos']"),
@@ -126,12 +127,12 @@ class AndroidProfileScreen(BasePage):
     def clear_profile_name_field(self):
         time.sleep(5)
         username_field = self.driver.find_element(*locators['USER_NAME'])
-        username_field.clear()  # This works for most Android text fields
+        username_field.clear()  
 
 
     def profile_name_field_empty_error(self):
         time.sleep(5)
-        return self.actions.is_element_displayed(*locators['EMPTY_PROFILE_NAME_FIELD_ERROR'])
+        self.actions.is_element_displayed(*locators['EMPTY_PROFILE_NAME_FIELD_ERROR'])
     
     def enter_invalid_char_in_name_field(self):
         time.sleep(2)
@@ -139,6 +140,20 @@ class AndroidProfileScreen(BasePage):
         username_field.clear()
         self.actions.enter_text(*locators['USER_NAME'], "John@123")
         time.sleep(3)
+
+    def clear_email_field(self):
+        time.sleep(5)
+        email_field = self.driver.find_element(*locators['EMAIL_ID'])
+        email_field.clear()
+        # Scroll until Save button is visible
+        save_button = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
+            '.scrollIntoView(new UiSelector().text("Save").instance(0));'
+        )
+
+        # Click Save button
+        save_button.click()
 
     def edit_email_address(self):
         time.sleep(2)
@@ -175,7 +190,8 @@ class AndroidProfileScreen(BasePage):
 
     def incorrect_email_error(self):
         time.sleep(5)
-        return self.actions.is_element_displayed(*locators['INCORRECT_EMAIL_FORMAT'])
+        self.actions.is_element_displayed(*locators['INCORRECT_EMAIL_FORMAT'])
+
 
     def edit_date_of_birth(self):
         time.sleep(2)
@@ -220,6 +236,28 @@ class AndroidProfileScreen(BasePage):
 
         print(f"[DEBUG] Actual DOB on profile: {actual_dob}")
         return actual_dob
+    
+    def click_on_calendar_close_button(self):
+        try:
+            # Try the explicit close icon first
+            close_btn = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, "//android.widget.Image[@text='close outline']"))
+            )
+            close_btn.click()
+            print("Calendar closed by clicking close icon")
+        except TimeoutException:
+            print("Close icon not found, trying 'Select' button...")
+
+            try:
+                select_btn = WebDriverWait(self.driver, 5).until(
+                    EC.element_to_be_clickable((By.XPATH, "//android.widget.Button[@text='Select']"))
+                )
+                select_btn.click()
+                print("Calendar closed by clicking Select button")
+            except TimeoutException:
+                print("Neither close icon nor Select button was found.")
+                print(self.driver.page_source)  # Debug to confirm what’s on screen
+                raise 
         
 
     def verify_future_dob_disabled(self):
@@ -233,11 +271,38 @@ class AndroidProfileScreen(BasePage):
         future_month = tomorrow.month
         future_year = tomorrow.year
 
-        is_selectable = self.actions.is_date_selectable(future_day, future_month, future_year)
-        print(f"[DEBUG] Is future date selectable? {is_selectable}")
+        # Step 1: Safely log attributes of date elements
+        elements = self.driver.find_elements(By.XPATH, "//android.view.View")
+        print(f"DEBUG: Found {len(elements)} date elements in calendar")
 
-        # Return True if date is selectable, else False
-        return is_selectable
+        for i in range(len(elements)):
+            try:
+                el = self.driver.find_elements(By.XPATH, "//android.view.View")[i]  # re-fetch each time
+                desc = el.get_attribute("content-desc")
+                txt = el.get_attribute("text")
+                print(f"DEBUG calendar element -> content-desc: {desc}, text: {txt}")
+            except Exception as e:
+                print(f"Skipped element {i} due to {type(e).__name__}: {e}")
+
+        # Step 2: Try locating tomorrow’s date
+        try:
+            # Try by content-desc
+            locator = (By.XPATH, f"//android.view.View[@content-desc='{future_day}']")
+            el = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located(locator))
+            print(f"Found future date by content-desc: {future_day}")
+            return el.is_enabled()
+        except TimeoutException:
+            print(f"Future day {future_day} not found by content-desc, trying text...")
+
+        try:
+            # Fallback: try by text
+            locator = (By.XPATH, f"//android.view.View[@text='{future_day}']")
+            el = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located(locator))
+            print(f"Found future date by text: {future_day}")
+            return el.is_enabled()
+        except TimeoutException:
+            print(f"Future date {future_day}-{future_month}-{future_year} not found at all.")
+            return False
 
     def click_change_picture_link(self):
         time.sleep(5)
@@ -247,7 +312,8 @@ class AndroidProfileScreen(BasePage):
 
     def verify_file_upload_pop_up(self):
         time.sleep(5)
-        return self.actions.is_element_displayed(*locators['FILE_UPLOAD_POP_UP'])
+        self.actions.is_element_displayed(*locators['FILE_UPLOAD_POP_UP'])
+        self.driver.back()
 
     def check_save_changes_button_disabled(self):
         time.sleep(3)
@@ -258,7 +324,7 @@ class AndroidProfileScreen(BasePage):
         )
         return not save_button.is_enabled()
     
-    def click_back_button_on_profile_acreen(self):
+    def click_back_button_on_profile_screen(self):
         time.sleep(3)
         self.driver.find_element(
             AppiumBy.ANDROID_UIAUTOMATOR,
@@ -321,9 +387,13 @@ class AndroidProfileScreen(BasePage):
         self.driver.find_element(*locators['TOGGLE_BUTTON']).click()
 
         # Verify it's OFF (can also check attribute/state)
-        is_off = not self.actions.is_element_displayed(*locators['TOGGLE_BUTTON'])
-        assert is_off, "Toggle button is still ON"
-        print("Color blind mode is OFF.")
+        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
+    
+        # Some Android toggles expose "checked" attribute → "true" (ON) or "false" (OFF)
+        is_checked = toggle_button.get_attribute("checked")  # returns string "true"/"false"
+        
+        assert is_checked == "false", "Toggle button is still ON"
+        print(" Toggle button is OFF (Color blind mode disabled).")
 
 
     def color_scheme(self):

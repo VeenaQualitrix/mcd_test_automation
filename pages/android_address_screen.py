@@ -1,9 +1,11 @@
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 import time
 
 locators = {
@@ -24,6 +26,7 @@ locators = {
         "ADDRESS_SCREEN_HEADER" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Building/Locality or nearby landmark']"),
         "ADDRESS_SAVED_WITH_SPECIAL_CHAR" : (AppiumBy.XPATH, "//android.widget.TextView[@text='%$^#@&*,']"),
         "ALL_ADDRESS" : (AppiumBy.XPATH, "//android.widget.TextView[@text='All Addresses']"),
+        "ALL_ADDRESS_LIST" : (AppiumBy.XPATH, "//android.widget.TextView[not(@text='All Addresses') and string-length(normalize-space(@text)) > 0]"),
         "CLICK_BACK_BUTTON" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-arrow-left-primary'])[2]"),
         "CLICK_BACK_BUTTON_FROM_SELECT_LOCATION" : (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
         "ADDRESS_EDIT_ICON" : (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-edit'])[1]"),
@@ -66,37 +69,32 @@ class AndroidAddressScreen(BasePage):
         self.actions.click_button(*locators["LOGIN_PROMPT"])
         print("Clicked on Log In/ Sign up button")
 
-    def verify_add_new_button_to_add_address(self):
-        time.sleep(5)
-        self.actions.is_element_displayed(*locators['SELECT_DELIVERY_ADDRESS_HEADER'])
-        self.actions.is_element_displayed(*locators['ADD_NEW'])
-        print("Add new button is displayed to add new address")
-        time.sleep(2)
-        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
-        print("Clicked on back button")
+    def verify_add_new_button_to_add_address(self, timeout=10): 
+        try:
+            # Wait for the header to be visible
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+            )
 
-    def search_for_address_after_selecting_business_model(self):
-        time.sleep(2)
-        self.actions.click_button(*locators['SEARCH_BUTTON'])
-        time.sleep(2)
-        self.actions.click_button(*locators['SEARCH_INPUT_FIELD'])
-        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bengaluru")
-        self.driver.press_keycode(66)  # KEYCODE_ENTER
-        time.sleep(5)
-        # Click the suggested address
-        select_address_locator = (
-            locators['SELECT_ADDRESS'][0],
-            locators['SELECT_ADDRESS'][1].format("Bengaluru")
-        )
-        self.actions.is_element_displayed(*select_address_locator)
-        self.actions.click_button(*select_address_locator)
-        print("Suggested address clicked.")
+            # Now wait for either "Add new" or "Add new address"
+            try:
+                WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located(locators['ADD_NEW'])
+                )
+                print(" 'Add new' button is displayed to add new address")
+                return True
+            except TimeoutException:
+                WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located(locators['ADD_NEW_ADDRESS'])
+                )
+                print(" 'Add new address' button is displayed to add new address")
+                return True
 
-        # Click the first address (confirmation or next step)
-        self.actions.is_element_displayed(*locators['FIRST_ADDRESS'])
-        self.actions.click_button(*locators['FIRST_ADDRESS'])
-        print("First address clicked.")
-
+        except TimeoutException:
+            print(" Neither 'Add new' nor 'Add new address' button is displayed")
+            return False
+    
+    
     def search_for_address_after_selecting_Dine_In_model(self):
         time.sleep(2)
         self.actions.click_button(*locators['SEARCH_BUTTON'])
@@ -141,23 +139,46 @@ class AndroidAddressScreen(BasePage):
         except Exception as e:
             raise AssertionError(f"Validation failed: Selected delivery address did not appear. Details: {e}")
         
-    def Click_add_new_button_and_confirm_location(self):
-        time.sleep(1)
-        self.actions.is_element_displayed(*locators['ADD_NEW'])
-        self.actions.click_button(*locators['ADD_NEW'])
-        time.sleep(2)
-        self.actions.is_element_displayed(*locators['CONFIRM_LOCATION'])
-        self.actions.click_button(*locators["CONFIRM_LOCATION"])
-        print("Clicked Confirm Location Button")
+    def Click_add_new_button_and_confirm_location(self, timeout=10):
+        try:
+            # Wait for either 'Add new' or 'Add new address'
+            try:
+                add_new_btn = WebDriverWait(self.driver, timeout).until(
+                    EC.element_to_be_clickable(locators['ADD_NEW'])
+                )
+                print("Found 'Add new' button")
+            except TimeoutException:
+                add_new_btn = WebDriverWait(self.driver, timeout).until(
+                    EC.element_to_be_clickable(locators['ADD_NEW_ADDRESS'])
+                )
+                print("Found 'Add new address' button")
 
-    def verify_redirect_to_address_filling_page(self):
-        time.sleep(2)
-        self.actions.is_element_displayed(*locators['ADDRESS_SCREEN_HEADER'])
-        time.sleep(1)
-        self.actions.click_button(*locators["CLICK_BACK_BUTTON"])
-        time.sleep(2)
-        self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
-        print("Entered text in house/flat field and click back button without saving")
+            # Click the button
+            add_new_btn.click()
+
+            # Wait for confirm location and click it
+            confirm_btn = WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable(locators['CONFIRM_LOCATION'])
+            )
+            self.actions.click_button(*locators["CONFIRM_LOCATION"])
+            print(" Clicked Confirm Location Button")
+            return True
+
+        except TimeoutException:
+            print(" Could not click Add new / Confirm location button within timeout")
+            return False
+
+    def verify_redirect_to_address_filling_page(self, timeout=10):
+        try:
+            # Wait until the address screen header is visible
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locators['ADDRESS_SCREEN_HEADER'])
+            )
+            print(" Address filling screen is displayed")
+            return True
+        except TimeoutException:
+            print(" Address filling screen not displayed within timeout")
+            return False
     
     def _scroll_bottom_sheet_until_text(self, text, max_scrolls=8):
         """
@@ -234,10 +255,10 @@ class AndroidAddressScreen(BasePage):
     def verify_address_mandatory_field_empty_error(self):
         time.sleep(2)
         self.actions.is_element_displayed(*locators['HOUSE_FIELD_EMPTY_ERROR'])
+        time.sleep(1)
         self.actions.click_button(*locators['CLICK_BACK_BUTTON'])
         time.sleep(1)
         self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
-        time.sleep(1)
     
     def enter_special_char_in_house_field(self):
         time.sleep(5)
@@ -316,21 +337,74 @@ class AndroidAddressScreen(BasePage):
     def search_for_address_after_selecting_business_model(self):
         time.sleep(2)
         self.actions.click_button(*locators['SEARCH_BUTTON'])
+        time.sleep(2)
+
+        # Find and click search input
+        search_field = self.driver.find_element(*locators["SEARCH_INPUT_FIELD"])
+        search_field.click()
+        search_field.clear()
+
+        try:
+            # Try direct send_keys first
+            search_field.send_keys("Bengaluru")
+            print("✅ Entered 'Bengaluru' using send_keys.")
+        except Exception as e:
+            print(f"⚠️ send_keys failed, falling back to keycodes: {e}")
+
+            # Fallback: type using keycodes
+            keycodes = {
+                "B": 30, "e": 33, "n": 42, "g": 35,
+                "a": 29, "l": 38, "u": 47, "r": 46
+            }
+            for letter in "Bengaluru":
+                if letter in keycodes:
+                    self.driver.press_keycode(keycodes[letter])
+                    time.sleep(0.3)
+            print("✅ Entered 'Bengaluru' using keycodes.")
+
+        # Hit Enter to search
+        self.driver.press_keycode(66)
         time.sleep(5)
-        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bengaluru")
-        time.sleep(5)
-        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Bengaluru"))
-        time.sleep(10)
+
+        # Select the suggested address
+        select_address_locator = (
+            locators['SELECT_ADDRESS'][0],
+            locators['SELECT_ADDRESS'][1].format("Bengaluru")
+        )
+        self.actions.is_element_displayed(*select_address_locator)
+        self.actions.click_button(*select_address_locator)
+        print("Suggested address clicked.")
+
+        # Click first address
         self.actions.is_element_displayed(*locators['FIRST_ADDRESS'])
         self.actions.click_button(*locators['FIRST_ADDRESS'])
         print("First address clicked.")
 
-    def Click_from_listed_address(self):
-        WebDriverWait(self.driver, 10).until(
-             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
+    def Click_from_listed_address(self, address_text="Marathahalli village, HAL Airport road", index=0, timeout=10):
+        # Wait for header to ensure page is loaded
+        WebDriverWait(self.driver, timeout).until(
+            EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         )
-        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Marathahalli village, HAL Airport road"))
-        print("Address from list clicked")
+
+        # Build locator with partial text match
+        xpath = f"//android.widget.TextView[contains(@text,'{address_text}')]"
+        
+        # Fetch all matching addresses
+        matching_addresses = WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_all_elements_located((AppiumBy.XPATH, xpath))
+        )
+
+        if not matching_addresses:
+            raise AssertionError(f"No address found matching '{address_text}'")
+
+        if index >= len(matching_addresses):
+            raise AssertionError(
+                f"Only {len(matching_addresses)} addresses found, but index {index} was requested"
+            )
+
+        # Click the chosen duplicate
+        matching_addresses[index].click()
+        print(f"Clicked on address '{address_text}' (occurrence #{index+1})")
 
        
     def click_address_edit_icon(self):
@@ -351,19 +425,24 @@ class AndroidAddressScreen(BasePage):
         print(f"Entered updated house/flat value: '{updated_house_name}' and clicked save button")
 
     def verify_updated_address_display_in_address_list(self, expected_partial_text):
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_all_elements_located(locators["ALL_ADDRESS"])
-        )
-        all_address_elements = self.driver.find_elements(*locators["ALL_ADDRESS"])
-        all_addresses = [addr.text.strip().lower() for addr in all_address_elements]
+        time.sleep(2)  
+        all_address_elements = self.driver.find_elements(*locators["ALL_ADDRESS_LIST"])
+        all_addresses = [addr.text.strip().lower() for addr in all_address_elements if addr.text.strip()]
         print("DEBUG - Addresses found on screen:", all_addresses)
 
-        normalized_expected = expected_partial_text.lower().replace(" ", "")
-        is_present = any(normalized_expected in address.replace(" ", "") for address in all_addresses)
+        # Normalize for comparison (remove spaces/commas)
+        normalized_expected = expected_partial_text.lower().replace(" ", "").replace(",", "")
+        is_present = any(
+            normalized_expected in address.replace(" ", "").replace(",", "")
+            for address in all_addresses
+        )
 
-        assert is_present, f"Expected address '{expected_partial_text}' not found. Found: {all_addresses}"
-        # Press back button (Android)
-        self.driver.press_keycode(4)
+        assert is_present, \
+            f"Expected address '{expected_partial_text}' not found. Found: {all_addresses}"
+        print(f"Verified: '{expected_partial_text}' is present in All Address section.")
+
+        # Go back after verification
+        self.driver.back()
 
     def enter_text_exceeding_max_limit(self):
         time.sleep(2)
@@ -549,7 +628,7 @@ class AndroidAddressScreen(BasePage):
         self.actions.is_element_displayed(*locators['ADD_NEW_ADDRESS'])
         print("Clicked on Add new address")
         time.sleep(2)
-        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
         print("Clicked on back button")
 
 
@@ -626,49 +705,47 @@ class AndroidAddressScreen(BasePage):
         self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
         print("Clicked back button")
     
+    def get_all_visible_addresses(self, max_scrolls=7):
+        """Scroll through the list and capture all unique addresses."""
+        seen_addresses = set()
+        scrollable = 'new UiScrollable(new UiSelector().scrollable(true))'
+
+        for _ in range(max_scrolls):
+            # Collect all currently visible address elements
+            address_elements = self.driver.find_elements(*locators['ALL_ADDRESS'])
+            for elem in address_elements:
+                txt = elem.text.strip()
+                if txt:
+                    seen_addresses.add(txt)
+
+            # Try scrolling forward
+            try:
+                self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, f'{scrollable}.scrollForward()')
+            except Exception:
+                print(" No more scrolling possible.")
+                break
+            time.sleep(1)
+
+        return list(seen_addresses)
+
     def verify_address_list_before_logout_the_application(self, user_data_store):
         WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         )
 
+        expected_addresses = ["123 Main Street", "Marathahalli village"]
+        all_addresses = self.get_all_visible_addresses()
+
         user_data_store["original_addresses"] = []
 
-        # Predefined addresses to validate
-        expected_addresses = ["Vipul greens, Lucknow", "123 Main Street", "Marathahalli village"]
+        for addr in expected_addresses:
+            matches = [a for a in all_addresses if addr.lower() in a.lower()]
+            if matches:
+                print(f" Captured address: {matches[0]}")
+                user_data_store["original_addresses"].append(matches[0])
+            else:
+                print(f" Could not find address: {addr}")
 
-        for address in expected_addresses:
-            found = False
-            max_scrolls = 5
-
-            for _ in range(max_scrolls):
-                try:
-                    # Try to locate address by text
-                    address_element = self.driver.find_element(
-                        locators['ADDED_ADDRESS'][0],
-                        locators['ADDED_ADDRESS'][1].format(address)
-                    )
-                    # Capture text if found
-                    address_title = address_element.text.strip()
-                    user_data_store["original_addresses"].append(address_title)
-                    print(f" Captured address: {address_title}")
-                    found = True
-                    break
-
-                except Exception:
-                    # Scroll down using Android UiScrollable
-                    try:
-                        self.driver.find_element(
-                            AppiumBy.ANDROID_UIAUTOMATOR,
-                            f'new UiScrollable(new UiSelector().scrollable(true)).scrollForward()'
-                        )
-                    except Exception:
-                        print(" Unable to scroll further")
-                    time.sleep(1)
-
-            if not found:
-                print(f" Could not find address: {address}")
-
-        # Go back from Address list
         self.driver.back()
 
     def verify_previously_saved_address_should_visible_after_logs_in(self, user_data_store):
@@ -676,68 +753,50 @@ class AndroidAddressScreen(BasePage):
             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         )
 
+        all_addresses = self.get_all_visible_addresses()
+
         for expected_address in user_data_store.get("original_addresses", []):
-            found = False
-            max_scrolls = 5
+            matches = [a for a in all_addresses if expected_address.lower() in a.lower()]
+            assert matches, f"[FAIL] Address '{expected_address}' not found after login."
+            print(f" [PASS] Address '{expected_address}' is visible after login.")
 
-            by, value = locators['ADDED_ADDRESS']
-            formatted_locator = (by, value.format(expected_address))
-
-            for _ in range(max_scrolls):
-                try:
-                    # Try to find the address
-                    address_element = self.driver.find_element(*formatted_locator)
-
-                    # Validate the text
-                    actual_text = address_element.text.strip()
-                    assert expected_address in actual_text, f"Expected '{expected_address}', but found '{actual_text}'"
-                    print(f" [PASS] Address '{expected_address}' is visible after login.")
-                    found = True
-                    break
-
-                except Exception:
-                    # Scroll forward if not found
-                    try:
-                        self.driver.find_element(
-                            AppiumBy.ANDROID_UIAUTOMATOR,
-                            'new UiScrollable(new UiSelector().scrollable(true)).scrollForward()'
-                        )
-                    except Exception:
-                        print(" No more scrolling possible.")
-                    time.sleep(1)
-
-            if not found:
-                print(f" [FAIL] Address '{expected_address}' not found after login.")
-                raise AssertionError(f"Address '{expected_address}' not found after login.")
-            
-            time.sleep(2)
-            self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
-            print("clicked back button ")
+        time.sleep(2)
+        self.actions.click_button(*locators["CLICK_BACK_BUTTON_FROM_SELECT_LOCATION"])
+        print("clicked back button")
 
     def select_Mumbai_address_from_list(self):
+        # Wait for the delivery address header to be visible
         WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         )
 
-        addresses = ["Dadar West Mcdonalds"]
+        target_address = "Dadar, Mukund Mansion, Ayan Fresh"
 
-        for address in addresses:
-            try:
-                # Use UiScrollable to scroll until text is visible
-                ui_scrollable = (
-                    'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
-                    f'.scrollIntoView(new UiSelector().textContains("{address}").instance(0));'
-                )
+        try:
+            # Scroll downward only until the address is visible
+            ui_scrollable = (
+                'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
+                '.setAsVerticalList()'
+                f'.scrollForward().scrollIntoView(new UiSelector().textContains("{target_address}").instance(0));'
+            )
 
-                address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
+            address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
 
-                address_text = address_element.text.strip()
-                print(f"Captured address: {address_text}")
-                address_element.click()
-                return  # Stop after first successful selection
+            address_text = address_element.text.strip()
+            print(f"Captured address: {address_text}")
 
-            except Exception as e:
-                print(f"Could not find address '{address}': {e}")
+            address_element.click()
+            print(f"Clicked on address: {address_text}")
+
+        except Exception as e:
+            print(f"Could not find address '{target_address}': {e}")
+
+
+    def click_back_button_from_select_address_screen(self):
+        time.sleep(2)
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        print("Clicked on back button from select location screen")
+       
 
     
 

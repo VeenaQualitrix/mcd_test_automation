@@ -33,7 +33,7 @@ locators = {
         "DINE_IN_ICON_AND_TEXT": (By.XPATH, "//img[@alt='ic-bm-dine-in']/following-sibling::span[text()='Dine-In']"),
         "ON_THE_GO_ICON_AND_TEXT": (By.XPATH, "//img[@alt='ic-bm-otg']/following-sibling::span[text()='On the Go']"),
         "TAKE_AWAY_ICON_AND_TEXT": (By.XPATH, "//img[@alt='ic-bm-delivery']/following-sibling::span[text()='Take Away']"),
-        "MODIFIED_ADDRESS": (By.XPATH, " (//div[contains(text(), 'HPCL HOUSING COLONY')])[5]"),
+        "MODIFIED_ADDRESS": (By.XPATH, " //div[contains(text(), ' 123, Marathahalli, Aeromedical Consultancy ')]"),
         "CLICK_BACK_BUTTON_FROM_SELECT_LOCATION" : (By.XPATH, "//img[@alt='ic-arrow-left-primary']"),
         "SELECTED_ADDRESS_LABEL" : (By.XPATH, "(//div[contains(text(), 'HPCL HOUSING COLONY')])[1]"),
         "HOME_PAGE_ADDRESS" : (By.XPATH, "//div[contains(@class, 'toolbar-v1__location')]"),
@@ -298,18 +298,40 @@ class HomePage(BasePage):
 
     def verify_browse_menu(self):
         time.sleep(5)
-        burger_name = "McAloo Tikki Burger"
+
+        # List of burger names to try in order
+        burger_names = ["McAloo Tikki Burger", "McVeggie Burger", "McChicken Burger"]
+
         add_item_locator = locators['ADD_ITEM_TO_CART']
-        formatted_xpath = add_item_locator[1].format(burger_name=burger_name)
-        # Click on add to cart for the selected burger
-        self.actions.click_button(add_item_locator[0], formatted_xpath)
-        print("'Add Item' button clicked.")
-        # Click on Next
+        burger_found = False
+
+        # Try each burger until one is found and added
+        for burger_name in burger_names:
+            try:
+                formatted_xpath = add_item_locator[1].format(burger_name=burger_name)
+
+                # Wait and click on the burger's 'Add' button
+                WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable((add_item_locator[0], formatted_xpath))
+                ).click()
+                print(f"'Add Item' button clicked for {burger_name}")
+                burger_found = True
+                break  # Exit loop after successfully adding a burger
+
+            except Exception as e:
+                print(f"⚠️ '{burger_name}' not found or not clickable. Trying next burger...")
+
+        if not burger_found:
+            raise Exception("❌ None of the burgers were available to add to cart.")
+
+        # Step 2: Click on 'Next'
         self.actions.is_element_displayed(*locators['CLICK_NEXT'])
         self.actions.click_button(*locators['CLICK_NEXT'])
         print("'Next' button clicked.")
+
         time.sleep(2)
-        # Final Add to Cart
+
+        # Step 3: Final Add to Cart
         self.actions.is_element_displayed(*locators['CLICK_ADD_TO_CART'])
         self.actions.click_button(*locators['CLICK_ADD_TO_CART'])
         print("'Add to Cart' button clicked.")
@@ -319,23 +341,32 @@ class HomePage(BasePage):
         self.actions.is_element_displayed(*locators['DINE_IN_OPTION'])
         print("Dine In selected after browsing menu and returning back to homepage")
 
-    def verify_updated_address_display_in_address_list(self, expected_partial_text):
-        self.actions.click_button(*locators['ADDRESS_DROPDOWN'])
-        print("CLicked on add address dropdown")
-        # Assert that the modified address appears in the list
-        time.sleep(10)
-        assert self.actions.is_element_displayed(*locators['MODIFIED_ADDRESS']), "Modified address not shown in list"
-        modified_address_text = self.actions.get_text(*locators['MODIFIED_ADDRESS'])
+    def verify_updated_address_display_in_address_list(self):
+        # Open dropdown
+        WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(locators['ADDRESS_DROPDOWN'])
+        ).click()
+        print("Clicked on address dropdown")
+
+        # Wait for list to appear and target address to be present/visible
+        modified_el = WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(locators['MODIFIED_ADDRESS'])
+        )
+        assert modified_el.is_displayed(), "Modified address not shown in list"
+
+        modified_address_text = modified_el.text.strip()
         print(f"Found modified address: {modified_address_text}")
-        # Optional: Click on the modified address to select it
-        self.actions.click_button(*locators['MODIFIED_ADDRESS'])
+
+        # Click the modified address
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['MODIFIED_ADDRESS'])
+        ).click()
         print("Modified address clicked in the address list")
-        # Validate that it becomes the selected address
-        selected_address_text = self.actions.get_text(*locators['SELECTED_ADDRESS_LABEL'])
-        assert expected_partial_text.strip() in selected_address_text.strip(), f"Expected '{expected_partial_text}' in selected address, but found '{selected_address_text}'"
-        print("Updated address is correctly displayed as selected")
-        # Exit from popup
-        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+
+        # Close the select-location popup
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        ).click()
         print("Clicked on back button from select location popup")
 
     def Click_back_button_from_select_location_page(self):

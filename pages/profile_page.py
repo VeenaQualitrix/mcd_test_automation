@@ -48,6 +48,8 @@ locators = {
     "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
     "MCDELIVERY_ICON": (By.XPATH, "//img[@alt = 'logo']"),
     "LOG_OUT_BUTTON": (By.XPATH, "//div[contains(text(), 'Logout')]"),
+    "CLOSE_CALENDAR_POPUP": (By.XPATH, "//ion-icon[@name ='close-outline']"),
+
     }
 
 
@@ -171,6 +173,21 @@ class ProfilePage(BasePage):
         time.sleep(5)
         self.actions.click_button(*locators["SUBMIT_BUTTON"])
 
+    def clear_email_field(self):
+        email_field = self.driver.find_element(*locators['EMAIL_ID'])
+        email_field.send_keys(Keys.CONTROL + "a")   # Select all text
+        email_field.send_keys(Keys.BACKSPACE)       # Delete selected text
+        email_field.send_keys(Keys.TAB)
+        time.sleep(2)
+
+        submit_button = self.driver.find_element(*locators["SUBMIT_BUTTON"])
+        # Scroll into view
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", submit_button)
+        time.sleep(1)
+        submit_button.click()
+        print("✅ Submit button clicked after scrolling.")
+
+
     def edit_email_address(self):
         email_field = self.driver.find_element(*locators['EMAIL_ID'])
         email_field.clear()
@@ -201,6 +218,8 @@ class ProfilePage(BasePage):
 
     def edit_date_of_birth(self):
         time.sleep(2)
+        
+        # Scroll to Date of Birth section
         date_of_birth = self.driver.find_element(*locators["DATE_OF_BIRTH"])
         self.driver.execute_script("arguments[0].scrollIntoView();", date_of_birth)
         self.actions.is_element_displayed(*locators['DATE_OF_BIRTH'])
@@ -231,17 +250,38 @@ class ProfilePage(BasePage):
             arguments[0].dispatchEvent(new Event('ionChange'));
         """, ion_datetime, formatted_date)
 
-        time.sleep(1)  # Give time for UI to react
+        time.sleep(1)  # Allow UI to react
 
         # Click the "Select" button
         self.actions.click_button(*locators["SELECT_BUTTON"])
         print("[INFO] Date selected and confirmed")
+
+        # -------- SCROLL UPWARD AND CLICK SUBMIT --------
+        try:
+            submit_button = self.driver.find_element(*locators["SUBMIT_BUTTON"])
+
+            # Scroll the page upward until the submit button is visible
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+            print("[INFO] Scrolled upward to the Submit button")
+
+            # Wait until the button is clickable
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(locators["SUBMIT_BUTTON"])
+            )
+
+            # Click the Submit button
+            self.actions.click_button(*locators["SUBMIT_BUTTON"])
+            print("[INFO] Submit button clicked successfully")
+
+        except Exception as e:
+            raise Exception(f"[ERROR] Failed to scroll and click Submit button: {str(e)}")
 
         time.sleep(2)
         return formatted_dob
 
         
     def verify_updated_date_of_birth(self):
+        time.sleep(5)
         # get actual DOB from UI
         dob_element = self.driver.find_element(*locators['DATE_OF_BIRTH_TEXTFIELD'])
 
@@ -255,6 +295,22 @@ class ProfilePage(BasePage):
         print(f"[DEBUG] Actual DOB on profile (value or text): {actual_dob}")
         return actual_dob
         
+    def is_date_selectable(self, day, month, year):
+        try:
+            date_locator = (By.XPATH, f"//td[@data-day='{day}' and @data-month='{month}' and @data-year='{year}']")
+            print(f"[DEBUG] Trying to locate date element: {date_locator}")
+            
+            date_element = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(date_locator)
+            )
+            print("[DEBUG] Date element found")
+
+            # Check if it's disabled
+            is_disabled = "disabled" in date_element.get_attribute("class")
+            return not is_disabled
+        except TimeoutException:
+            print("[DEBUG] Future date element not found - probably disabled.")
+            return False
 
     def verify_future_dob_disabled(self):
         time.sleep(5)
@@ -269,13 +325,25 @@ class ProfilePage(BasePage):
         print("Calendar modal appeared")
         time.sleep(5)
 
+        # Calculate tomorrow's date
         tomorrow = datetime.now() + timedelta(days=1)
         future_day = tomorrow.day
         future_month = tomorrow.month
         future_year = tomorrow.year
 
+        # Check if future date is selectable
         is_selectable = self.actions.is_date_selectable(future_day, future_month, future_year)
         print(f"[DEBUG] Is future date selectable? {is_selectable}")
+
+        # If future date is NOT selectable, close the calendar popup
+        if not is_selectable:
+            try:
+                WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable(locators['CLOSE_CALENDAR_POPUP'])
+                ).click()
+                print("[INFO] Calendar popup closed as future date is not selectable")
+            except TimeoutException:
+                print("[ERROR] Unable to close the calendar popup")
 
         # Return True if date is selectable, else False
         return is_selectable
@@ -459,9 +527,31 @@ class ProfilePage(BasePage):
         self.actions.click_button(*locators["SUBMIT_BUTTON"])
 
     def Click_log_out_on_profile_details_page(self):
-        log_out_button = self.driver.find_element(*locators["LOG_OUT_BUTTON"])
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", log_out_button)
-        time.sleep(10)
-        log_out_button.click()
-        print("Log out button clicked")
+        try:
+            # Wait for the log out button to be present
+            log_out_button = WebDriverWait(self.driver, 20).until(
+                EC.presence_of_element_located(locators["LOG_OUT_BUTTON"])
+            )
+
+            # Scroll into view (works for Web)
+            try:
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", log_out_button)
+                print("Scrolled to log out button using JavaScript.")
+            except Exception:
+                print(" scrollIntoView failed, attempting manual swipe for mobile.")
+                # Fallback: swipe for mobile native apps
+                self.driver.swipe(500, 1500, 500, 300, 800)
+
+            # Wait until the button is clickable
+            log_out_button = WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable(locators["LOG_OUT_BUTTON"])
+            )
+
+            # Click the button
+            log_out_button.click()
+            print(" Log out button clicked")
+
+        except Exception as e:
+            print(f" Failed to click log out button: {e}")
+            raise
 
