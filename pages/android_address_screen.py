@@ -628,7 +628,7 @@ class AndroidAddressScreen(BasePage):
         self.actions.is_element_displayed(*locators['ADD_NEW_ADDRESS'])
         print("Clicked on Add new address")
         time.sleep(2)
-        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
         print("Clicked on back button")
 
 
@@ -765,29 +765,32 @@ class AndroidAddressScreen(BasePage):
         print("clicked back button")
 
     def select_Mumbai_address_from_list(self):
+        # Wait for the delivery address header to be visible
         WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         )
 
-        addresses = ["Dadar, Mukund Mansion, Ayan Fresh"]
+        target_address = "Dadar, Mukund Mansion, Ayan Fresh"
 
-        for address in addresses:
-            try:
-                # Use UiScrollable to scroll until text is visible
-                ui_scrollable = (
-                    'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
-                    f'.scrollIntoView(new UiSelector().textContains("{address}").instance(0));'
-                )
+        try:
+            # Scroll downward only until the address is visible
+            ui_scrollable = (
+                'new UiScrollable(new UiSelector().scrollable(true).instance(0))'
+                '.setAsVerticalList()'
+                f'.scrollForward().scrollIntoView(new UiSelector().textContains("{target_address}").instance(0));'
+            )
 
-                address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
+            address_element = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, ui_scrollable)
 
-                address_text = address_element.text.strip()
-                print(f"Captured address: {address_text}")
-                address_element.click()
-                return  # Stop after first successful selection
+            address_text = address_element.text.strip()
+            print(f"Captured address: {address_text}")
 
-            except Exception as e:
-                print(f"Could not find address '{address}': {e}")
+            address_element.click()
+            print(f"Clicked on address: {address_text}")
+
+        except Exception as e:
+            print(f"Could not find address '{target_address}': {e}")
+
 
     def click_back_button_from_select_address_screen(self):
         time.sleep(2)

@@ -1474,6 +1474,54 @@ def verify_all_prices_prefixed_with_currency_symbol(setup_platform):
     print("verify each price should be prefixed with the ₹ symbol")
     AndroidViewCartScreen(setup_platform).verify_all_prices_prefixed_with_currency_symbol()
 
+@then("I verify the estimated delivery time displayed below the delivery address")
+@allure.step("Then I verify the estimated delivery time displayed below the delivery address")
+def verify_estimated_delivery_time(setup_platform):
+    print("verify the estimated delivery time displayed below the delivery address")
+    AndroidViewCartScreen(setup_platform).verify_estimated_delivery_time()
+
+@then("I click back button")
+@allure.step("Then I click back button")
+def Click_back_button(setup_platform):
+    print("click back button")
+    AndroidViewCartScreen(setup_platform).Click_back_button()
+
+@then("I verify the cart should retain the previously added items")
+@allure.step("Then I verify the cart should retain the previously added items")
+def cart_retained_the_previously_added_item(setup_platform):
+    print("verify the cart should retain the previously added items")
+    AndroidViewCartScreen(setup_platform).Verify_single_item_in_cart()
+
+@when("I apply multiple promo codes")
+@allure.step("When I apply multiple promo codes")
+def verify_coupon_switch(setup_platform):
+    print("apply multiple promo codes")
+    AndroidOfferPage(setup_platform).verify_coupon_switch()
+
+@then("I verify only one code applied at a time")
+@allure.step("Then I verify only one code applied at a time")
+def verify_applied_offer_and_click_change_offer(setup_platform):
+    print("verify only one code applied at a time")
+    AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+@when("I apply the second promo code")
+@allure.step("When I apply the second promo code")
+def Select_second_promo_code(setup_platform):
+    print("apply the second promo code")
+    AndroidOfferPage(setup_platform).Select_second_promo_code()
+
+@then("I verify that the first offer is removed and the second offer is displayed")
+@allure.step("When I verify that the first offer is removed and the second offer is displayed")
+def verify_first_offer_is_removed_and_the_second_offer_is_displayed(setup_platform):
+    print("verify that the first offer is removed and the second offer is displayed")
+    AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+
+@then("I verify the discount should be clearly shown and deducted in the order summary")
+@allure.step("When I verify the discount should be clearly shown and deducted in the order summary")
+def verify_discount_prices_in_order_summary(setup_platform):
+    print("verify the discount should be clearly shown and deducted in the order summary")
+    AndroidViewCartScreen(setup_platform).verify_discount_is_applied_correctly()
+
 
 
 
