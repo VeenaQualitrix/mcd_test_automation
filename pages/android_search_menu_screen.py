@@ -17,7 +17,15 @@ locators = {
         "VIEW_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='View Cart']"),
         "CART_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-cart-outline']"),
         "HOME_ICON": (AppiumBy.XPATH, "//android.widget.TextView[@text='Home']"),
-    
+        "FRIES_MENU": (AppiumBy.XPATH, "//android.widget.TextView[@text='Fries (Medium)']"),
+        "ITEM_NOT_FOUND_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Oops, no results found!']"),
+        "SEARCH_MENU_ITEM_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Search menu item']"),
+        "VEG_FILTER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Veg']"),
+        "VEG_ICON_SYMBOL": (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-veg'])[1]"),
+        "NON_VEG_FILTER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Non-Veg']"),
+        "NON_VEG_ICON_SYMBOL": (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-nonveg'])[1]"),
+        "CLICK_CLEAR_ALL": (AppiumBy.XPATH, "//android.widget.TextView[@text='Clear All']"),
+        "POPULAR_ITEMS": (AppiumBy.XPATH, "//android.widget.TextView[@text='Popular Items']"),
 
          }
 
@@ -91,6 +99,81 @@ class AndroidSearchMenuScreen(BasePage):
         time.sleep(2)
         self.actions.click_button(*locators["HOME_ICON"])
         time.sleep(2)
+
+    def enter_fries_and_click_search(self, menu_item):
+        time.sleep(3)
+        self.actions.enter_text(*locators["SEARCH_MENU_TEXTFIELD"], menu_item)
+        self.actions.click_button(*locators["SEARCH_MENU_ICON"])
+        print("Clicked on search menu icon")
+
+
+    def verify_search_result_display_fries_menu_items(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['FRIES_MENU'])
+        print("Fries menu items is displayed")
+
+    def enter_pasta_and_click_search(self, menu_item_nonexistent):
+        time.sleep(3)
+        self.actions.enter_text(*locators["SEARCH_MENU_TEXTFIELD"], menu_item_nonexistent)
+        self.actions.click_button(*locators["SEARCH_MENU_ICON"])
+        print("Clicked on search menu icon")
+
+    def verify_message_when_items_not_found(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['ITEM_NOT_FOUND_TEXT'])
+        print("No matching item found text is displayed")
+
+    def click_search_with_empty_input(self):
+        time.sleep(5)
+        self.actions.click_button(*locators['SEARCH_MENU_ICON'])
+        print("Clicked search menu Icon On menu Page")
+
+    def verify_prompt_display(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['POPULAR_ITEMS'])
+        print("No action should be taken")
+
+    def click_veg_filter(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['VEG_FILTER'])
+        print("Veg filter is displayed")
+        self.actions.click_button(*locators['VEG_FILTER'])
+        print("Clicked veg filter On menu Page")
+
+    def verify_display_of_veg_items(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['VEG_ICON_SYMBOL'])
+        print("Veg itmes is displayed after appling the veg filter")
+
+    def click_non_veg_filter(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['NON_VEG_FILTER'])
+        print("Non-Veg filter is displayed")
+        self.actions.click_button(*locators['NON_VEG_FILTER'])
+        print("Clicked non-veg filter On menu Page")
+
+    def verify_display_of_non_veg_items(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['NON_VEG_ICON_SYMBOL'])
+        print("Non-Veg itmes is displayed after appling the Non-veg filter")
+
+    def enter_burger_and_click_search(self, search_burger):
+        time.sleep(3)
+        self.actions.enter_text(*locators["SEARCH_MENU_TEXTFIELD"], search_burger)
+        self.actions.click_button(*locators["SEARCH_MENU_ICON"])
+        print("Clicked on search menu icon")
+
+    def clear_search_input_field(self):
+        time.sleep(3)
+        self.actions.click_button(*locators["CLICK_CLEAR_ALL"])
+        print("Cleared the entered input from search field")
+
+    def verify_default_view_restored(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['POPULAR_ITEMS'])
+        print("popular items text is displayed after clearing the recent serarch")
+
+    
 
 
         

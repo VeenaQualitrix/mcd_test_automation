@@ -1625,6 +1625,157 @@ Scenario: Ensure guest checkout not allowed
     And   I click on view cart option
     And   I click on add address in home screen
     Then  I verify user redirected to login/signup prompt
+
+@TC_Android_CO_023 @newtestmcd1
+Scenario: Display applied offer discount in the order summary
+    Given  I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I clicks the 'Add' button multiple times to increase the item quantity
+    Then  I verify total amount from order summary
+    When  I click on 'View All' link
+    And   I apply the discount promo code
+    Then  I verify the discount should be clearly shown and deducted in the order summary
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_CO_025 @testmcd1
+Scenario: Validate behavior with an expired promo code
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    When  I enter the expired promo code and click search
+    And   I click on offer Apply button and select button
+    Then  I verify a message should be displayed indicating that the code is invalid or expired
+    When  I click on clear all to empty the cart
+    
+
+@TC_Android_CO_026 @newtestmcd1
+Scenario: Check total with delivery charges added
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I checks the price breakdown on the right side of the page
+    Then  I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount
+    When  I click on clear all to empty the cart
+
+@TC_Android_SM_001 @newtestmcd1
+Scenario Outline: Search for an existing menu item
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enters 'Fries' in the search bar
+    Then  I verify the search results should display items matching 'Fries'
+
+@TC_Android_SM_002 @newtestmcd1
+Scenario Outline: Search for an non-existing menu item
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enters 'Pasta' in the search bar
+    Then  I verify 'No matching items found' message is displayed
+
+
+@TC_Android_SM_003 @newtestmcd1
+Scenario Outline: User attempts to search with empty input
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I clicks the search button without typing anything
+    Then  I verify no action should be taken and prompt is displayed
+
+@TC_Android_SM_004 @newtestmcd1
+Scenario Outline: Filter menu items by Veg option
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I clicks the 'Veg' filter button
+    Then  I verify only Veg items should be displayed in the menu
+    
+@TC_Android_SM_005 @newtestmcd1
+Scenario Outline: Filter menu items by Non-Veg option
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I clicks the 'Non-Veg' filter button
+    Then  I verify only Non-Veg items should be displayed in the menu
+    
+
+@TC_Android_SM_006 @newtestmcd1
+Scenario Outline: Search Burger while Veg filter is active
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I clicks the 'Veg' filter button
+    And   I enters 'Burger' in the search bar
+    Then  I verify only Veg Burger items should be displayed in the menu
+    
+
+@TC_Android_SM_007 @newtestmcd1
+Scenario Outline: Clear search and reset filters
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enters 'Fries' in the search bar
+    Then  I verify the search results should display items matching 'Fries'
+    When  I clears the search input
+    Then  I verify Default view restored and no filters should be applied
+
+@TC_Android_SM_008 @newtestmcd1
+Scenario Outline: Add item to cart from search result
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enter burger name and click search icon
+    Then  I verify item displayed
+    When  I click on add+ button
+    And   I click on Add to cart option
+    And   I click on view cart option
+    Then  I verify item added to the cart and quantity updated
+    When  I click on clear all to empty the cart
        
 
 @TC_Android_AD_017   @Fridaynew

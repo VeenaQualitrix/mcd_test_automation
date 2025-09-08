@@ -29,6 +29,7 @@ locators = {
         "BROWNIE_PRODUCT_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Chocochip Muffin']"),
         "MILLET_BUN_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='McSpicy Paneer Burger with Multi-Millet Bun']"),
         "TOTAL_PAYABLE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Total Payable']/following-sibling::android.widget.TextView"),
+        "DROP_DOWN_ICON": (AppiumBy.XPATH, "//android.widget.TextView[@text='Total Payable']/following-sibling::android.widget.TextView"),
         "REMOVE_ITEM_FROM_CART_PAGE" : (AppiumBy.XPATH, " (//android.widget.Image[@text='ic-subtract'])[1]"),
         "BURGER_XPATH": (AppiumBy.XPATH, "//android.widget.TextView[@text='{}']"),
         "MEXICAN_BURGER_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mexican Grilled Chicken & Cheese Burger + Fries (M)']"),
@@ -66,6 +67,12 @@ locators = {
          }
 
 class AndroidViewCartScreen(BasePage):
+
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.initial_total = 0.0
+        self.initial_prices = {}
+
     
     def Click_login_prompt_from_checkout(self):
         time.sleep(5)
@@ -726,26 +733,71 @@ class AndroidViewCartScreen(BasePage):
         print("Second applied offer is displayed")
         time.sleep(1)
         self.driver.back()
+
+    def increase_cart_item_multiple_times(self, times=4):
+        time.sleep(5)  
+        if self.actions.is_element_displayed(*locators['INCREASE_ITEM_QUANTITY_IN_CART']):
+            for i in range(times):
+                self.actions.click_button(*locators['INCREASE_ITEM_QUANTITY_IN_CART'])
+                print(f"Item increased in the cart: click {i+1}")
+                time.sleep(1) 
+
+    def get_total_amount_from_order_summary(self):
+        prices = self.verify_prices_breakdown_in_order_summary()
+        self.initial_prices = prices
+        self.initial_total = round(
+            prices.get('sub_total', 0) +
+            prices.get('handling_charges', 0) +
+            prices.get('cgst', 0) +
+            prices.get('sgst', 0), 2
+        )
+        print(f"Original total before discount: ₹{self.initial_total:.2f}")
+        print(f"Breakdown: {self.initial_prices}")
+
+        time.sleep(2)
+        View_all = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("View All"));'
+        )
+
+        # Click it
+        View_all.click()
+        print("Clicked on view all")
        
 
     def verify_discount_is_applied_correctly(self):
-        time.sleep(5)
-    
+        """Verify that discount has been applied after promo code"""
+        if self.initial_total == 0.0:
+            raise RuntimeError("Initial total not captured. Call capture_total_before_promo() first.")
+
         discounted_prices = self.verify_prices_breakdown_in_order_summary()
-        discounted_total = discounted_prices['sub_total'] + discounted_prices['handling_charges'] + discounted_prices['cgst'] + discounted_prices['sgst']
+        discounted_total = round(
+            discounted_prices.get('sub_total', 0) +
+            discounted_prices.get('handling_charges', 0) +
+            discounted_prices.get('cgst', 0) +
+            discounted_prices.get('sgst', 0), 2
+        )
+
+        discount = round(self.initial_total - discounted_total, 2)
+
         print(f"Discounted breakdown: {discounted_prices}")
         print(f"Discounted total: ₹{discounted_total:.2f}")
 
-        discount = self.initial_total - discounted_total
-
         if discount > 0:
-            print(f" Discount applied successfully. Amount reduced by ₹{discount:.2f}")
-
-            handling_diff = self.initial_prices['handling_charges'] - discounted_prices['handling_charges']
+            print(f"✅ Discount applied successfully: ₹{discount:.2f}")
+            handling_diff = round(self.initial_prices.get('handling_charges', 0) - discounted_prices.get('handling_charges', 0), 2)
             if handling_diff > 0:
-                print(f"ℹ Handling charges were discounted by ₹{handling_diff:.2f}")
+                print(f"ℹ Handling charges reduced by: ₹{handling_diff:.2f}")
         else:
-            raise AssertionError(" Discount not applied correctly. Total amount did not decrease.")
+            raise AssertionError("❌ Discount not applied correctly. Total amount did not decrease.")
+        
+        time.sleep(1)
+        self.driver.back()
+        
+    
+
+    
         
         
 
