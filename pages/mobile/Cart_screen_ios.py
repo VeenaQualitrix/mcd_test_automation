@@ -68,7 +68,17 @@ locators = {
 
 'INCREASE_QUANTITY': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[1]'),
 
-'DISCOUNT_SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]')
+'DISCOUNT_SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]'),
+
+'PROMO_CODE_TEXT_FIELD': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="Enter Coupon Code"]'),
+
+'CLICK_APPLY_EXPIRED': (AppiumBy.ACCESSIBILITY_ID, 'Apply'),
+
+'PROMO_ERROR_MESSAGE': (AppiumBy.ACCESSIBILITY_ID, 'Promo Code Expired'),
+
+'LOCATION_OPTION': (AppiumBy.ACCESSIBILITY_ID, 'Please select location'),
+
+'SELECT_ADDRESS': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[@name="Home"])[1]'),
 
 }
 class CartScreenIos(BasePage):
@@ -384,7 +394,7 @@ class CartScreenIos(BasePage):
     def add_multiple_item_quantities(self):
         time.sleep(1)
         print("Updating item quantity in the cart...")
-        for i in range(5):
+        for i in range(4):
             print(f"Clicking '+' to increase quantity ({i + 1}/5)...")
             self.actions.click_button(*locators['INCREASE_QUANTITY'])
             time.sleep(0.5)  # Optional: small delay between clicks
@@ -471,6 +481,56 @@ class CartScreenIos(BasePage):
 
         print("Cart prices, discount, and subtotal validated successfully.")
 
+         
+    def enter_promo_code(self, promo_code):
+        time.sleep(5)
+        self.actions.enter_text(*locators["PROMO_CODE_TEXT_FIELD"], promo_code)
+        print(f"Entered promo code: {promo_code}")
+        self.actions.click_button(*locators["CLICK_APPLY_EXPIRED"])
+        print(f"Clicked Apply for promo code: {promo_code}")
+        self.actions.click_button(*locators['CHOOSE_ITEM'])
+        print("Selected item after applying promo code.")
 
 
-                
+    def verify_expired_promo_message(self, expected_message):
+        time.sleep(2)  # wait for message to appear
+        actual_message = self.actions.get_text(*locators["PROMO_ERROR_MESSAGE"])
+        print(f"Promo error message shown: {actual_message}")
+        assert expected_message in actual_message, \
+            f"Expected message '{expected_message}', but got '{actual_message}'"
+        print(" Error message verified successfully.")
+        self.actions.click_button(*locators['CLICK_OK'])
+
+    def add_delivery_instruction(self, notes):
+        print("Scrolling to 'Add Delivery Instructions'...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Add Delivery Instructions'"
+        })
+        time.sleep(1)  # Optional small delay after scroll
+        print("Clicking on 'Add Delivery Instructions'...")
+        self.actions.click_button(*locators['ADD_INSTRUCTION_BUTTON'])
+        self.actions.enter_text(*locators["INSTRUCTION_TEXT_FIELD"], notes)
+        actual_notes = self.actions.get_text(*locators["INSTRUCTION_TEXT_FIELD"])
+        # Assertion
+        assert notes == actual_notes, \
+            f" Expected delivery instruction '{notes}', but found '{actual_notes}'"
+        print(f" Delivery instruction verified in cart: {actual_notes}")
+        print("Scrolling to 'Add Delivery Instructions'...")
+        # Number of scroll attempts
+        scroll_times = 3
+        for _ in range(scroll_times):
+            try:
+                self.driver.execute_script("mobile: scroll", {
+                    "direction": "up",
+                    "predicateString": "name == 'Clear All'"
+                })
+            except Exception as e:
+                print(f"Scroll attempt failed: {e}")
+
+
+
+    def select_location(self):
+        self.actions.click_button(*locators["LOCATION_OPTION"]) 
+        self.actions.click_button(*locators["SELECT_ADDRESS"]) 
+        print("Delivery location selected successfully.")

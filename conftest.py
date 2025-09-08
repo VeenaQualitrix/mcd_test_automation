@@ -80,22 +80,29 @@ def env(request):
 
 
 def launchChromeheadless():
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model (recommended for headless mode)
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems in Docker containers
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--ignore-certificate-errors")
-    chrome_options.add_argument("--disable-web-security")
-    chrome_options.add_argument("--allow-insecure-localhost")
-    #chrome_options.add_argument("--headless=old")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option("useAutomationExtension", False)
-    chrome_options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.110 Safari/537.36")
-    service = Service(ChromeDriverManager().install())
-    browserDriver = webdriver.Chrome(service=service, options=chrome_options)
-    return browserDriver
+    options = webdriver.ChromeOptions()
+    # Chrome headless and cert handling
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--ignore-ssl-errors=yes")
+    options.set_capability("acceptInsecureCerts", True)
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option("useAutomationExtension", False)
+    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.110 Safari/537.36")
+
+    driver_path = ChromeDriverManager().install()
+    if "THIRD_PARTY_NOTICES" in driver_path or "LICENSE" in driver_path:
+        folder = os.path.dirname(driver_path)
+        driver_path = os.path.join(folder, "chromedriver")
+
+    service = ChromeService(driver_path)
+    driver = webdriver.Chrome(service=service, options=options)
+    return driver
 
 
 

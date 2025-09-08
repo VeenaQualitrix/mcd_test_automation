@@ -10,5 +10,16 @@
     "edit_user_name": "Testuser01",
     "Expired_Promo" : "GB100",
     "New_Mobile_Number": "7381048196",
-    "Password": "Test@1234"
+    "Password": "Test@1234",
+    "Expired_Promo_Code": "GB100",
+    "Expired_Promo_Message": "Promo Code Expired",
+    "Special_Notes": "Leave package at 🚪#2 🙂🤝 ASAP!",
+    "menu_item": "Fries",
+    "fries_item_display": "Fries (Large)",
+    "menu_item_nonexistent": "Pasta",
+    "no_items_message": "No matching item found",
+    "empty_search_message": "Search menu item",
+    "Burger": "Burger",
+    "search_burger": "Burger"
+
 }

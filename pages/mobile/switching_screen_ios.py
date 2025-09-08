@@ -42,11 +42,16 @@ locators = {
 
 'PROFILE_TAB': (AppiumBy.ACCESSIBILITY_ID, 'ic-bottom-tab-mymcd'),
 
-'PROFILE_NAME': (AppiumBy.ACCESSIBILITY_ID, 'Testuser01'),
+'PROFILE_NAME': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText)[3]'),
 
-'PROFILE_PHONENUMBER': (AppiumBy.ACCESSIBILITY_ID, '+917777777777'),
+'PROFILE_PHONENUMBER': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText)[4]'),
 
 'HOME_TAB': (AppiumBy.ACCESSIBILITY_ID, 'ic-bottom-tab-home'),
+
+"EDIT_ICON": (
+    AppiumBy.ACCESSIBILITY_ID,
+    "ic-editIcon"
+),
 
 
 }
@@ -142,7 +147,6 @@ class SwitchScreenIos(BasePage):
 
 
     def note_profile_details(self):
-        self.actions.click_button(*locators["PROFILE_TAB"])
         time.sleep(2) 
         name = self.actions.get_text(*locators["PROFILE_NAME"])
         phonenumber = self.actions.get_text(*locators["PROFILE_PHONENUMBER"])
