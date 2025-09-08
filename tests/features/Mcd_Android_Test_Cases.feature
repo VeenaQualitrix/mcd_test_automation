@@ -307,7 +307,7 @@ Scenario: Validate incorrect email format
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_PP_08 @Fridaynew
+@TC_Android_PP_08 @sanitymobile01
 Scenario: update date of birth successfully
     Given I launch the native app
     Then  I verify the app should be launched
@@ -747,7 +747,7 @@ Scenario: Verify Switching models does not alter profile information
     Then  I verify the profile information should remain unchanged
     And   I click on Log out button
 
-@TC_Android_BM_022 @Fridaynew
+@TC_Android_BM_022 @sanitymobile01
 Scenario: Verify Switching between models updates the UI layout appropriately
     Given I launch the native app
     Then  I verify the app should be launched
@@ -878,7 +878,7 @@ Scenario: Validate empty address cannot be saved
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_AD_007  @Fridaynew
+@TC_Android_AD_007  @sanitymobile01
 Scenario: Verify "Near" location shown under each address
     Given I launch the native app
     Then  I verify the app should be launched
@@ -942,7 +942,7 @@ Scenario: Default address selection on login
     Then  I click on Log out button
 
 
-@TC_Android_AD_012  @Fridaynew
+@TC_Android_AD_012  @sanitymobile01
 Scenario: Ensure “Add New” opens address entry popup or page
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1379,7 +1379,7 @@ Scenario: Add Delivery Instructions on Checkout Page
     Then  I verify the instructions field should accept the input
     When  I click on clear all to empty the cart
 
-@TC_Android_CO_007 @Fridaynew
+@TC_Android_CO_007 @testmcd1
 Scenario: Validate subtotal after all additions
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1510,7 +1510,7 @@ Scenario: Redirect user to login when attempting checkout without being logged i
     And   I click on view cart option
     And   I click on add address in home screen
     Then  I verify user redirected to login/signup prompt
-   
+
 @TC_Android_CO_016 @testmcd1
 Scenario: Remove item from cart by decreasing quantity to zero
     Given I launch the native app
@@ -1625,7 +1625,7 @@ Scenario: Ensure guest checkout not allowed
     And   I click on view cart option
     And   I click on add address in home screen
     Then  I verify user redirected to login/signup prompt
-       
+
 
 @TC_Android_AD_017   @Fridaynew
 Scenario: Verify behavior when all addresses are deleted
@@ -1642,8 +1642,6 @@ Scenario: Verify behavior when all addresses are deleted
     Then  I verify the address list should be empty and the Add Address prompt should be visible
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
-
-
 
     
 

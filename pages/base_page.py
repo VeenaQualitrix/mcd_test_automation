@@ -1,7 +1,6 @@
 from actions.webpage_actions import WebAppActions
 from conftest import readConstants
-from selenium import webdriver
-from appium import webdriver as appiumdriver
+from appium import webdriver
 from actions.android_actions import AndroidActions
 from actions.ios_actions import iOSActions
 
@@ -10,23 +9,26 @@ from actions.ios_actions import iOSActions
 class BasePage:
 
     def __init__(self, driver):
-        self.driver = driver 
-        if isinstance(driver, webdriver.Remote):
-            self.driver = driver
-            print("Web browser instance")
-            self.actions = WebAppActions(driver)
-        elif isinstance(driver, appiumdriver.Remote):
-            capabilities = driver.capabilities
-            platform_name = capabilities.get('platformName', '').lower()
-            if platform_name == 'android':
-                print("Inside Android")
-                self.actions = AndroidActions(driver)
-            elif platform_name == 'ios':
-                print("Inside iOS")
-                self.actions = iOSActions(driver)
-        else:
-            print("Both chrome and webdriver instance is not called")
+        if driver is None:
+            raise ValueError("Driver cannot be None")
+        self.driver = driver
 
+        try:
+            capabilities = driver.capabilities
+            print("DEBUG: Capabilities =", capabilities)
+            platform_name = capabilities.get('platformName', '').lower()
+        except AttributeError:
+            platform_name = ''
+        
+        if platform_name == 'android':
+            print("Inside Android")
+            self.actions = AndroidActions(driver)
+        elif platform_name == 'ios':
+            print("Inside iOS")
+            self.actions = iOSActions(driver)
+        else:
+            print("Inside Web/Default")
+            self.actions = WebAppActions(driver)
 
     def launch_application(self):
         """Launch the mobile application."""
@@ -45,12 +47,3 @@ class BasePage:
     def quit_driver(self):
         self.actions.quit_Driver()
         print("Closed McD App")
-
-    # def launch_application(self, appURL):
-    #     if appURL:
-    #         self.actions.launch_browser_url(appURL)
-    #         print("Opened McD Website")
-    #     else:
-    #         self.actions.launch_app()
-    #         print("Opened McD App")  
-            

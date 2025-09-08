@@ -692,7 +692,7 @@ class AndroidViewCartScreen(BasePage):
     def verify_applied_offer(self):
         try:
             time.sleep(5)
-            
+
             # Verify "Offer Applied" section is visible
             self.actions.is_element_displayed(*locators['OFFER_APPLIED_TEXT'])
 
@@ -716,21 +716,20 @@ class AndroidViewCartScreen(BasePage):
 
     def verify_first_offer_is_removed_and_the_second_offer_is_displayed(self):
         time.sleep(5)
-        self.actions.is_element_displayed(*locators['OFFER_APPLIED_TEXT'])
+        self.actions.is_element_displayed(*locators['OFFER_APPLIED'])
         print("offer applied text is displayed")
-        if self.actions.is_element_displayed(*locators['FIRST_OFFER_NAME']):
+        if self.actions.is_element_displayed(*locators['APPLIED_OFFER_NAME']):
             print(" First offer is still displayed")
         else:
             print(" First offer is NOT displayed (as expected)")
-        self.actions.is_element_displayed(*locators['SECOND_OFFER_NAME'])
+        self.actions.is_element_displayed(*locators['APPLIED_SECOND_OFFER_NAME'])
         print("Second applied offer is displayed")
-        time.sleep(1)
-        self.driver.back()
-       
+        time.sleep(2)
+        self.Clear_all()
 
     def verify_discount_is_applied_correctly(self):
         time.sleep(5)
-    
+
         discounted_prices = self.verify_prices_breakdown_in_order_summary()
         discounted_total = discounted_prices['sub_total'] + discounted_prices['handling_charges'] + discounted_prices['cgst'] + discounted_prices['sgst']
         print(f"Discounted breakdown: {discounted_prices}")
@@ -746,8 +745,8 @@ class AndroidViewCartScreen(BasePage):
                 print(f"ℹ Handling charges were discounted by ₹{handling_diff:.2f}")
         else:
             raise AssertionError(" Discount not applied correctly. Total amount did not decrease.")
-        
-        
+
+
 
 
         

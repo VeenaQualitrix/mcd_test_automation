@@ -1502,7 +1502,7 @@ def verify_coupon_switch(setup_platform):
 @allure.step("Then I verify only one code applied at a time")
 def verify_applied_offer_and_click_change_offer(setup_platform):
     print("verify only one code applied at a time")
-    AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+    AndroidViewCartScreen(setup_platform).verify_applied_offer()
 
 @when("I apply the second promo code")
 @allure.step("When I apply the second promo code")
