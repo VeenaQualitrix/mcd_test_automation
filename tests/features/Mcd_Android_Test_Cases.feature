@@ -307,7 +307,7 @@ Scenario: Validate incorrect email format
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_PP_08 @Fridaynew
+@TC_Android_PP_08 @sanitymobile01
 Scenario: update date of birth successfully
     Given I launch the native app
     Then  I verify the app should be launched
@@ -747,7 +747,7 @@ Scenario: Verify Switching models does not alter profile information
     Then  I verify the profile information should remain unchanged
     And   I click on Log out button
 
-@TC_Android_BM_022 @Fridaynew
+@TC_Android_BM_022 @sanitymobile01
 Scenario: Verify Switching between models updates the UI layout appropriately
     Given I launch the native app
     Then  I verify the app should be launched
@@ -878,7 +878,7 @@ Scenario: Validate empty address cannot be saved
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_AD_007  @Fridaynew
+@TC_Android_AD_007  @sanitymobile01
 Scenario: Verify "Near" location shown under each address
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1667,7 +1667,7 @@ Scenario: Validate behavior with an expired promo code
     And   I click on offer Apply button and select button
     Then  I verify a message should be displayed indicating that the code is invalid or expired
     When  I click on clear all to empty the cart
-    
+
 
 @TC_Android_CO_026 @newtestmcd1
 Scenario: Check total with delivery charges added
@@ -1724,7 +1724,7 @@ Scenario Outline: Filter menu items by Veg option
     Then  I verify search menu screen navigation
     When  I clicks the 'Veg' filter button
     Then  I verify only Veg items should be displayed in the menu
-    
+
 @TC_Android_SM_005 @newtestmcd1
 Scenario Outline: Filter menu items by Non-Veg option
     Given I launch the native app
@@ -1734,7 +1734,7 @@ Scenario Outline: Filter menu items by Non-Veg option
     Then  I verify search menu screen navigation
     When  I clicks the 'Non-Veg' filter button
     Then  I verify only Non-Veg items should be displayed in the menu
-    
+
 
 @TC_Android_SM_006 @newtestmcd1
 Scenario Outline: Search Burger while Veg filter is active
@@ -1746,7 +1746,7 @@ Scenario Outline: Search Burger while Veg filter is active
     When  I clicks the 'Veg' filter button
     And   I enters 'Burger' in the search bar
     Then  I verify only Veg Burger items should be displayed in the menu
-    
+
 
 @TC_Android_SM_007 @newtestmcd1
 Scenario Outline: Clear search and reset filters
@@ -1776,7 +1776,7 @@ Scenario Outline: Add item to cart from search result
     And   I click on view cart option
     Then  I verify item added to the cart and quantity updated
     When  I click on clear all to empty the cart
-       
+
 
 @TC_Android_AD_017   @Fridaynew
 Scenario: Verify behavior when all addresses are deleted

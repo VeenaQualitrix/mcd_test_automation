@@ -9,8 +9,6 @@ import allure
 from bs4 import BeautifulSoup
 import psutil
 import pytest
-from appium import webdriver as androidDriver
-from appium.webdriver import Remote as AppiumRemote
 from appium import webdriver as appiumDriver
 from selenium import webdriver
 from appium.webdriver.appium_service import AppiumService
@@ -21,23 +19,13 @@ import re
 import urllib3
 import wget
 import logging
-# from src.app.application import Application
-# from appium.webdriver.common.appiumby import AppiumBy
-# from appium.webdriver.webdriver import AppiumOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 from selenium import webdriver as browserDriver
-from appium import webdriver as androidDriver
-from appium.webdriver.appium_service import AppiumService
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
 
 import os
 from pathlib import Path

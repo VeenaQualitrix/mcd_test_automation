@@ -17,12 +17,12 @@
     },
 
     "ios": {
-  "appium:deviceName": "Sunil's iPhone",
-  "appium:platformVersion": "18.5",
-  "appium:automationName": "XCUITest",
-  "platformName": "iOS",
-  "appium:udid": "00008020-000E41810189002E",
-  "appium:noReset" : true
-}
+        "appium:deviceName": "Sunil's iPhone",
+        "appium:platformVersion": "18.5",
+        "appium:automationName": "XCUITest",
+        "platformName": "iOS",
+        "appium:udid": "00008020-000E41810189002E",
+        "appium:noReset" : true
+    }
 
 }

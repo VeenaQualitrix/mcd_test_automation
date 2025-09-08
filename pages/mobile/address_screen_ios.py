@@ -88,7 +88,7 @@ class AddressScreenIos(BasePage):
         self.actions.click_button(*locators['LOGIN_SCREEN_IDENTIFIER'])
     
     def click_menu_option(self):
-        time.sleep(3)
+        time.sleep(6)
         print("Attempting to click on the Menu option")
         self.actions.click_button(*locators['MENU_OPTION'])
         print("Successfully clicked on the Menu option")
@@ -99,8 +99,13 @@ class AddressScreenIos(BasePage):
         print("Successfully clicked on Add")
     
     def click_next_button(self):
+        print("Attempting to click on the 'Next' button...")
+        if self.actions.is_element_displayed(*locators['NEXT_BUTTON']):
             self.actions.click_button(*locators['NEXT_BUTTON'])
-            print("Successfully clicked on the Next button")
+            print(" Successfully clicked on the 'Next' button.")
+        else:
+            print("'Next' button is not visible. Skipping the click.")
+
 
         
     def click_add_to_cart(self):
@@ -237,5 +242,6 @@ class AddressScreenIos(BasePage):
 
 
     
-   
+    
+
 

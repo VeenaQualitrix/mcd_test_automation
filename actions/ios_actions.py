@@ -464,3 +464,18 @@ class iOSActions(ActionsParent):
         end_y = window_size["height"] * 0.2
 
         self.driver.swipe(start_x, start_y, start_x, end_y, duration=800)
+
+        
+
+    def scroll_to_element_by_name(self, name: str):
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": f"name == '{name}'"
+        })
+        time.sleep(2)
+
+    
+    def find_elements(self, by, value):
+        return self.driver.find_elements(by, value)
+
+    

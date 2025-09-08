@@ -73,7 +73,7 @@ class AndroidViewCartScreen(BasePage):
         self.initial_total = 0.0
         self.initial_prices = {}
 
-    
+
     def Click_login_prompt_from_checkout(self):
         time.sleep(5)
         self.actions.is_element_displayed(*locators['LOGIN_FROM_CHECKOUT_PAGE'])
@@ -723,24 +723,24 @@ class AndroidViewCartScreen(BasePage):
 
     def verify_first_offer_is_removed_and_the_second_offer_is_displayed(self):
         time.sleep(5)
-        self.actions.is_element_displayed(*locators['OFFER_APPLIED_TEXT'])
+        self.actions.is_element_displayed(*locators['OFFER_APPLIED'])
         print("offer applied text is displayed")
-        if self.actions.is_element_displayed(*locators['FIRST_OFFER_NAME']):
+        if self.actions.is_element_displayed(*locators['APPLIED_OFFER_NAME']):
             print(" First offer is still displayed")
         else:
             print(" First offer is NOT displayed (as expected)")
-        self.actions.is_element_displayed(*locators['SECOND_OFFER_NAME'])
+        self.actions.is_element_displayed(*locators['APPLIED_SECOND_OFFER_NAME'])
         print("Second applied offer is displayed")
         time.sleep(1)
         self.driver.back()
 
     def increase_cart_item_multiple_times(self, times=4):
-        time.sleep(5)  
+        time.sleep(5)
         if self.actions.is_element_displayed(*locators['INCREASE_ITEM_QUANTITY_IN_CART']):
             for i in range(times):
                 self.actions.click_button(*locators['INCREASE_ITEM_QUANTITY_IN_CART'])
                 print(f"Item increased in the cart: click {i+1}")
-                time.sleep(1) 
+                time.sleep(1)
 
     def get_total_amount_from_order_summary(self):
         prices = self.verify_prices_breakdown_in_order_summary()
@@ -764,7 +764,7 @@ class AndroidViewCartScreen(BasePage):
         # Click it
         View_all.click()
         print("Clicked on view all")
-       
+
 
     def verify_discount_is_applied_correctly(self):
         """Verify that discount has been applied after promo code"""
@@ -791,13 +791,13 @@ class AndroidViewCartScreen(BasePage):
                 print(f"ℹ Handling charges reduced by: ₹{handling_diff:.2f}")
         else:
             raise AssertionError("❌ Discount not applied correctly. Total amount did not decrease.")
-        
+
         time.sleep(1)
         self.driver.back()
-        
-    
 
-    
+
+
+
         
         
 

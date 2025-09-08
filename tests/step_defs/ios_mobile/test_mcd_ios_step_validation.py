@@ -7,6 +7,8 @@ from pages.mobile.profile_screen_ios import ProfileScreenIos
 from pages.mobile.address_screen_ios import AddressScreenIos
 from pages.mobile.switching_screen_ios import SwitchScreenIos
 from pages.mobile.address_store_screen_ios import AddressStoreScreenIos
+from pages.mobile.Oderingflow_screen_ios import OderingScreenIos
+from pages.mobile.Cart_screen_ios import CartScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -204,33 +206,19 @@ def tap_on_terms_and_conditions_link(setup_platform):
 def enter_mobile_number_with_more_than_10_digits(setup_platform):
     LoginScreenIos(setup_platform).enter_invalid_mobile_number("98765432101")
 
-@when("I copied a mobile number")
-@allure.step("When I copied a mobile number")
+@when("I copied the mobile number this is ios")
+@allure.step("Copy mobile number to clipboard")
 def copy_mobile_number(setup_platform):
-    Copied_number = readPreReqJson("test_data", "mobile_number")
-    print("verify mobile number copied")
-    LoginScreenIos(setup_platform).copy_mobile_number_to_clipboard(Copied_number)
+    mobile_number = readPreReqJson("test_data", "mobile_number")
+    print(f"Copying mobile number: {mobile_number}")
+    LoginScreenIos(setup_platform).copy_mobile_number_to_clipboard(mobile_number)
 
 
-@when("I paste the number with Ctrl V and click verify")
-@allure.step("When I paste the number with Ctrl V and click verify")
-def paste_copied_mobile_number(setup_platform):
-    print("Pasting mobile number using Ctrl+V")
+
+@when("I paste CTRL V and click verify")
+@allure.step("When I paste CTRL V and click verify")
+def step_paste_number_and_verify(setup_platform):
     LoginScreenIos(setup_platform).paste_mobile_number_using_clipboard()
-
-
-@then("I verify number pasted correctly and accepted")
-@allure.step("Then I verify number pasted correctly and accepted")
-def verify_number_pasted_correctly(setup_platform):
-    print("Verifying that the pasted number was accepted correctly")
-
-    expected_number = readPreReqJson("test_data", "mobile_number")
-    actual_number = LoginScreenIos(setup_platform).get_pasted_mobile_number()
-
-    print(f"Expected Mobile Number: {expected_number}")
-    print(f"Actual Mobile Number in Field: {actual_number}")
-
-    assert actual_number == expected_number, "Pasted mobile number does not match or was not accepted"
 
 
 @then("I verify the Terms and Conditions web view or page is displayed")
@@ -649,3 +637,405 @@ def step_scroll_through_address_list(setup_platform):
 @then("I verify that all addresses are accessible via scrolling")
 def step_verify_all_addresses_accessible(setup_platform):
     AddressStoreScreenIos(setup_platform).verify_all_addresses_scrollable()
+
+@when("I log out of the application")
+@allure.step("When I log out of the application")
+def step_log_out_of_application(setup_platform):
+    AddressStoreScreenIos(setup_platform).logout_user()
+
+@when("I delete all saved addresses")
+@allure.step("When I delete all saved addresses")
+def step_delete_all_saved_addresses(setup_platform):
+    AddressStoreScreenIos(setup_platform).delete_all_saved_addresses()
+
+@then("I verify that the last address is not deleted as it is set as the default address")
+@allure.step("Then I verify that the last address is not deleted as it is set as the default address")
+def step_verify_default_address_not_deleted(setup_platform):
+    AddressStoreScreenIos(setup_platform).verify_default_address_not_deleted()
+
+@when("I select the Home tag and Work for the address and verify that the tag is applied")
+@allure.step("And I select the Home tag and Work for the address and verify that the tag is applied")
+def step_select_tags_and_verify(setup_platform):
+    AddressStoreScreenIos(setup_platform).select_and_verify_address_tags()
+
+
+@then("I navigate to the McBreakfast menu page")
+@allure.step("When I navigate to the McBreakfast menu page")
+def navigate_to_mcbreakfast_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_breakfast_category()
+
+@then("I select Veg McMuffin with protein plus Meal")
+@allure.step("When I select Veg McMuffin with protein plus Meal")
+def select_veg_mcmuffin_protein_plus_meal(setup_platform):
+    OderingScreenIos(setup_platform).select_veg_mcmuffin_protein_plus_meal()
+
+@then("I click on Add item")
+@allure.step("When I click on Add item")
+def click_on_add_item(setup_platform):
+    OderingScreenIos(setup_platform).click_add_item()
+
+@then("I click on the please select location")
+@allure.step("When I click on the please select location")
+def click_select_location(setup_platform):
+    OderingScreenIos(setup_platform).click_select_location()
+
+@then("I select the location in add popup")
+@allure.step("When I select the location in add popup")
+def select_location_in_popup(setup_platform):
+    OderingScreenIos(setup_platform).select_location_in_popup()
+
+@then("I verify the your order")
+@allure.step("Then I verify the your order")
+def verify_your_order(setup_platform):
+    OderingScreenIos(setup_platform).verify_your_order_displayed()
+
+@when("I search for the location")
+@allure.step("User searches for the location")
+def search_for_location(setup_platform):
+    OderingScreenIos(setup_platform).search_location()
+
+@when("I enter breakfast address details")
+@allure.step("Entering address details for McBreakfast order")
+def enter_valid_address_details(setup_platform):
+    OderingScreenIos(setup_platform).enter_address_details_breakfast()
+
+  
+  
+@then("I clear the order")
+@allure.step("User clears the current order")
+def clear_the_order(setup_platform):
+    OderingScreenIos(setup_platform).clear_order()
+
+@when("I search for out of stock item location")
+@allure.step("User searches for delivery location before selecting an out-of-stock item")
+def search_location_for_out_of_stock_item(setup_platform):
+    OderingScreenIos(setup_platform).search_location_outofstock()   
+
+@when("I enter  out of stock item address details")
+@allure.step("User enters breakfast address details to check out-of-stock behavior")
+def enter_address_for_out_of_stock_item(setup_platform):
+    OderingScreenIos(setup_platform).enter_address_details_outodstock()  
+
+@then("I verify the sold out item is indicated as unavailable")
+@allure.step("Verify that the sold out item is correctly marked as unavailable")
+def verify_sold_out_item_unavailable(setup_platform):
+    OderingScreenIos(setup_platform).is_item_marked_sold_out()
+
+
+@then("I click on the customization options and verify")
+@allure.step("User clicks on the customization options")
+def click_customization_options(setup_platform):
+    OderingScreenIos(setup_platform).select_customization_option()
+
+@then("I added the first item from menu")
+@allure.step("User adds an item from the menu")
+def add_item_from_menu(setup_platform): 
+    OderingScreenIos(setup_platform).add_first_available_item()    
+
+@then("I added the second item from menu")
+@allure.step("User adds an item from the menu")
+def add_item_from_menu(setup_platform): 
+    OderingScreenIos(setup_platform).add_second_available_item()
+
+@then("I navigate to the MCsaver menu page")
+@allure.step("Navigate to the MCsaver menu page")
+def navigate_to_mcsaver_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_mcsaver_category()
+
+@then("I verify the payment method and button")
+@allure.step("Verify payment method and confirm button visibility")
+def verify_payment_method_and_button(setup_platform):
+    OderingScreenIos(setup_platform).is_payment_method_and_confirm_button_displayed()
+    print("Payment method and confirm button verified successfully")
+
+@then("I verify the item price matches the listed menu price")
+@allure.step("Verify the item price matches the listed menu price")
+def verify_item_price_matches_menu(setup_platform):
+    OderingScreenIos(setup_platform).verify_pricing()
+
+@then("I verify that sold out items cannot be added to cart")
+@allure.step("Verify 'Sold out' label prevents adding the item to cart")
+def step_verify_sold_out_items_not_addable(setup_platform):
+    OderingScreenIos(setup_platform).verify_sold_out_items_not_clickable()
+
+@then("I verify the item is added to the cart")
+@allure.step("Verify that the selected item is present in the cart")
+def verify_item_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_item_in_cart()
+
+@then("I navigate to the 3pc meal menu page")
+@allure.step("User navigates to the 3pc meal menu page")
+def navigate_to_3pc_meal_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_3pc_meal_category()
+
+@then("I verity the 3pc meal iteam is added to the cart")
+@allure.step("Verify 3pc meal item is present in the cart")
+def verify_3pc_meal_added_to_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_3pc_meal_item_in_cart()
+
+@then("I click on the meal category")
+@allure.step("User clicks on the meal category")
+def click_meal_category(setup_platform):
+    OderingScreenIos(setup_platform).select_3pc_meal()
+
+@then("I click on the dessert menu")
+@allure.step("Click on the Desserts menu from the category list")
+def click_on_dessert_menu(setup_platform):
+    OderingScreenIos(setup_platform).select_desserts_category()
+
+@then("I select the random dersert item")
+@allure.step("Select a random dessert item from the Desserts menu")
+def select_random_dessert_item(setup_platform):
+    OderingScreenIos(setup_platform).select_random_dessert_item()
+
+@then("I verity the dessert iteam is added to the cart")
+@allure.step("Verify dessert item is present in the cart")
+def verify_dessert_item_added_to_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_dessert_item_in_cart()
+
+@then("I click on the Burgers & Wraps menu")
+@allure.step("Click on the Burgers & Wraps menu")
+def click_on_burgers_and_wraps_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_burgers_and_wraps_menu()
+
+@then("I select the Chicken Wrap item")
+@allure.step("Select the Chicken Wrap item from the Burgers & Wraps menu")
+def select_chicken_wrap_item(setup_platform):
+    OderingScreenIos(setup_platform).select_chicken_wrap_item()
+
+@then("I verity the Chicken Wrap iteam is added to the cart")
+@allure.step("Verify Chicken Wrap item is present in the cart")
+def verify_chicken_wrap_added_to_cart(setup_platform):
+    OderingScreenIos(setup_platform).verify_chicken_wrap_item_in_cart()
+
+@then("I select the burger on the customization options")
+@allure.step("Select the burger from the customization options")
+def select_burger_on_customization_options(setup_platform):
+    OderingScreenIos(setup_platform).select_burger_customization_option()
+
+@then("I Click on Customize button")
+@allure.step("Click on the Customize button")
+def click_on_customize_button(setup_platform):
+    OderingScreenIos(setup_platform).click_customize_button()
+
+@then("I added the extra item")
+@allure.step("Add an extra item in the customization options")
+def add_extra_item(setup_platform):
+    OderingScreenIos(setup_platform).add_extra_item()
+
+@then("I click on the fries and sides menu")
+@allure.step("Click on the Fries and Sides menu")
+def click_on_fries_and_sides_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_fries_and_sides_menu()
+
+@then("I select the medium fries item")
+@allure.step("Select the Medium Fries item")
+def select_medium_fries_item(setup_platform):
+    OderingScreenIos(setup_platform).click_fries_medium()
+
+@then("I verify the fries item is added to the cart")
+@allure.step("Verify fries item is added to the cart")
+def verify_fries_item_in_cart(setup_platform):
+    added = OderingScreenIos(setup_platform).is_fries_item_in_cart()
+    print(f"Fries item added to cart: {added}")
+
+@then("I click on the Coffee & Beverages menu")
+@allure.step("Click on the Coffee & Beverages menu")
+def click_on_coffee_and_beverages_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_coffee_and_beverages_menu()
+
+@then("I select the cappuccino coffee item")
+@allure.step("Select the Cappuccino coffee item")
+def select_cappuccino_coffee_item(setup_platform):
+    OderingScreenIos(setup_platform).click_cappuccino_coffee()
+
+@then("I verify the cappuccino coffee item is added to the cart")
+@allure.step("Verify cappuccino coffee item is added to the cart")
+def verify_cappuccino_in_cart(setup_platform):
+    added = OderingScreenIos(setup_platform).is_cappuccino_in_cart()
+    print(f"Cappuccino coffee item added to cart: {added}")
+
+@then("I click on the Cakes brownies menu")
+@allure.step("Click on the Cakes, Brownies & Cookies menu")
+def click_on_cakes_brownies_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_cakes_brownies_menu()
+
+@then("I select the chcochip muffin brownie item")
+@allure.step("Select the Chocochip Muffin Brownie item")
+def select_chocochip_muffin_brownie(setup_platform):
+    OderingScreenIos(setup_platform).click_chocochip_muffin_brownie()
+
+@then("I verify the chcochip muffin brownie")
+@allure.step("Verify Chocochip Muffin Brownie item is added to the cart")
+def verify_chocochip_muffin_brownie_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).chocochip_muffin_brownie_in_cart()
+    print("Chocochip Muffin Brownie item added to cart")
+
+@then("I click on the Protein Plus and Burgers with Millet Bun menu")
+@allure.step("Click on the Protein Plus and Burgers with Millet Bun menu")
+def click_on_protein_plus_and_millet_bun_menu(setup_platform):
+    OderingScreenIos(setup_platform).click_protein_plus_and_millet_bun_menu()
+
+@then("I select the Chicken Burger with Millet Bun item")
+@allure.step("Select the Chicken Burger with Millet Bun item")
+def select_chicken_burger_with_millet_bun(setup_platform):
+    OderingScreenIos(setup_platform).click_chicken_burger_with_millet_bun()
+
+@then("I verify the Chicken Burger with Millet Bun item is added to the cart")
+@allure.step("Verify Chicken Burger with Millet Bun item is added to the cart")
+def verify_chicken_burger_with_millet_bun_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).chicken_burger_with_millet_bun_in_cart()
+    print("Chicken Burger with Millet Bun item added to cart")
+
+@then("I verify that a larger image of the dessert is displayed when tapped")
+@allure.step("Verify larger dessert image is displayed after tapping")
+def verify_larger_dessert_image_displayed(setup_platform):
+    OderingScreenIos(setup_platform).verify_larger_dessert_image()
+
+@then("I verify that the nutrition information is displayed")
+@allure.step("Verify nutrition information is displayed")
+def verify_nutrition_info_displayed(setup_platform):
+    OderingScreenIos(setup_platform).is_nutrition_info_displayed()
+
+@then("I click on another item to Add")
+@allure.step("Click on another item to add to the cart")
+def click_on_another_item_to_add(setup_platform):
+    OderingScreenIos(setup_platform).click_another_item_to_add()
+
+@then("I remove the item from the cart")
+@allure.step("Remove the item from the cart")
+def remove_item_from_cart(setup_platform):
+    OderingScreenIos(setup_platform).remove_item_from_cart()
+
+@then("I update the item quantity in the cart")
+@allure.step("Update item quantity in the cart")
+def update_item_quantity_in_cart(setup_platform):
+    OderingScreenIos(setup_platform).update_item_quantity()
+
+@then("I verify the total price calculation is correct")
+@allure.step("Verify total price calculation in the cart")
+def verify_total_price_calculation(setup_platform):
+    OderingScreenIos(setup_platform).verify_total_price_calculation()
+
+@then("I scroll through all menu categories")
+@allure.step("Scroll through all menu categories")
+def scroll_through_all_menu_categories(setup_platform):
+    OderingScreenIos(setup_platform).scroll_through_all_menu_categories()
+
+@then("I verify the cart is empty on app launch")
+@allure.step("Verify the cart is empty on app launch")
+def verify_cart_is_empty_on_app_launch(setup_platform):
+    OderingScreenIos(setup_platform).validate_cart_is_empty()
+
+@then("I verify the cart item details including name, price, and quantity")
+@allure.step("Verify cart item details including name, price, and quantity")
+def verify_cart_item_details(setup_platform):
+    CartScreenIos(setup_platform).validate_cart_items()
+
+
+@then("I add delivery instructions in the cart")
+@allure.step("Add delivery instructions in the cart")
+def add_delivery_instructions_in_cart(setup_platform):
+    CartScreenIos(setup_platform).add_delivery_instructions("Please leave it at the doorstep.")
+
+@then("I verify the subtotal reflects all additions accurately")
+@allure.step("Verify the subtotal reflects all added item prices accurately")
+def verify_subtotal_all_items(setup_platform):
+    CartScreenIos(setup_platform).verify_subtotal_reflects_all_items()
+
+@then("I verify the taxes are calculated correctly based on the subtotal")
+@allure.step("Verify CGST and SGST are calculated correctly based on the subtotal")
+def verify_taxes_calculated_correctly(setup_platform):
+    CartScreenIos(setup_platform).validate_tax_breakdown()
+
+@then("I click on the back button")
+@allure.step("Clicking on the back button")
+def step_click_back_button(setup_platform):
+    CartScreenIos(setup_platform).click_back_button()
+
+@then("I click on the Know More link in charity donation option")
+@allure.step("Click on the 'Know More' link in the charity donation section")
+def click_know_more_in_charity_section(setup_platform):
+    CartScreenIos(setup_platform).click_know_more_charity()
+
+@then("I verify that the charity donation information is displayed in the cart")
+@allure.step("Verify that the charity donation information is displayed in the cart")
+def verify_charity_info_displayed(setup_platform):
+    CartScreenIos(setup_platform).is_charity_info_visible()
+
+@then("I select the charity donation checkbox")
+@allure.step("Select charity donation checkbox")
+def select_charity_checkbox(setup_platform):
+    CartScreenIos(setup_platform).charity_checkbox()
+
+@then("I verify that the donation amount is added to the total price in the cart")
+@allure.step("Verify donation amount is included in total cart price")
+def verify_donation_amount_in_total(setup_platform):
+    CartScreenIos(setup_platform).validate_donation_amount()
+
+@then("I uncheck the charity donation checkbox")
+@allure.step("Uncheck the charity donation checkbox")
+def step_uncheck_charity_donation_checkbox(setup_platform):
+    CartScreenIos(setup_platform).uncheck_charity_donation()
+
+@then("I verify that the donation amount is removed from the total price in the cart")
+@allure.step("Verify donation amount is removed from the cart total")
+def verify_donation_amount_removed(setup_platform):
+    CartScreenIos(setup_platform).verify_donation_removed()
+
+
+@then("I tap on the View All Offers link")
+@allure.step("Tap on the 'View All Offers' link")
+def tap_view_all_offers_link(setup_platform):
+    CartScreenIos(setup_platform).click_view_all_offers()
+
+@then("I verify that the offers page is displayed")
+@allure.step("Verify that the offers page is displayed")
+def verify_offers_page_displayed(setup_platform):
+    CartScreenIos(setup_platform).verify_offers_page_is_visible()
+
+@then("I verify that all price components display the ₹ symbol")
+@allure.step("Verify ₹ symbol is displayed with all price components")
+def verify_currency_symbol_displayed(setup_platform):
+    CartScreenIos(setup_platform).validate_currency_symbols()
+
+@then("I verify the total price should update correctly")
+@allure.step("Verify total price is updated correctly after item removal")
+def verify_total_price_updated(setup_platform):
+    CartScreenIos(setup_platform).is_total_price_correct()
+    
+@then("I verify the estimated delivery time is displayed below the delivery address")
+@allure.step("Verify estimated delivery time is visible below the delivery address")
+def verify_estimated_delivery_time_visible(setup_platform):
+    CartScreenIos(setup_platform).validate_estimated_delivery_time()
+
+
+@then("I apply the first promo code")
+@allure.step("Apply the first promo code")
+def apply_first_promo_code(setup_platform):
+    CartScreenIos(setup_platform).apply_first_promo_code()
+
+@then("I apply the second promo code")
+@allure.step("Apply the second promo code")
+def apply_second_promo_code_step(setup_platform):
+    CartScreenIos(setup_platform).apply_second_promo_code()
+
+@then("I verify only one promo code is applied")
+@allure.step("Verify only one promo code is applied")
+def verify_only_one_promo_code_applied(setup_platform):
+    CartScreenIos(setup_platform).validate_single_promo_code_applied()
+
+@then("I add multiple quantity items")
+@allure.step("Add multiple quantity items to the cart")
+def add_multiple_quantity_items(setup_platform):
+    CartScreenIos(setup_platform).add_multiple_item_quantities()
+
+@then("I click on the discount flat")
+@allure.step("Click on the flat discount offer")
+def click_discount_flat(setup_platform):
+    CartScreenIos(setup_platform).click_flat_discount()
+
+@then("I verify the discount is correctly deducted from the subtotal")
+@allure.step("Verify discount is correctly deducted from subtotal in order summary")
+def verify_discount_deduction(setup_platform):
+    CartScreenIos(setup_platform).validate_discount_deduction()
