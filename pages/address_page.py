@@ -27,7 +27,7 @@ locators = {
         "MOBILE_FIELD_ERROR" : (By.XPATH, "//label[contains(text(), 'Please enter valid mobile number')]"),
         "LOGIN_PAGE_HEADER_FROM_CHECKOUT" : (By.XPATH, " //h5[contains(text(), 'Welcome to Mcdonalds.')] "),
         "SELECTED_DELIVERY_ADDRESS" : (By.XPATH, " //div[@class = 'txt-ellipsis']"),
-        "ADDRESS_FILLING_DETAILS_PAGE" : (By.XPATH, " (//h5[contains(text(), 'Building/Locality or nearby landmark')])[2]"),
+        "ADDRESS_FILLING_DETAILS_PAGE" : (By.XPATH, "(//h5[contains(text(), 'Building/Locality or nearby landmark')])[2]"),
         "ADDRESS_MANDATORY_FIELD_EMPTY_ERROR" : (By.XPATH, "//div[contains(text(), ' Please enter valid House / Flat No.')]"),
         "CLICK_BACK_BUTTON" : (By.XPATH, "//img[@class= 'bottom-sheet__back-icon']"),
         "CLICK_BACK_BUTTON_FROM_SELECT_LOCATION" : (By.XPATH, "//img[@alt='ic-arrow-left-primary']"),
@@ -249,16 +249,39 @@ class AddressPage(BasePage):
          print("-", dup)
 
     def search_for_address_after_selecting_business_model(self):
-        time.sleep(2)
-        self.actions.click_button(*locators['SEARCH_BUTTON'])
-        time.sleep(5)
-        self.actions.enter_text(*locators["SEARCH_INPUT_FIELD"], "Bengaluru")
-        time.sleep(5)
-        self.actions.click_button(locators['SELECT_ADDRESS'][0], locators['SELECT_ADDRESS'][1].format("Bengaluru"))
-        time.sleep(10)
-        self.actions.is_element_displayed(*locators['FIRST_ADDRESS'])
-        self.actions.click_button(*locators['FIRST_ADDRESS'])
-        print("First address clicked.")
+        try:
+            # Step 1: Click on search button
+            WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable(locators['SEARCH_BUTTON'])
+            ).click()
+            print("Clicked on search button")
+
+            # Step 2: Enter "Bengaluru" in search input
+            WebDriverWait(self.driver, 20).until(
+                EC.visibility_of_element_located(locators["SEARCH_INPUT_FIELD"])
+            ).send_keys("Bengaluru")
+            print("Entered 'Bengaluru' in search field")
+
+            # Step 3: Wait for search suggestion with 'Bengaluru' to appear
+            bengaluru_locator = (
+                locators['SELECT_ADDRESS'][0],
+                locators['SELECT_ADDRESS'][1].format("Bengaluru")
+            )
+
+            WebDriverWait(self.driver, 20).until(
+                EC.visibility_of_element_located(bengaluru_locator)
+            ).click()
+            print("Selected 'Bengaluru' from suggestions")
+
+            # Step 4: Wait for first address to appear after selecting the city
+            WebDriverWait(self.driver, 20).until(
+                EC.visibility_of_element_located(locators['FIRST_ADDRESS'])
+            ).click()
+            print("Clicked on the first address (Kasturba Road).")
+
+        except Exception as e:
+            print(f"❌ Test failed while searching for address: {str(e)}")
+            raise
         
 
     def verify_browse_menu(self):

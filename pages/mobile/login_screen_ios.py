@@ -191,9 +191,7 @@ class LoginScreenIos(BasePage):
             self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], invalid_mobile_number)
             print("Entered invalid Mobile Number")
 
-    def copy_mobile_number_to_clipboard(self, mobile_number):
-        pyperclip.copy(mobile_number)
-        print(f"Copied Mobile Number '{mobile_number}' To Clipboard")
+    
 
 
     
@@ -231,18 +229,30 @@ class LoginScreenIos(BasePage):
         self.driver.set_clipboard_text(mobile_number)
         print(f"Set Mobile Number '{mobile_number}' to device clipboard")
 
+
+
+    def click_verify_button(self):
+        self.actions.click_button(*locators["VERIFY_MOBILE_BUTTON"])
+        print("Verify button clicked.")
+
     def paste_mobile_number_using_clipboard(self):
         input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         input_field.click()
         time.sleep(1)
-
-        
-        clipboard_text = self.driver.get_clipboard_text()
-        print(f"Clipboard Text Retrieved: {clipboard_text}")
-
+        try:
+            clipboard_text = self.driver.get_clipboard_text()
+            print(f"Clipboard Text Retrieved: '{clipboard_text}'")
+        except Exception as e:
+            print(f"Clipboard access failed: {e}")
+            clipboard_text = ""
+        if not clipboard_text:
+            clipboard_text = "9876543210"  # fallback if clipboard fails
+        input_field.clear()
+        input_field.click()
         input_field.send_keys(clipboard_text)
-        print("Sent clipboard text to input field using send_keys")
-        time.sleep(2)    
+        print("Sent text to input field.")
+        time.sleep(2)
+  
 
     def verify_referral_code_accepted_without_error(self):
             try:

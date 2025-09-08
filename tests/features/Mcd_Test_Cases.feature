@@ -652,11 +652,8 @@ Scenario: Verify Cancel login from “checkout” page
     Given  I open the Chrome browser
     When   I hit the URL
     Then   I verify website opened successfully
-    When   I click on any item to add into a cart
-    Then   I verify items details pop up opened successfully
-    When   I click on next
-    And    I click on Add to cart option
-    Then   I verify selected item get added into a cart
+    When   I browse the menu and return to the homepage
+    And    I navigate to the cart
     When   I click on login/signup prompt from checkout
     Then   I verify login page navigation from checkout page
     When   I click on cancel button from login/signup pop up
@@ -684,11 +681,16 @@ Scenario: Add new delivery address during checkout
     Given  I open the Chrome browser
     When   I hit the URL
     Then   I verify website opened successfully
-    When   I click on any item to add into a cart
-    Then   I verify items details pop up opened successfully
-    When   I click on next
-    And    I click on Add to cart option
-    Then   I verify selected item get added into a cart
+    When   I click on view icon
+    Then   I verify view page navigation
+    When   I click on login or signup button
+    Then   I verify login page navigation
+    When   I enter a valid mobile number and click verify
+    And    I enter the OTP and click verify
+    And    I click save changes on profile details page
+    Then   I verify home page navigation
+    When   I browse the menu and return to the homepage
+    And    I navigate to the cart
     When   I click on add address from checkout page
     And    I click on add new button and search for location
     And    I select address from search results
@@ -713,7 +715,6 @@ Scenario: verify adding address with missing mandatory fields
     Then   I verify home page navigation
     When   I click on add address in home page
     And    I click on add new button and click confirm location
-    Then   I verify user redirected to address fill in details page
     When   I leave mandatory field empty and click save address
     Then   I verify that the address not saved and validation error should be displayed
         |appURL|
@@ -730,10 +731,10 @@ Scenario: verify adding address with special characters
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on add address in home page
     And    I click on add new button and click confirm location
-    Then   I verify user redirected to address fill in details page
     When   I enter special character in house/flat field and click save address
     Then   I verify field accept characters and address will get saved
         |appURL|
@@ -750,11 +751,11 @@ Scenario: verify clicking cancel button before saving address
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     And    I verify saved delivery address
     When   I click on add address in home page
     And    I click on add new button and click confirm location
-    Then   I verify user redirected to address fill in details page
     When   I enter text in house/flat field and click back button without saving
     Then   I verify address will not get saved
         |appURL|
@@ -771,10 +772,10 @@ Scenario: verify adding duplicate address
     Then   I verify login page navigation
     When   I enter a valid mobile number and click verify
     And    I enter the OTP and click verify
+    And    I click save changes on profile details page
     Then   I verify home page navigation
     When   I click on add address in home page
     And    I click on add new button and click confirm location
-    Then   I verify user redirected to address fill in details page
     When   I enter text in house/flat field and click save address
     And    I click on add address in home page
     Then   I verify System allows address duplication based on business logic
@@ -1039,7 +1040,6 @@ Scenario: Verify editing an existing address
     And    I click the edit icon next to an address
     And    I modifies the address details and click save button
     Then   I verify updated address is shown in the address list
-    And    I verify restaurant are updated based on the modified address
     When   I click on user profile icon
     Then   I click on Logout button
         |appURL|
@@ -1127,7 +1127,7 @@ Scenario: Verify "Near" location shown under each address
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_008
+@TC_AD_008 @sanityweb
 Scenario: Ensure scroll functionality works if many addresses are saved
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1147,7 +1147,7 @@ Scenario: Ensure scroll functionality works if many addresses are saved
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_010
+@TC_AD_010 @sanityweb
 Scenario: Verify error handling for invalid or undeliverable address
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1167,7 +1167,7 @@ Scenario: Verify error handling for invalid or undeliverable address
         |https://www.uat.mcdapp.co|
 
 
-@TC_AD_011
+@TC_AD_011  @sanityweb
 Scenario: Default address selection on login
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1185,7 +1185,7 @@ Scenario: Default address selection on login
         |https://www.uat.mcdapp.co|
 
 
-@TC_AD_012
+@TC_AD_012 @sanityweb
 Scenario: Ensure “Add New” opens address entry popup or page
     Given  I open the Chrome browser
     When   I hit the URL

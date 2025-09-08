@@ -65,3 +65,4 @@ wsproto
 zipp
 pyautogui
 pyperclip
+pandas

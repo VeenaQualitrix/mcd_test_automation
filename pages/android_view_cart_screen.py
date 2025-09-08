@@ -20,7 +20,7 @@ locators = {
         "CLEAR_ALL": (AppiumBy.XPATH, "//android.widget.TextView[@text='Clear All']"),
         "DELETE_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='Delete Cart']"),
         "OK": (AppiumBy.XPATH, "//android.widget.Button[@text='OK']"),
-        "MCCHICKEN_3PC_MEAL_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='McChicken Burger Happy Meal']"),
+        "MCCHICKEN_3PC_MEAL_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Crispy Veggie Burger Meal (M)']"),
         "DESSERTS_PRODUCT_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Hot Fudge Sundae']"),
         "WRAP_ITEM_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Big Spicy Chicken Wrap']"),
         "CUSTOMISED_ITEM_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Removed: Chipotle Sauce Added: Protein Slice']"),
@@ -59,6 +59,8 @@ locators = {
         "OFFER_APPLIED_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offer Applied!']"),
         "OFFER_CODE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offer Applied!']/following-sibling::android.widget.TextView[1]"),
         "CHANGE_OFFER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Change Offer']"),
+        "FIRST_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='SPD82AA49EE9040']"),
+        "SECOND_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='SPDB28292DD88C1']"),
 
 
          }
@@ -690,7 +692,7 @@ class AndroidViewCartScreen(BasePage):
     def verify_applied_offer(self):
         try:
             time.sleep(5)
-            
+
             # Verify "Offer Applied" section is visible
             self.actions.is_element_displayed(*locators['OFFER_APPLIED_TEXT'])
 
@@ -727,7 +729,7 @@ class AndroidViewCartScreen(BasePage):
 
     def verify_discount_is_applied_correctly(self):
         time.sleep(5)
-    
+
         discounted_prices = self.verify_prices_breakdown_in_order_summary()
         discounted_total = discounted_prices['sub_total'] + discounted_prices['handling_charges'] + discounted_prices['cgst'] + discounted_prices['sgst']
         print(f"Discounted breakdown: {discounted_prices}")
@@ -743,8 +745,8 @@ class AndroidViewCartScreen(BasePage):
                 print(f"ℹ Handling charges were discounted by ₹{handling_diff:.2f}")
         else:
             raise AssertionError(" Discount not applied correctly. Total amount did not decrease.")
-        
-        
+
+
 
 
         

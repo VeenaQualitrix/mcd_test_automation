@@ -15,7 +15,7 @@ import pyperclip
 locators = {
     "FULL_NAME_FIELD": (
     AppiumBy.XPATH,
-    '//XCUIElementTypeTextField[@value="Sabbvg"]'
+    '//XCUIElementTypeTextField[1]'
 ),
 "SAVE_CHANGES_BUTTON": (AppiumBy.ACCESSIBILITY_ID, "Save Changes"),
 
@@ -23,7 +23,7 @@ locators = {
 
 "VALID_MOBILE_NUMBER": (
     AppiumBy.XPATH,
-    '//XCUIElementTypeTextField[@value="7777777777"]'
+    '//XCUIElementTypeTextField[2]'
 ),
 "EDIT_ICON": (
     AppiumBy.ACCESSIBILITY_ID,
@@ -39,7 +39,7 @@ locators = {
 ),
 "CLEAR_EMAIL_FIELD": (
     AppiumBy.XPATH,
-    '//XCUIElementTypeTextField[@value="john.doe@example.com"]'
+    '//XCUIElementTypeTextField[3]'
 ),
 'LABEL_ENTER_OTP': (
     AppiumBy.XPATH,
@@ -59,7 +59,7 @@ locators = {
     AppiumBy.XPATH,
     '//XCUIElementTypeTextField[@value="Enter Your Email ID"]'
 ),
-"DOB_FIELD":(AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="11/08/2025"]'),
+"DOB_FIELD":(AppiumBy.XPATH, '//XCUIElementTypeTextField[4]'),
 
 "DOB_SAVE_BUTTON":(AppiumBy.XPATH, '//XCUIElementTypeButton[@name="Select"]'),
 
@@ -96,9 +96,9 @@ class ProfileScreenIos(BasePage):
 
 
     def enter_full_name(self, name):
-        time.sleep(5)
-        self.actions.click_button(*locators['FULL_NAME_FIELD'])
-        # self.actions.clear_text(*locators['FULL_NAME_FIELD'])  # use your own clear_text method here
+        time.sleep(2)
+        self.actions.click_button(*locators["FULL_NAME_FIELD"])
+        self.actions.clear_text(*locators["FULL_NAME_FIELD"])  # use your own clear_text method here
         self.actions.enter_text(*locators["FULL_NAME_FIELD"], name)
         print(f"Entered name: {name}")
 

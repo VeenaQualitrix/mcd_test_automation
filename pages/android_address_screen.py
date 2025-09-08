@@ -628,7 +628,7 @@ class AndroidAddressScreen(BasePage):
         self.actions.is_element_displayed(*locators['ADD_NEW_ADDRESS'])
         print("Clicked on Add new address")
         time.sleep(2)
-        self.actions.is_element_displayed(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
+        self.actions.click_button(*locators['CLICK_BACK_BUTTON_FROM_SELECT_LOCATION'])
         print("Clicked on back button")
 
 

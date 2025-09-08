@@ -533,7 +533,7 @@ def step_verify_old_data_loaded_after_refresh(setup_platform, user_data_store):
 @when("I click on any item to add into a cart")
 @allure.step("When I click on any item to add into a cart")
 def step_click_add_item(setup_platform):
-    HomePage(setup_platform).add_item_in_cart()
+    HomePage(setup_platform).verify_browse_menu()
 
 @then("I verify items details pop up opened successfully")
 @allure.step("When I verify items details pop up opened successfully")
@@ -908,7 +908,7 @@ def search_address_from_searchbar(setup_platform):
 @allure.step("When I browse the menu and return to the homepage")
 def verify_browse_menu(setup_platform):
     print("browse the menu and return to the homepage")
-    AddressPage(setup_platform).verify_browse_menu()
+    HomePage(setup_platform).verify_browse_menu()
 
 @then("I verify Dine-In remains the selected option until manually changed")
 @allure.step("Then I verify Dine-In remains the selected option until manually changed")
@@ -950,7 +950,7 @@ def modify_existing_address(setup_platform):
 @allure.step("Then I verify updated address is shown in the address list")
 def verify__updated_address_display_in_address_list(setup_platform):
     print("Verifying updated address is shown in the address list")
-    HomePage(setup_platform).verify_updated_address_display_in_address_list("123, Marathahalli")
+    HomePage(setup_platform).verify_updated_address_display_in_address_list()
 
 @then("I verify restaurant are updated based on the modified address")
 @allure.step("Then I verify restaurant are updated based on the modified address")

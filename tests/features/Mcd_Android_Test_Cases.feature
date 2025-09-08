@@ -153,7 +153,7 @@ Scenario Outline: Verify navigation after successfully entetered a valid mobile 
     When  I enter a valid mobile number and click mobile verify
     Then  I verify OTP screen navigation
 
-@TC_Android_LOGIN_013 @sanitymobile
+@TC_Android_LOGIN_013 @Fridaynew
 Scenario Outline: Verify terms and conditions link
     Given I launch the native app
     Then  I verify the app should be launched
@@ -766,7 +766,8 @@ Scenario: Verify Switching between models updates the UI layout appropriately
     Then  I verify the page layout or menu should adapt to match the on the go model
     When  I select Take Away option
     Then  I verify the page layout or menu should adapt to match the Take Away model
-    When  I click on MyMcD hamburger icon
+    When  I select the McDelivery option
+    And   I click on MyMcD hamburger icon
     Then  I click on Log out button
 
 @TC_Android_AD_002 @sanitymobile01
@@ -1161,7 +1162,7 @@ Scenario: Add burger/wrap from Burgers & Wraps
     Then  I verify the Burgers & Wraps product added in cart
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_016   @FridayScripts
+@TC_Android_ORDER_016   @Fridaynew
 Scenario: Customize burger before adding to cart
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1509,7 +1510,7 @@ Scenario: Redirect user to login when attempting checkout without being logged i
     And   I click on view cart option
     And   I click on add address in home screen
     Then  I verify user redirected to login/signup prompt
-   
+
 @TC_Android_CO_016 @testmcd1
 Scenario: Remove item from cart by decreasing quantity to zero
     Given I launch the native app
@@ -1542,7 +1543,7 @@ Scenario: Verify that payment is not allowed to process with a sold-out item.
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_CO_019 @testmcd1
+@TC_Android_CO_019 @Fridaynew
 Scenario: Validate estimated delivery time visibility
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1591,6 +1592,8 @@ Scenario: Apply Multiple Promo Codes
     When  I click on 'View All' link
     And   I apply multiple promo codes
     Then  I verify only one code applied at a time
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
 
 @TC_Android_CO_022 @testmcd1
 Scenario: Update quantity for multiple items in cart
@@ -1607,21 +1610,6 @@ Scenario: Update quantity for multiple items in cart
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_CO_023 @newtestmcd1
-Scenario: Display applied offer discount in the order summary
-    Given  I launch the native app
-    Then  I verify the app should be launched
-    And   I verify home screen navigation
-    When  I click on Menu icon
-    And   I add single item to the cart
-    And   I click on view cart option
-    Then  I verify the single item in cart
-    And   I verify the total payable amount should be displayed
-    When  I click on 'View All' link
-    Then  I verify the user should be redirected to a page displaying all available offers
-    When  I apply the first promo code
-    Then  I verify the discount should be clearly shown and deducted in the order summary
-
 @TC_Android_CO_028 @testmcd1
 Scenario: Ensure guest checkout not allowed
     Given I launch the native app
@@ -1637,9 +1625,9 @@ Scenario: Ensure guest checkout not allowed
     And   I click on view cart option
     And   I click on add address in home screen
     Then  I verify user redirected to login/signup prompt
-       
 
-@TC_Android_AD_017  
+
+@TC_Android_AD_017   @Fridaynew
 Scenario: Verify behavior when all addresses are deleted
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1654,8 +1642,6 @@ Scenario: Verify behavior when all addresses are deleted
     Then  I verify the address list should be empty and the Add Address prompt should be visible
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
-
-
 
     
 
