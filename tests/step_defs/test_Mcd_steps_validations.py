@@ -1408,7 +1408,7 @@ def verify_prices_breakdown_in_order_summary(setup_platform):
     print("checks the price breakdown on the right side of the page")
     ViewCartPage(setup_platform).verify_prices_breakdown_in_order_summary()
 
-@then("I veverify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
+@then("I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
 @allure.step("When I verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")
 def verify_display_of_charges_and_total_amount_in_order_summary(setup_platform):
     print("verify the subtotal, handling charges, CGST, and SGST should be displayed and match the total payable amount")

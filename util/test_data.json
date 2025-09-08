@@ -10,5 +10,11 @@
     "edit_user_name": "Testuser01",
     "Expired_Promo" : "GB100",
     "Coupon_code" : "freedelivery@199",
-    "Flat10_Coupon_code" : "FLAT10"
+    "Flat10_Coupon_code" : "FLAT10",
+    "menu_item": "Fries",
+    "fries_item_display": "Fries (Large)",
+    "menu_item_nonexistent": "Pasta",
+    "no_items_message": "No matching item found",
+    "empty_search_message": "Search menu item",
+    "search_burger": "Burger"
 }

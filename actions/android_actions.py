@@ -31,8 +31,10 @@ class AndroidActions(ActionsParent):
         self.super_wait = WebDriverWait(self.driver, readConstants("SUPER_WAIT"))
         self.dynamic_number = random.randint(1, 10000)
 
+
     def launch_app(self):
         print("Application launch is handled in conftest fixture")
+
 
     def relaunch_app(self, appPackage):
         print("Application is already Launched. Relaunching application again")

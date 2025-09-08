@@ -1516,11 +1516,142 @@ def verify_first_offer_is_removed_and_the_second_offer_is_displayed(setup_platfo
     print("verify that the first offer is removed and the second offer is displayed")
     AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
 
+@when("I clicks the 'Add' button multiple times to increase the item quantity")
+@allure.step("When I clicks the 'Add' button multiple times to increase the item quantity")
+def increase_cart_item_multiple_times(setup_platform):
+    print("clicks the 'Add' button multiple times to increase the item quantity")
+    AndroidViewCartScreen(setup_platform).increase_cart_item_multiple_times()
+
+@when("I apply the discount promo code")
+@allure.step("When I apply the discount promo code")
+def enter_promo_code_and_click_search(setup_platform):
+    print("apply the discount promo code")
+    AndroidOfferPage(setup_platform).enter_promo_code_and_click_search()
+
+@then("I verify total amount from order summary")
+@allure.step("When I verify total amount from order summary")
+def get_total_amount_from_order_summary(setup_platform):
+    print("verify total amount from order summary")
+    AndroidViewCartScreen(setup_platform).get_total_amount_from_order_summary()
+
 @then("I verify the discount should be clearly shown and deducted in the order summary")
-@allure.step("When I verify the discount should be clearly shown and deducted in the order summary")
+@allure.step("Then I verify the discount should be clearly shown and deducted in the order summary")
 def verify_discount_prices_in_order_summary(setup_platform):
     print("verify the discount should be clearly shown and deducted in the order summary")
     AndroidViewCartScreen(setup_platform).verify_discount_is_applied_correctly()
+
+@when("I enter the expired promo code and click search")
+@allure.step("When I enter the expired promo code and click search")
+def enter_expired_promo_code_and_click_search(setup_platform):
+    Expired_Promo = readPreReqJson("test_data", "Expired_Promo")
+    print("enter the expired promo code and click search")
+    AndroidOfferPage(setup_platform).enter_expired_promo_code_and_click_search(Expired_Promo)
+
+@when("I click on offer Apply button and select button")
+@allure.step("When I click on offer Apply button and select button")
+def click_offer_apply_and_select_button(setup_platform):
+    print("click on offer Apply button and select button")
+    AndroidOfferPage(setup_platform).click_offer_apply_and_select_button()
+
+@then("I verify a message should be displayed indicating that the code is invalid or expired")
+@allure.step("Then I verify a message should be displayed indicating that the code is invalid or expired")
+def verify_promo_expired_message(setup_platform):
+    print("verify a message should be displayed indicating that the code is invalid or expired")
+    AndroidOfferPage(setup_platform).verify_promo_expired_message()
+
+@when("I enters 'Fries' in the search bar")
+@allure.step("When I enters 'Fries' in the search bar")
+def click_on_menu_search_icon_and_enter_fries(setup_platform):
+    search_fries = readPreReqJson("test_data", "menu_item")
+    print("enters 'Fries' in the search bar")
+    AndroidSearchMenuScreen(setup_platform).enter_fries_and_click_search(search_fries)
+
+@then("I verify the search results should display items matching 'Fries'")
+@allure.step("Then I verify the search results should display items matching 'Fries'")
+def verify_search_result_display_fries_menu_items(setup_platform):
+    print("verify the search results should display items matching 'Fries'")
+    AndroidSearchMenuScreen(setup_platform).verify_search_result_display_fries_menu_items()
+
+@when("I enters 'Pasta' in the search bar")
+@allure.step("When I enters 'Pasta' in the search bar")
+def click_on_menu_search_icon_and_enter_pasta(setup_platform):
+    search_Pasta = readPreReqJson("test_data", "menu_item_nonexistent")
+    print("enters 'Pasta' in the search bar")
+    AndroidSearchMenuScreen(setup_platform).enter_pasta_and_click_search(search_Pasta)
+
+@then("I verify 'No matching items found' message is displayed")
+@allure.step("Then I verify 'No matching items found' message is displayed")
+def verify_message_when_items_not_found(setup_platform):
+    print("verify 'No matching items found' message is displayed")
+    AndroidSearchMenuScreen(setup_platform).verify_message_when_items_not_found()
+
+@when("I clicks the search button without typing anything")
+@allure.step("When I clicks the search button without typing anything")
+def click_search_with_empty_input(setup_platform):
+    print("clicks the search button without typing anything")
+    AndroidSearchMenuScreen(setup_platform).click_search_with_empty_input()
+
+@then("I verify no action should be taken and prompt is displayed")
+@allure.step("Then I verify no action should be taken and prompt is displayed")
+def verify_prompt_display(setup_platform):
+    print("verify no action should be taken and prompt is displayed")
+    AndroidSearchMenuScreen(setup_platform).verify_prompt_display()
+
+@when("I clicks the 'Veg' filter button")
+@allure.step("When I clicks the 'Veg' filter button")
+def click_veg_filter(setup_platform):
+    print("clicks the 'Veg' filter button")
+    AndroidSearchMenuScreen(setup_platform).click_veg_filter()
+
+@then("I verify only Veg items should be displayed in the menu")
+@allure.step("Then I verify only Veg items should be displayed in the menu")
+def verify_display_of_veg_items(setup_platform):
+    print("verify only Veg items should be displayed in the menu")
+    AndroidSearchMenuScreen(setup_platform).verify_display_of_veg_items()
+
+@when("I clicks the 'Non-Veg' filter button")
+@allure.step("When I clicks the 'Non-Veg' filter button")
+def click_non_veg_filter(setup_platform):
+    print("clicks the 'Non-Veg' filter button")
+    AndroidSearchMenuScreen(setup_platform).click_non_veg_filter()
+
+@then("I verify only Non-Veg items should be displayed in the menu")
+@allure.step("Then I verify only Non-Veg items should be displayed in the menu")
+def verify_display_of_non_veg_items(setup_platform):
+    print("verify only Non-Veg items should be displayed in the menu")
+    AndroidSearchMenuScreen(setup_platform).verify_display_of_non_veg_items()
+
+@when("I enters 'Burger' in the search bar")
+@allure.step("When I enters 'Burger' in the search bar")
+def search_for_burger_item(setup_platform):
+    search_Burger = readPreReqJson("test_data", "search_burger")
+    print("enters 'Burger' in the search bar")
+    AndroidSearchMenuScreen(setup_platform).enter_burger_and_click_search(search_Burger)
+
+@then("I verify only Veg Burger items should be displayed in the menu")
+@allure.step("Then I verify only Veg Burger items should be displayed in the menu")
+def verify_display_of_veg_burger_items(setup_platform):
+    print("verify only Veg Burger items should be displayed in the menu")
+    AndroidSearchMenuScreen(setup_platform).verify_display_of_veg_items()
+
+@when("I clears the search input")
+@allure.step("When I clears the search input")
+def clear_search_input_field(setup_platform):
+    print("clears the search input")
+    AndroidSearchMenuScreen(setup_platform).clear_search_input_field()
+
+@then("I verify Default view restored and no filters should be applied")
+@allure.step("Then I verify Default view restored and no filters should be applied")
+def verify_default_view_restored(setup_platform):
+    print("verify Default view restored and no filters should be applied")
+    AndroidSearchMenuScreen(setup_platform).verify_default_view_restored()
+
+@then("I verify item added to the cart and quantity updated")
+@allure.step("Then I verify item added to the cart and quantity updated")
+def verify_default_view_restored(setup_platform):
+    print("Verify item added to the cart and quantity updated")
+    AndroidViewCartScreen(setup_platform).get_all_cart_items()
+
 
 
 

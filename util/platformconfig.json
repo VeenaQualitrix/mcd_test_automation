@@ -2,7 +2,7 @@
     "android": {
         "platformName": "Android",
         "appium:deviceName": "RZ8N810NC1K",
-        "appium:app": "D:\\\\UAT-v12.81.0-1754378379877.apk",
+        "appium:app": "D:\\\\UAT-v12.90.10-1756783420465.apk",
         "appium:automationName": "UiAutomator2",
         "appium:appPackage": "com.il.mcdelivery",
         "appium:appActivity": "com.il.mcdelivery.MainActivity",
