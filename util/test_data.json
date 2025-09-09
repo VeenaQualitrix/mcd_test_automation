@@ -16,5 +16,6 @@
     "menu_item_nonexistent": "Pasta",
     "no_items_message": "No matching item found",
     "empty_search_message": "Search menu item",
-    "search_burger": "Burger"
+    "search_burger": "Burger",
+    "search_wrap": "Wrap"
 }

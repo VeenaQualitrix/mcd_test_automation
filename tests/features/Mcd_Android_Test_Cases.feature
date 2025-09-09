@@ -1777,8 +1777,171 @@ Scenario Outline: Add item to cart from search result
     Then  I verify item added to the cart and quantity updated
     When  I click on clear all to empty the cart
 
+@TC_Android_SM_009 
+Scenario Outline: Search term and results persist after adding an item to the cart
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enter burger name and click search icon
+    Then  I verify item displayed
+    When  I click on add+ button
+    And   I click on Add to cart option
+    Then  I verify the search results for 'Burger' should still be displayed
+    When  I clears the search input
+    And   I click on view cart option
+    And   I click on clear all to empty the cart
 
-@TC_Android_AD_017   @Fridaynew
+@TC_Android_SM_010 
+Scenario Outline: Filter buttons maintain state across search
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I clicks the 'Veg' filter button
+    And   I enters 'Wrap' in the search bar
+    Then  I verify filter remains active and only Veg Wrap items should be displayed 
+    When  I clears the search input
+
+@TC_Android_SM_013
+Scenario Outline: Verify placeholder text in search input
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    And   I verify the placeholder text should be displayed as 'Search here'
+
+@TC_Android_SM_014 
+Scenario Outline: Search responsiveness on different screen sizes
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I click on search textfield
+    And   I enters 'Fries' in the search bar
+    Then  I verify the search results should display items matching 'Fries'
+    When  I clears the search input
+
+@TC_Android_SM_015 
+Scenario Outline: Toggle Veg filter on and off
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I clicks the 'Veg' filter button
+    And   I clicks the close icon of 'Veg' filter button
+    Then  I verify the default view should be restored
+
+@TC_Android_SM_017 
+Scenario Outline: Search persists after page reload
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on search icon in home screen
+    Then  I verify search menu screen navigation
+    When  I enters 'Burger' in the search bar
+    Then  I click back button from search menu screen
+    And   I verify Default view restored and no filters should be applied
+
+@TC_Android_OFFER_001 
+Scenario: Verify offer page input field is visible and functional
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    Then  I verify the input box for entering the coupon code should be visible and accept text input
+    And   I verify entered coupon code is displayed
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_OFFER_002 @newtestmcd2
+Scenario: Validate manual coupon entry and search
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    And   I user enters a valid coupon code 'FLAT10' into the input box
+    Then  I verify an offer card with the code 'FLAT10' should appear
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_OFFER_003 @newtestmcd2
+Scenario: Validate offer cards display correctly
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    And   I user enters a valid coupon code 'FLAT10' into the input box
+    Then  I verify each offer card should displays code, description, Show More link, and Apply button
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_OFFER_004 @newtestmcd2
+Scenario: Verify Apply offer coupon functionality
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I clicks the 'Add' button multiple times to increase the item quantity
+    And   I click on 'View All' link
+    And   I enters a valid coupon code 'FLAT10' and clicks on the Apply button
+    Then  I verify selected coupon should be applied to the current cart
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_OFFER_005 @newtestmcd2
+Scenario: Validate cart value restrictions
+    Given  I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    And   I enters a 'FLAT10' coupon code and clicks on the Apply button
+    Then  I verify a warning should appear with the message 'Promo not applied'
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+
+@TC_Android_AD_017   
 Scenario: Verify behavior when all addresses are deleted
     Given I launch the native app
     Then  I verify the app should be launched

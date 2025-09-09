@@ -26,6 +26,12 @@ locators = {
         "NON_VEG_ICON_SYMBOL": (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-nonveg'])[1]"),
         "CLICK_CLEAR_ALL": (AppiumBy.XPATH, "//android.widget.TextView[@text='Clear All']"),
         "POPULAR_ITEMS": (AppiumBy.XPATH, "//android.widget.TextView[@text='Popular Items']"),
+        "RECENT_SEARCHES": (AppiumBy.XPATH, "//android.widget.TextView[@text='Your Recent Searches']"),
+        "BURGER_SEARCH_RESULT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Burger']"),
+        "WRAP_SEARCH_RESULT": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Wrap'])[2]"),
+        "WRAP_ITEM": (AppiumBy.XPATH, "//android.widget.TextView[@text='Big Spicy Paneer Wrap Combo']"),
+        "VEG_FILTER_CLOSE_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-close-red']"),
+        "BACK_BUTTON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
 
          }
 
@@ -172,6 +178,48 @@ class AndroidSearchMenuScreen(BasePage):
         time.sleep(3)
         self.actions.is_element_displayed(*locators['POPULAR_ITEMS'])
         print("popular items text is displayed after clearing the recent serarch")
+
+    def verify_burger_search_result_persist_post_add(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['RECENT_SEARCHES'])
+        print("'Your Recent searches' text is displayed")
+        self.actions.is_element_displayed(*locators['BURGER_SEARCH_RESULT'])
+        print("burger search result is persist post add the burger")
+
+    def enter_wrap_and_click_search(self, search_wrap):
+        time.sleep(3)
+        self.actions.enter_text(*locators["SEARCH_MENU_TEXTFIELD"], search_wrap)
+        self.actions.click_button(*locators["SEARCH_MENU_ICON"])
+        print("Clicked on search menu icon")
+
+    def verify_veg_wrap_item_is_displayed(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['RECENT_SEARCHES'])
+        print("'Your Recent searches' text is displayed")
+        self.actions.is_element_displayed(*locators['WRAP_SEARCH_RESULT'])
+        print("Wrap search result is displayed")
+        time.sleep(1)
+        self.actions.is_element_displayed(*locators['WRAP_ITEM'])
+        print("'Big Spicy Paneer Wrap Combo' text is displayed")
+
+    def verify_placeholder_shows_search_here(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['SEARCH_MENU_TEXTFIELD'])
+        print("Search here text is displayed")
+
+    def click_close_icon_on_veg_filter(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['VEG_FILTER_CLOSE_ICON'])
+        print("Veg filter close icon is displayed")
+        self.actions.click_button(*locators['VEG_FILTER_CLOSE_ICON'])
+        print("Clicked on close icon of veg filter")
+
+    def Click_back_button_from_search_menu(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['BACK_BUTTON'])
+        self.actions.click_button(*locators['BACK_BUTTON'])
+        print("Back button clicked")
+        
 
     
 

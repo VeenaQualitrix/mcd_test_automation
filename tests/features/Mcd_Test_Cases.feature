@@ -2033,7 +2033,7 @@ Scenario: Validate manual coupon entry and search
         |https://www.uat.mcdapp.co|
 
 @TC_OFFER_003 @newtestmcd2
-Scenario: Validate manual coupon entry and search
+Scenario: Validate offer cards display correctly
     Given  I open the Chrome browser
     When   I hit the URL
     Then   I verify website opened successfully
