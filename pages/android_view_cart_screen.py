@@ -750,6 +750,44 @@ class AndroidViewCartScreen(BasePage):
                 self.actions.click_button(*locators['INCREASE_ITEM_QUANTITY_IN_CART'])
                 print(f"Item increased in the cart: click {i+1}")
                 time.sleep(1)
+                
+    def verify_discount_in_order_summary(self):
+        time.sleep(2)
+
+        # Step 1: Scroll to bottom where "Total Payable" is visible
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+        time.sleep(1)
+        self.actions.click_button(*locators['DROP_DOWN_ICON'])
+
+        prices = {}
+        labels = ['Sub Total', 'Handling Charges', 'Discount', 'CGST', 'SGST']
+
+        for label in labels:
+            # Create dynamic XPath using the label
+            dynamic_xpath = (
+                f"//android.widget.TextView[@text='{label}']/following-sibling::android.widget.TextView"
+            )
+
+            # Wait for element and fetch text
+            element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, dynamic_xpath))
+            )
+
+            # Clean the price value and convert to float
+            price_value = float(element.text.strip().replace('₹', '').strip())
+
+            # Print label and price for debugging
+            print(f"{label} price is: ₹{price_value}")
+
+            # Store in dictionary with key as label in snake_case
+            prices[label.lower().replace(' ', '_')] = price_value
+
+        print("All prices fetched successfully:", prices)
+        return prices
 
     def get_total_amount_from_order_summary(self):
         prices = self.verify_prices_breakdown_in_order_summary()

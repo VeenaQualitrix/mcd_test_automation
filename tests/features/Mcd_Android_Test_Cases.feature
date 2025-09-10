@@ -1940,6 +1940,135 @@ Scenario: Validate cart value restrictions
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
+@TC_Android_OFFER_006 @newtestmcd2
+Scenario: Validate cart value eligibility for coupon application
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I clicks the 'Add' button multiple times to increase the item quantity
+    And   I click on 'View All' link
+    And   I enters a valid coupon code 'FLAT10' and clicks on the Apply button
+    Then  I verify the discount should be successfully applied
+
+@TC_Android_OFFER_008 @newtestmcd2
+Scenario: Validate one coupon per order policy
+    Given  I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    And   I apply multiple promo codes
+    Then  I verify only one code applied at a time
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+  
+@TC_Android_OFFER_009 @newtestmcd2
+Scenario: Validate expired or inactive coupon codes
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    When  I enter the expired promo code and click search
+    And   I click on offer Apply button and select button
+    Then  I verify a message should be displayed indicating that the code is invalid or expired
+    When  I click on clear all to empty the cart
+
+@TC_Android_OFFER_010 @newtestmcd2
+Scenario: Verify applied offer is reflected in order summary
+
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I clicks the 'Add' button multiple times to increase the item quantity
+    And   I click on 'View All' link
+    And   I enters a valid coupon code 'FLAT10' and clicks on the Apply button
+    Then  I verify the discount should be successfully applied
+
+@TC_Android_OFFER_011 @newtestmcd2
+Scenario: Validate UI Responsiveness for Offer Page
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I clicks the 'Add' button multiple times to increase the item quantity
+    And   I click on 'View All' link
+    Then  I verify the offer layout should adapt responsively to the screen size
+    And   I verify all buttons and interactive elements should remain functional
+   
+
+@TC_Android_OFFER_012 @newtestmcd2
+Scenario: Validate Offer Tags on Product Cards
+    Given  I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    And   I user enters a valid coupon code 'FLAT10' into the input box
+    Then  I verify an offer card with the code 'FLAT10' should appear
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+    Then  I verify the offer tags such as 'FLAT 10 OFF' should be clearly visible
+
+@TC_Android_OFFER_013 @newtestmcd2
+Scenario: Verify multiple offers are shown in a scrollable  or paginated if many exists
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on 'View All' link
+    Then  I verify the offers should appear in a scrollable or paginated format without any visual breakage
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
 
 @TC_Android_AD_017   
 Scenario: Verify behavior when all addresses are deleted

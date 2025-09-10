@@ -1753,6 +1753,14 @@ def verify_coupon_restriction_message(setup_platform):
     print("verify a warning should appear with the message 'Promo not applied'")
     AndroidOfferPage(setup_platform).verify_coupon_restriction_message()
 
+@then("I verify the discount should be successfully applied")
+@allure.step("When I verify the discount should be successfully applied")
+def verify_discount_prices_in_order_summary(setup_platform):
+    print("verify the discount should be successfully applied")
+    view_cart = ViewCartPage(setup_platform)
+    view_cart.step_capture_total_before_applying_promo() 
+    view_cart.verify_discount_is_applied_correctly()
+
 
 
 
