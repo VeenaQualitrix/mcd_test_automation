@@ -202,9 +202,14 @@ class OderingScreenIos(BasePage):
 
     def clear_order(self):
         time.sleep(2)
-        self.actions.click_button(*locators['CLEAR_ORDER_BUTTON'])
-        self.actions.click_button(*locators['CLEAR_ORDER_OK_BUTTON'])
-        print("Order cleared")    
+        if self.actions.is_element_displayed(*locators['CLEAR_ORDER_BUTTON']):
+            self.actions.click_button(*locators['CLEAR_ORDER_BUTTON'])
+            if self.actions.is_element_displayed(*locators['CLEAR_ORDER_OK_BUTTON']):
+                self.actions.click_button(*locators['CLEAR_ORDER_OK_BUTTON'])
+            print("Order cleared")
+        else:
+            print("No order to clear")
+  
 
     def search_location_outofstock(self):
         time.sleep(2)

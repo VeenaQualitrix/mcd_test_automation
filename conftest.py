@@ -19,20 +19,21 @@ import re
 import urllib3
 import wget
 import logging
+# from src.app.application import Application
+# from appium.webdriver.common.appiumby import AppiumBy
+# from appium.webdriver.webdriver import AppiumOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 from selenium import webdriver as browserDriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
 
 import os
 from pathlib import Path
 import time
-import pandas as pd
 import zipfile
 import signal
 
@@ -79,22 +80,29 @@ def env(request):
 
 
 def launchChromeheadless():
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model (recommended for headless mode)
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems in Docker containers
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--ignore-certificate-errors")
-    chrome_options.add_argument("--disable-web-security")
-    chrome_options.add_argument("--allow-insecure-localhost")
-    #chrome_options.add_argument("--headless=old")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option("useAutomationExtension", False)
-    chrome_options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.110 Safari/537.36")
-    service = Service(ChromeDriverManager().install())
-    browserDriver = webdriver.Chrome(service=service, options=chrome_options)
-    return browserDriver
+    options = webdriver.ChromeOptions()
+    # Chrome headless and cert handling
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--ignore-ssl-errors=yes")
+    options.set_capability("acceptInsecureCerts", True)
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option("useAutomationExtension", False)
+    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.110 Safari/537.36")
+
+    driver_path = ChromeDriverManager().install()
+    if "THIRD_PARTY_NOTICES" in driver_path or "LICENSE" in driver_path:
+        folder = os.path.dirname(driver_path)
+        driver_path = os.path.join(folder, "chromedriver")
+
+    service = ChromeService(driver_path)
+    driver = webdriver.Chrome(service=service, options=options)
+    return driver
 
 
 
@@ -103,16 +111,14 @@ def get_admin_server(request):
     server_value = request.config.getoption("--qaserver")
     admin_server_url = readConstants("admin_app_url")
     print('admin_server_url===', admin_server_url.format(server_value))
-    # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-    # browserDriver = launchChromeBrowser()
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    browserDriver = launchChromeBrowser()
     browserDriver = launchChromeheadless()
     print("launch portal")
     browserDriver.get(admin_server_url.format(server_value))
     browserDriver.save_screenshot("headless_mode_test.png")
     yield browserDriver
     # browserDriver.close
-
-
 
 
 def load_capabilities(config_name):
@@ -144,16 +150,6 @@ def readPreReqJson(prereqFileName, constant_key):
         costant_value = json.load(constant_file)
     return costant_value.get(constant_key)
 
-def readExcelColumn(excel_file_name, sheet_name=0, column_name="Product Name"):
-    # Get project root and construct the full path to the Excel file
-    project_root = os.getcwd()
-    excel_file_path = os.path.join(project_root, 'util', excel_file_name + '.xlsx')
-
-    # Read Excel file using pandas
-    df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
-
-    # Return non-empty values from the specified column as a list
-    return df[column_name].dropna().tolist()
 
 def start_appium_service_with_retry(port=4723, retries=3, delay=5):
     appium_service = AppiumService()
@@ -194,102 +190,120 @@ def kill_process_on_port(port):
     except Exception as e:
         print(f"Error killing process on port {port}: {e}")
 
-
-def kill_process_on_port(port):
-    try:
-        # Use lsof to find the PID and kill it
-        result = os.popen(f"lsof -ti:{port}").read().strip()
-        if result:
-            print(f"Killing process with PID: {result} on port {port}.")
-            os.system(f"kill -9 {result}")
-        else:
-            print(f"No process found running on port {port}.")
-    except Exception as e:
-        print(f"Error killing process on port {port}: {e}")
-
 @pytest.fixture(scope="class", autouse=False)
 def setup_platform(env, request):
     driver = None
-    appium_service = None
-
-    currentPlatform = env.lower()
-    print(f"[DEBUG] Current platform selected: {currentPlatform}")
-
-    # Android Setup
+    """
+        Fixture for setting up the testing environment.
+    """
+    project_root = os.getcwd()
+    constants_path = os.path.join(project_root, 'util', 'constants.json')
+    with open(constants_path) as constant_file:
+        costant_value = json.load(constant_file)
+       
+    with open(constants_path, "w") as constant_file:
+        json.dump(costant_value, constant_file, indent=4)              
+    currentPlatform = env
+    appToLaunch = request.config.getoption("--appFileName")
+   
+    print('currentApp', currentPlatform)
     if currentPlatform == 'android':
-        print("[DEBUG] Starting Appium for Android...")
+        print("Inside android")
         appium_service = AppiumService()
         appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
         if not appium_service.is_running:
             raise Exception("Appium server did not start!")
 
         capabilities = load_capabilities(currentPlatform)
-        print("[DEBUG] Loaded Android capabilities:", capabilities)
-
+        appPath = os.path.abspath(os.getcwd())
+       
+        capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
+        print('capabilities to load', capabilities)
+        
         options = UiAutomator2Options().load_capabilities(capabilities)
+        print("loadingoptions ====", options)
 
-        def create_android_driver():
-            drv = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
-            drv.implicitly_wait(10)
-            WebDriverWait(drv, 30).until(lambda d: d.current_activity is not None)
-            print("[DEBUG] Android driver launched successfully.")
-            return drv
-
-        driver = create_android_driver()
-
-        # Restart app cleanly
-        app_package = readConstants("current_app_package")
+        # capabilities_options = UiAutomator2Options().load_capabilities(capabilities)
         try:
-            driver.terminate_app(app_package)
+            print("am i relunching app?=============================")
+            driver = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
+            print(" firetv driver started=====")
+            print(" firetv driver started=  driver type ====", type(driver))
+            driver.terminate_app(readConstants("current_app_package"))
             time.sleep(2)
-            driver.activate_app(app_package)
+            driver.close
+            # Launch (activate) the app again
+            driver.activate_app(readConstants("current_app_package"))
+            
+            driver.implicitly_wait(10)
         except Exception as e:
-            print(f"[WARN] Failed to restart Android app: {e}")
+            print("firetv appluanch error ===", e)
+    
+        except Exception as e:
+            print("firetv appluanch error ===", e)
 
-    # Web Setup
-    elif currentPlatform == 'web':
+    if currentPlatform == 'web':
         driver = launchChromeheadless()
-        print("[DEBUG] Web driver launched successfully.")
+        print("launch chrome browser ", type(driver))
 
-    # iOS Setup
-    elif currentPlatform == 'ios':
-        print("[DEBUG] Starting Appium for iOS...")
+    if currentPlatform == 'ios':
+        print("launch apple tv")
         appium_service = start_appium_service_with_retry()
+        appium_service.start()
+        webDriverAgentUrl = request.config.getoption("--webDriverAgentUrl")
         if not appium_service.is_running:
             raise Exception("Appium server did not start!")
-
+        appToLaunch = request.config.getoption("--appFileName")
+        bundleId = request.config.getoption("app_package_name")
         capabilities = load_capabilities(currentPlatform)
-        webDriverAgentUrl = request.config.getoption("--webDriverAgentUrl")
+        appPath = os.path.abspath(os.getcwd())
         capabilities["webDriverAgentUrl"] = webDriverAgentUrl
+        print('capabilities to load for iOS', capabilities)
+
+        print(os.path.abspath(os.getcwd()))
 
         options = XCUITestOptions().load_capabilities(capabilities)
+        print("loadingoptions ====", options)
+        try:
+            print("am i relunching app?=============================")
+            for attempt in range(3):
+                try:
+                    driver = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
+                    if driver is not None:
+                        break
+                except Exception as e:
+                    print(f"Attempt {attempt + 1} to create driver failed: {e}")
+                    time.sleep(5)
+            print("iOS driver started=====")
+            print("iOS driver started=  driver type ====", type(driver))
+            driver.implicitly_wait(30)
+            bundleId= 'com.il.mcd'
+            try:
+                driver.execute_script('mobile: terminateApp', {'bundleId': bundleId})
 
-        def create_ios_driver():
-            drv = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
-            drv.implicitly_wait(30)
-            return drv
-
-        driver = create_ios_driver()
-
-    else:
-        raise ValueError(f"Unknown platform: {currentPlatform}")
-
-    yield driver
-
-    # Teardown
+            except Exception as e:
+                print(f"Failed to terminate app {bundleId}: {e}")
+            driver.execute_script('mobile: activateApp', {'bundleId': bundleId})
+        except Exception as e:
+            print("iOS appluanch error ===", e)
+        
     if driver:
-        try:
+        print('yeidling driver instance condition')
+        yield driver
+        print('after yielding driver')
+        if isinstance(driver, appiumDriver.Remote):
+            print('Inside tear down')
+            # driver.quit()
+            if currentPlatform == 'ios':
+                appium_service.stop()
+        if isinstance(driver, browserDriver.chrome.webdriver.WebDriver):
+            print('Inside tear down for web ')
             driver.quit()
-            print("[DEBUG] Driver quit successfully.")
-        except Exception as e:
-            print(f"[WARN] Error quitting driver: {e}")
+            # appium_service.stop()
+    else:
+        print('yielding nothing')
+        yield None
 
-    if appium_service and appium_service.is_running:
-        try:
-            appium_service.stop()
-            print("[DEBUG] Appium service stopped successfully.")
-        except Exception as e:
-            print(f"[WARN] Error stopping Appium service: {e}")
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -312,8 +326,16 @@ def pytest_runtest_makereport(item, call):
             print("coming to take screenshot for failure")
             if isinstance(driver, webdriver):
                 screenshot = driver.get_screenshot_as_png()
-                print("secnario is failed so trying to kill app and relaunch " ,readConstants("current_app_package"))
-                driver.terminate_app(readConstants("current_app_package"))
+                print("secnario is failed so trying to kill app and relaunch ", readConstants("current_app_package"))
+                # driver.terminate_app(readConstants("current_app_package"))
+                try:
+                    # Attempt to terminate using Appium
+                    driver_status = driver.terminate_app(readConstants("current_app_package"))
+                    print(f"status of the driver is: ======================= {driver_status}")
+                except Exception as e:
+                    print(f"Appium terminate_app failed: {e}. Trying force stop.")
+                    # Fallback to ADB force stop
+                    os.system(f"adb shell am force-stop {readConstants('current_app_package')}")
                 time.sleep(2)
                 print("app killed====lets relaunch")
                 driver.activate_app(readConstants("current_app_package"))
@@ -324,6 +346,8 @@ def pytest_runtest_makereport(item, call):
                 print("its roku report")    
 
         # Make sure the setup_platform fixture is called
+
+        
         mode = 'a' if os.path.exists('failures') else 'w'
         try:
             with open('failures', mode) as f:
@@ -348,6 +372,42 @@ consecutive_failure_count = 5
 consecutive_failures = 0
 
 
+def pytest_configure(config):
+    global consecutive_failure_abort, consecutive_failure_count
+    consecutive_failure_abort = config.getoption("--consecutive_failure_abort")
+    print("Consecutive failure value", consecutive_failure_abort, type(consecutive_failure_abort))
+    if config.getoption("--consecutive_failure_count"):
+        consecutive_failure_count = int(config.getoption("--consecutive_failure_count"))
+
+    app_file = config.getoption("--appFileName")
+    app_package_name = config.getoption("--app_package_name")
+    current_platform = config.getoption("--platform")
+    webDriverAgentUrl = config.getoption("--webDriverAgentUrl")
+    # if not app_file and current_platform == "android":
+    #     raise pytest.UsageError("--appFileName is required")
+
+    # if not app_package_name and current_platform == "android":
+    #     raise pytest.UsageError("--app_package_name is required")
+
+    # if not webDriverAgentUrl and current_platform == "ios":
+        # raise pytest.UsageError("--webDriverAgentUrl is required")
+
+    #isScreenshoreRequired = config.getoption("--screenShotToggle")
+
+    # project_root = os.getcwd()
+    # constants_path = os.path.join(project_root, 'utils', 'constants.json')
+    # with open(constants_path) as constant_file:
+    #     costant_value = json.load(constant_file)
+    # costant_value["current_app_package"] = app_package_name
+    # print("reading from cons for screenshot ===", costant_value["NEED_SCREENSHOTS_FOR_PASS"])
+    # print("reading run tim e setup screenshot ===", isScreenshoreRequired)
+    # costant_value["NEED_SCREENSHOTS_FOR_PASS"] = isScreenshoreRequired
+    # print("reading from cons for screenshot after update ===", costant_value["NEED_SCREENSHOTS_FOR_PASS"])
+
+    # print("final value for screenshot ===", costant_value["NEED_SCREENSHOTS_FOR_PASS"])
+
+    # with open(constants_path, "w") as constant_file:
+    #     json.dump(costant_value, constant_file, indent=4)
 
 
 def pytest_runtest_logreport(report):
@@ -375,18 +435,25 @@ def updateConstantFile(contantKey, ConstantValue):
     costant_value[contantKey] = ConstantValue
     with open(constants_path, "w") as constant_file:
         json.dump(costant_value, constant_file, indent=4) 
-
-@pytest.fixture
-def user_data_store():
-    """Fixture to store user input temporarily across steps."""
-    return {}
-
-@pytest.fixture
-def context():
-    return {}
-
-
-
-
     
 
+@pytest.fixture(scope="session", autouse=False)
+def mobile_driver():
+
+    desired_caps = {
+        "platformName": "iOS",
+        "platformVersion": "18.5",
+        "deviceName": "Sunil's iPhone",
+        "automationName": "XCUITest",
+        "appPackage": "com.il.mcd",
+        "appActivity": "com.mcdonalds.mobileapp/.MainActivity",
+        "noReset": False,
+        "fullReset": False
+    }
+    appium_service = AppiumService()
+    appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
+    if not appium_service.is_running:
+        raise Exception("Appium server did not start!") 
+    
+
+    

@@ -9,6 +9,7 @@ from pages.mobile.switching_screen_ios import SwitchScreenIos
 from pages.mobile.address_store_screen_ios import AddressStoreScreenIos
 from pages.mobile.Oderingflow_screen_ios import OderingScreenIos
 from pages.mobile.Cart_screen_ios import CartScreenIos
+from pages.mobile.searchflow_screen_ios import SearchScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -1039,3 +1040,116 @@ def click_discount_flat(setup_platform):
 @allure.step("Verify discount is correctly deducted from subtotal in order summary")
 def verify_discount_deduction(setup_platform):
     CartScreenIos(setup_platform).validate_discount_deduction()
+
+@then("I enter the expired promo code")
+@allure.step("Enter the expired promo code into the promo field")
+def enter_expired_promo_code(setup_platform):
+    expired_code = readPreReqJson("test_data", "Expired_Promo_Code")
+    print(f"Entering expired promo code: {expired_code}")
+    CartScreenIos(setup_platform).enter_promo_code(expired_code)
+
+@then("I should see a message indicating the code is invalid or expired")
+@allure.step("Verify error message for invalid/expired promo code")
+def verify_expired_promo_message(setup_platform):
+    expected_message = readPreReqJson("test_data", "Expired_Promo_Message")
+    CartScreenIos(setup_platform).verify_expired_promo_message(expected_message)
+
+
+@then("I add a delivery instruction in the cart using emojis or special characters")
+@allure.step("Add delivery instruction in the cart with emojis/special characters")
+def add_delivery_instruction_with_special_chars(setup_platform):
+    notes = readPreReqJson("test_data", "Special_Notes")
+    print(f"Adding delivery instruction with special characters: {notes}")
+    CartScreenIos(setup_platform).add_delivery_instruction(notes)
+
+@then("I select location")
+@allure.step("Select delivery location")
+def select_location(setup_platform):
+    CartScreenIos(setup_platform).select_location()
+
+
+@when("I click on the Search icon")
+@allure.step("Click on the Search icon")
+def click_search_icon(setup_platform):
+    SearchScreenIos(setup_platform).click_search_icon()
+
+@when("I enter Fries in the search bar")
+@allure.step("Enter menu item in the search bar")
+def enter_menu_item(setup_platform):
+    menu_item = readPreReqJson("test_data", "menu_item") 
+    print(f"Entering menu item: {menu_item}")
+    SearchScreenIos(setup_platform).enter_search_text(menu_item) 
+
+@when("I click on the search icon inside the search bar")
+@allure.step("Click on the search icon inside the search bar")
+def click_search_icon_inside(setup_platform):
+    SearchScreenIos(setup_platform).click_search_icon_inside()      
+
+@then("I verify the search results display matching items")
+@allure.step("Verify search results display matching items")
+def verify_search_results(setup_platform):
+    expected_item = readPreReqJson("test_data", "fries_item_display")
+    actual_results = SearchScreenIos(setup_platform).get_search_results()
+    assert expected_item in actual_results, f"Expected '{expected_item}' in search results, but got {actual_results}"
+    print(f"Verified search results contain: {expected_item}")    
+
+@when("I enter a non-existent menu item")
+@allure.step("Enter a non-existent menu item")
+def enter_nonexistent_item(setup_platform):
+    menu_item = readPreReqJson("test_data", "menu_item_nonexistent")
+    print(f"Entering non-existent menu item: {menu_item}")
+    SearchScreenIos(setup_platform).enter_search_text(menu_item)    
+
+
+@then("I verify the No items found message is displayed")
+@allure.step("Verify the No items found message is displayed")
+def verify_no_items_message(setup_platform):
+    expected_message = readPreReqJson("test_data", "no_items_message")
+    actual_message = SearchScreenIos(setup_platform).get_no_items_message()
+    assert actual_message == expected_message, f"Expected '{expected_message}' but got '{actual_message}'"
+    print(f"Verified No items found message: {actual_message}")
+
+@then("I verify the prompt message is displayed for empty input")
+@allure.step("Verify the prompt message is displayed for empty input")
+def verify_empty_search_prompt(setup_platform):
+    expected_message = readPreReqJson("test_data", "empty_search_message")
+    actual_message = SearchScreenIos(setup_platform).get_no_items_empty_message()
+    assert actual_message == expected_message, f"Expected '{expected_message}' but got '{actual_message}'"
+    print(f"Verified empty search prompt message: {actual_message}")
+
+@then("I verify the item is added in the cart")
+@allure.step("Verify the item is added in the cart")
+def verify_item_in_cart(setup_platform):
+    expected_item = "Fries" 
+    actual_item = SearchScreenIos(setup_platform).get_cart_item_name()
+    # check if expected_item is part of the actual text
+    assert expected_item in actual_item, f"Expected '{expected_item}' in cart item but found '{actual_item}'"
+    print(f"Verified item is added in the cart: {actual_item}")
+
+@when("I enter Burger in the search bar")
+@allure.step("Enter 'Burger' in the search bar")
+def enter_burger_in_search_bar(setup_platform):
+    menu_item = readPreReqJson("test_data", "Burger")
+    print(f"Entering menu item: {menu_item}")
+    SearchScreenIos(setup_platform).enter_search_text(menu_item)
+
+
+
+@then("I verify the search results for Burger are still displayed")
+@allure.step("Verify the search results for Burger are still displayed")
+def verify_burger_search_results_persist(setup_platform):
+    results = SearchScreenIos(setup_platform).burger_display_in_search()
+    print(f"Search results captured: {results}")
+    assert any("burger" in item.lower() for item in results), \
+        f"No results found containing 'Burger'. Actual results: {results}"
+    print("Verified search results still displayed for: Burger")
+
+
+@then('I verify the placeholder text in the search bar is displayed as Search here')
+@allure.step("Verify placeholder text in the search bar is displayed as 'Search here'")
+def verify_search_placeholder_text(setup_platform):
+    expected_placeholder = "Search here"
+    actual_placeholder = SearchScreenIos(setup_platform).get_search_placeholder_text()
+    assert expected_placeholder == actual_placeholder, \
+        f"Expected placeholder '{expected_placeholder}' but found '{actual_placeholder}'"
+    print(f"Verified placeholder text in search bar: {actual_placeholder}")

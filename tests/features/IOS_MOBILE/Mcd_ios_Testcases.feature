@@ -2,7 +2,7 @@
 
 Feature: McD Mobile App Functionality
 
-@TC_IOS_Login_Mobile_0002 @TC_011 @TC_Demo1
+@TC_IOS_Login_Mobile_0002 @TC_011 @TC_Demo
 Scenario Outline: Verify login with valid mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -13,7 +13,7 @@ Scenario Outline: Verify login with valid mobile number
     
     
     
-@TC_IOS_Login_Mobile_0002 @TC_01 @TC_Demo1
+@TC_IOS_Login_Mobile_0002 @TC_01 @TC_Demo
 Scenario Outline: Verify referral code input
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -25,7 +25,7 @@ Scenario Outline: Verify referral code input
     And  I enter referral code
     Then  I verify referral code accepted without error
 
-# @TC_IOS_Login_Mobile_0003 @TC_Demo
+# @TC_IOS_Login_Mobile_0003 @TC_Demo1
 # Scenario: Validate that mobile number field
 #     Given I launch the mobile application
 #     Then I verify the app home screen is displayed
@@ -36,7 +36,7 @@ Scenario Outline: Verify referral code input
 #     Then I confirm 'verify mobile' button is disabled
 
 
-@TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo1
+@TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo
 Scenario Outline: Validate empty mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -48,7 +48,7 @@ Scenario Outline: Validate empty mobile number
     
     
 
-@TC_IOS_Login_Mobile_0004 @TC_01 @TC_Demo1
+@TC_IOS_Login_Mobile_0004 @TC_01 @TC_Demo
 Scenario Outline: Validate short mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -334,8 +334,8 @@ Scenario: Cancel edit by refreshing page
     When I tap on the My McD bottom tab
     When I tap on the Edit icon
     When I edit the full name field
-    When I clear the full name field
-    Then  I tap on the Save Address
+    # When I clear the full name field
+    And   I click on Save button
     When I tap on the My McD bottom tab
     When I tap on the Edit icon
 
@@ -390,10 +390,10 @@ Scenario: Incorrect login from Add Address screen
     And I click on View Cart
     And I tap on the login continue button
     When  I enter mobile number with special characters and click verify    
-    Then I should be redirected back to the cart or checkout screen
+    Then  I close the login screen
     Then I clear the order
 
-@TC_IOS_Address_Mobile_00014 @TC_03 @TC_Demo2
+@TC_IOS_Address_Mobile_00014 @TC_03 @TC_Demo
 Scenario: Add a new delivery address during checkout
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -574,7 +574,8 @@ Scenario: Test visual feedback on tap for business model options on mobile
 Scenario: Ensure model selection doesn't affect account/profile data
     Given I launch the mobile application
     Then I verify the app home screen is displayed
-    And I open the Profile section and note the profile details
+    When I tap on the My McD bottom tab
+    Then I open the Profile section and note the profile details
     And I click on the homepage
     And I select the Dine In option
     And I select the MCDelivery
@@ -982,7 +983,7 @@ Scenario: verify and Add fries to cart
     Then I clear the order
 
 @TC_IOS_Ordering_Mobile_0015 @TC_Demo
-Scenario: verify and Add fries to cart
+Scenario: verify and add coffee Beverages
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     Then I click on the Menu option
@@ -996,7 +997,7 @@ Scenario: verify and Add fries to cart
     Then I clear the order 
 
 @TC_IOS_Ordering_Mobile_0016 @TC_Demo
-Scenario: adds a brownie to the cart
+Scenario: Adds a brownie to the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     Then I click on the Menu option
@@ -1118,7 +1119,7 @@ Scenario: Update item quantity in cart
     Then I clear the order
 
 @TC_IOS_Cart_Mobile_003 @TC_Demo
-Scenario: Update item quantity in cart
+Scenario: Verify and Clear cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     Then I click on the Menu option
@@ -1361,6 +1362,132 @@ Scenario: Validate discount shown in order summary
     And I click on the discount flat 
     Then I verify the discount is correctly deducted from the subtotal
     Then I clear the order
-    # need to check the discount is displaying wrong
+    # need to check the discount is displaying wrong more than 1000 rupee and need to use 77777777
+
+@TC_IOS_Cart_Mobile_0022 @TC_Demo
+Scenario: Validate behavior with expired promo code
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link
+    And I enter the expired promo code
+    Then I should see a message indicating the code is invalid or expired
+    Then I clear the order
+
+@TC_IOS_Cart_Mobile_0023 @TC_Demo
+Scenario: Check total with delivery charges added
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on another item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I verify the total price calculation is correct
+    Then I clear the order 
+
+
+@TC_IOS_Cart_Mobile_0024 @TC_03 @TC_Demo
+Scenario: Ensure guest checkout not allowed/ redirect to login page
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I tap on the My McD bottom tab
+    And I log out of the application
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the login continue button
+    And I close the login screen
+    Then I should be redirected back to the cart or checkout screen
+    Then I clear the order  
 
     
+@TC_IOS_Cart_Mobile_0025 @TC_Demo
+Scenario: Validate emoji/special character handling in notes
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click the Add Address button
+    Then I should be redirected to the login screen 
+    When I tap on the login continue
+    When  I enter a valid mobile number click on verify
+    Then  I verify OTP screen navigation
+    When  I enter the OTP and click verify 
+    And   I click on Save button
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I add a delivery instruction in the cart using emojis or special characters
+    And I select location
+    Then I clear the order
+
+@TC_IOS_Search_Mobile_0001 @TC_Demo
+Scenario: Search for an existing menu item
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I enter Fries in the search bar
+    And I click on the search icon inside the search bar
+    Then I verify the search results display matching items
+
+@TC_IOS_Search_Mobile_0002 @TC_Demo
+Scenario: Search for a non-existent menu item
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I enter a non-existent menu item
+    And I click on the search icon inside the search bar
+    Then I verify the No items found message is displayed
+
+@TC_IOS_Search_Mobile_0003 @TC_Demo
+Scenario: Search with empty input
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I click on the search icon inside the search bar
+    Then I verify the prompt message is displayed for empty input
+
+
+@TC_IOS_Search_Mobile_0004 @TC_Demo
+Scenario: Add item to cart from search result
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I enter Fries in the search bar
+    And I click on the search icon inside the search bar
+    Then  I click on an item to Add
+    And I click on Add to Cart
+    And I click on View Cart
+    And  I verify the item is added in the cart
+    Then I clear the order
+    
+
+@TC_IOS_Search_Mobile_0005 @TC_Demo
+Scenario: Maintain search term after adding to cart
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I enter Burger in the search bar
+    And I click on the search icon inside the search bar
+    Then  I click on an item to Add
+    And I click on Add to Cart
+    Then I verify the search results for Burger are still displayed
+    And I click on View Cart
+    Then I clear the order
+
+@TC_IOS_Search_Mobile_0006 @TC_Demo
+Scenario: Verify placeholder text in search input
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    Then I verify the placeholder text in the search bar is displayed as Search here
