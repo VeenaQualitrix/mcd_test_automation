@@ -44,7 +44,7 @@ locators = {
 
 'DONATION_AMOUNT': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="₹ 3.00"]'),
 
-'VIEW_ALL_OFFERS': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="View All"]'),
+'VIEW_ALL_OFFERS': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="View All Offers"]'),
 
 'OFFERS_PAGE_HEADER': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Offers For You"]'),
 
@@ -253,9 +253,15 @@ class CartScreenIos(BasePage):
             print("Donation amount element not found, assuming it's removed.")
 
     def click_view_all_offers(self):
+        print("Scrolling to 'View All Offers'...")
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name == 'Offers For You'"
+        })
         print("Clicking on 'View All Offers' link...")
         self.actions.click_button(*locators['VIEW_ALL_OFFERS'])
         print("'View All Offers' clicked successfully.")
+
 
 
     def verify_offers_page_is_visible(self):

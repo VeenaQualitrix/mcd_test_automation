@@ -20,6 +20,12 @@
     "no_items_message": "No matching item found",
     "empty_search_message": "Search menu item",
     "Burger": "Burger",
-    "search_burger": "Burger"
+    "search_burger": "Burger",
+    "Veg_Filter": "McVeggie Burger + Fries (M)",
+    "NonVeg_Filter": "Big Spicy Chicken Wrap",
+    "Veg_Burger_Filter": "Burger Combo for 2: McSpicy Deluxe Paneer Burger",
+    "Wrap": "Big Spicy Paneer Wrap Combo",
+    "Valid_Coupon_Code": "FLAT10"
+
 
 }

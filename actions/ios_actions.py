@@ -475,7 +475,12 @@ class iOSActions(ActionsParent):
         time.sleep(2)
 
     
+    
+    
     def find_elements(self, by, value):
         return self.driver.find_elements(by, value)
+    
+    def find_element(self, by, value):
+        return self.driver.find_element(by, value)
 
     

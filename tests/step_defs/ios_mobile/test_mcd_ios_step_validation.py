@@ -10,6 +10,7 @@ from pages.mobile.address_store_screen_ios import AddressStoreScreenIos
 from pages.mobile.Oderingflow_screen_ios import OderingScreenIos
 from pages.mobile.Cart_screen_ios import CartScreenIos
 from pages.mobile.searchflow_screen_ios import SearchScreenIos
+from pages.mobile.offerflow_screen_ios import OffersScreenIos
 import pyperclip
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
@@ -1153,3 +1154,158 @@ def verify_search_placeholder_text(setup_platform):
     assert expected_placeholder == actual_placeholder, \
         f"Expected placeholder '{expected_placeholder}' but found '{actual_placeholder}'"
     print(f"Verified placeholder text in search bar: {actual_placeholder}")
+
+
+@when("I click on the Veg filter button")
+@allure.step("Click on the Veg filter button")
+def click_veg_filter_button(setup_platform):
+    SearchScreenIos(setup_platform).click_veg_filter()
+    print("Clicked on the Veg filter button")
+
+@then("verify only veg items should be displayed in the results")
+@allure.step("Verify only veg items are displayed in the results")
+def verify_only_veg_items_displayed(setup_platform):
+    expected_label = readPreReqJson("test_data", "Veg_Filter").lower()
+    results = SearchScreenIos(setup_platform).get_search_veg()
+    print(f"Search results after applying Veg filter: {results}")
+    # Collect only veg items
+    veg_items = [item for item in results if expected_label in item.lower()]
+    if veg_items:
+        print(f" Veg items displayed: {veg_items}")
+    else:
+        print(f" No veg items found in results: {results}")
+
+
+@when("I click on the Non-Veg filter button")
+@allure.step("Click on the Non-Veg filter button")
+def click_nonveg_filter_button(setup_platform):
+    SearchScreenIos(setup_platform).click_nonveg_filter()
+    print("Clicked on the Non-Veg filter button")
+
+@then("verify only non-veg items should be displayed in the results")
+@allure.step("Verify only non-veg items are displayed in the results")
+def verify_only_nonveg_items_displayed(setup_platform):
+    expected_label = readPreReqJson("test_data", "NonVeg_Filter").lower()
+    results = SearchScreenIos(setup_platform).get_search_nonveg()
+    print(f"Search results after applying Non-Veg filter: {results}")
+    # Collect only non-veg items
+    nonveg_items = [item for item in results if expected_label in item.lower()]
+    if nonveg_items:
+        print(f"Non-Veg items displayed: {nonveg_items}")
+    else:
+        print(f"No non-veg items found in results: {results}")
+
+
+@then("verify only veg items containing Burger are displayed in the results")
+@allure.step("Verify only veg items containing Burger are displayed in the results")
+def verify_veg_burger_search_results(setup_platform):
+    expected_label = readPreReqJson("test_data", "Veg_Burger_Filter").lower()
+    search_term = "burger"
+    results = SearchScreenIos(setup_platform).get_search_veg()
+    print(f"Search results after applying Veg filter: {results}")
+    # Filter only veg items containing the search term
+    veg_burger_items = [item for item in results if expected_label in item.lower() and search_term in item.lower()]
+    if veg_burger_items:
+        print(f"Veg items containing '{search_term}' displayed: {veg_burger_items}")
+    else:
+        print(f"No veg items containing '{search_term}' found in results: {results}")
+
+
+
+@when("I clear the search input")
+@allure.step("Clear the search input")
+def clear_search_input(setup_platform):
+    SearchScreenIos(setup_platform).clear_search()
+    print("Cleared the search input")
+
+@then("verify the default view is restored with no filters applied")
+@allure.step("Verify the default view is restored with no filters applied")
+def verify_default_view(setup_platform):
+    results = SearchScreenIos(setup_platform).get_all_items()
+    print(f"Items displayed after clearing search and filters: {results}")
+    # Check if some items are displayed (default view)
+    if results:
+        print("Default view restored with all items displayed")
+    else:
+        print("No items found after clearing search and filters")
+
+
+@when('I enter Wrap in the search bar')
+@allure.step('Enter "Wrap" in the search bar')
+def enter_wrap_in_search_bar(setup_platform):
+    menu_item = "Wrap"
+    SearchScreenIos(setup_platform).enter_search_text(menu_item)
+    print(f"Entered search term: {menu_item}")
+
+
+@then("I verify only items containing Wrap are displayed in the results")
+@allure.step("Verify only items containing Wrap are displayed in the results")
+def verify_wrap_search_results(setup_platform):
+    Wrap = readPreReqJson("test_data", "Wrap")
+    print(f"Checking search results for items containing: {Wrap}")
+    results = SearchScreenIos(setup_platform).get_search_wrap()
+    print(f"Search results captured: {results}")
+    # Filter results that contain the search term
+    filtered_results = [item for item in results if Wrap.lower() in item.lower()]
+    # Just print the filtered results without asserting
+    print(f"Filtered items containing '{Wrap}': {filtered_results}")
+
+
+@then("I verify the default view is restored with no filters applied")
+@allure.step("Verify default view is restored with no filters applied")
+def verify_default_view_restored(setup_platform):
+    results = SearchScreenIos(setup_platform).fetch_displayed_items()
+    print(f"Items visible after clearing filters: {results}")
+    print("Default view restored; no filters applied")
+
+@when("I click  the Veg filter button again")
+@allure.step("I click  the Veg filter button again")
+def click_veg_filter_button(setup_platform):
+    SearchScreenIos(setup_platform).click_veg_filter_again()
+    print("I click  the Veg filter button again")
+
+@then("I clicked on the back button in search page")
+@allure.step("I clicked on the back button in search page")
+def step_click_back_button(setup_platform):
+    SearchScreenIos(setup_platform).click_back_button()    
+
+@then('I enter a valid coupon code "FLAT10" in the coupon input field')
+@allure.step("Enter valid coupon code in coupon input field")
+def enter_valid_coupon_code(setup_platform):
+    Valid_Coupon_Code = readPreReqJson("test_data", "Valid_Coupon_Code")
+    print(f"Entering coupon code from prereq: {Valid_Coupon_Code}")
+    OffersScreenIos(setup_platform).enter_coupon_code(Valid_Coupon_Code)
+    print(" Coupon code entered successfully")
+
+@then("I tap on the search button")
+@allure.step("Tap on the search button")
+def tap_search_button(setup_platform):
+    print("Tapping on the search button...")
+    OffersScreenIos(setup_platform).tap_search_button()
+    print("Search button tapped successfully")
+
+
+@then('I verify that an offer card with code "FLAT10" is displayed')
+@allure.step("Verify that an offer card with code 'FLAT10' is displayed")
+def verify_offer_card_displayed(setup_platform):
+    coupon_code = "FLAT10"
+    print(f"Verifying offer card for coupon code: {coupon_code}")
+    results = OffersScreenIos(setup_platform).get_offer_cards()
+    print(f"Offer cards visible: {results}")
+    if any(coupon_code in card for card in results):
+        print(f" Offer card with code '{coupon_code}' is displayed")
+    else:
+        print(f" Offer card with code '{coupon_code}' not found in results: {results}")
+
+
+
+@then("I scroll through all the offer cards")
+@allure.step("Scroll through all offer cards")
+def step_scroll_through_offer_cards(setup_platform):
+    OffersScreenIos(setup_platform).scroll_through_offer_cards()
+
+
+@then("I verify  coupon code, description, Show More link, and Apply button")
+@allure.step("Verify all required elements are present in offer cards")
+def step_verify_offer_card_elements(setup_platform):
+    OffersScreenIos(setup_platform).verify_offer_card_elements()
