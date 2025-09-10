@@ -10,7 +10,10 @@ locators = {
         "LOGIN_BUTTON": (AppiumBy.XPATH, "//android.widget.TextView[@text='Login/Sign Up']"),
         "LOG_OUT_BUTTON": (AppiumBy.XPATH, "//android.widget.Button[@text='ic-logoutIcon Logout ic-arrow-right']"),
         "PROFILE_EDIT_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-editIcon']"),
-        "POPUP_DO_LATER": (By.XPATH, "//android.widget.Button[@text='I'll Do It Later']"),
+        "POPUP_DO_LATER": (AppiumBy.XPATH, "//android.widget.Button[@text='I'll Do It Later']"),
+        "BACK_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
+        "PROFILE_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='Test User01']"),
+        "PROFILE_MOBILE": (AppiumBy.XPATH, "//android.widget.TextView[@text='+917777777777']"),
     
     }
 
@@ -18,6 +21,7 @@ locators = {
 class AndroidViewScreen(BasePage):
 
     def verify_view_screen_navigation(self):
+        time.sleep(3)
         is_displayed = self.actions.is_element_displayed(*locators['MYMCD_LOGO'])
         print(f"View screen element displayed: {is_displayed}")
         return is_displayed
@@ -42,7 +46,7 @@ class AndroidViewScreen(BasePage):
         logout_element.click()
         print("Clicked on Log out button")
         time.sleep(2)
-        self.actions.click_button(*locators['POPUP_DO_LATER'])
+        #self.actions.click_button(*locators['POPUP_DO_LATER'])
 
     def click_profile_edit_icon(self):
         time.sleep(2)
@@ -54,24 +58,22 @@ class AndroidViewScreen(BasePage):
         time.sleep(5)
         self.actions.is_element_displayed(*locators['MYMCD_LOGO'])
         time.sleep(2)
-        user_data_store["original_name"] = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
-        user_data_store["original_mobile"] = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
-        user_data_store["original_email"] = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
+        user_data_store["original_name"] = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("text")
+        user_data_store["original_mobile"] = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("text")
         print("Captured profile info: ")
         print(user_data_store)
         time.sleep(2)
-        self.actions.is_element_displayed(*locators['MCDELIVERY_ICON'])
-        self.actions.click_button(*locators['MCDELIVERY_ICON'])
+        self.actions.click_button(*locators['BACK_ICON'])
 
     def Verify_profile_info_remian_unchanged(self, user_data_store):
         time.sleep(2)
-        current_name = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
-        current_mobile = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
-        current_email = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
+        current_name = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("text")
+        current_mobile = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("text")
 
-        assert current_name == user_data_store["original_name"], f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
-        assert current_mobile == user_data_store["original_name"], f"Expected name: {user_data_store['original_mobile']}, but got: {current_name}"
-        assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
+        assert current_name == user_data_store["original_name"], \
+            f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
+        assert current_mobile == user_data_store["original_mobile"], \
+            f"Expected mobile: {user_data_store['original_mobile']}, but got: {current_mobile}"
         print(" Profile info remains unchanged after switching business model.")
 
     

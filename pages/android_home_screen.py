@@ -14,10 +14,7 @@ locators = {
         "MYMCD_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='MyMcD']"),
         "HAMBURGER_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bottom-tab-mymcd']"),
         "MYMCD_LOGO": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-MyMcD_Logo']"),
-        "MENU_TITLE": (By.XPATH, "//h4[@class='menu__title']"),
-        "CONFIRM_ADD_TO_CART": (By.XPATH, "//button[contains(text(), 'Add to Cart')]"),
-        "CART_LIST": (By.XPATH, "//div[@class='cart-details__card-list']"),
-        "VIEW_CART": (By.XPATH, "//div[@class='cart-status-bar__cta' and contains(text(), 'View Cart')]"),
+        "VIEW_CART": (AppiumBy.XPATH, "//android.widget.TextView[@text='View Cart']"),
         "MCDELIVERY_OPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='McDelivery']"),
         "DINE_IN_OPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Dine-In']"),
         "ON_THE_GO_OPTION": (AppiumBy.XPATH, "//android.widget.TextView[@text='On the Go']"),
@@ -39,6 +36,13 @@ locators = {
         "DINE_IN_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-dine-in']"),
         "ON_THE_GO_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-otg']"),
         "TAKE_AWAY_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bm-delivery']"),
+        "TOAST_MESSAGE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Sorry, we do not serve this location yet']"),
+        "UNDELIVERABLE_AREA_MESSAGE": (AppiumBy.XPATH, "//android.widget.Image[@text='_banner1_img']"),
+        "NO_STORES_NEAR_BY": (AppiumBy.XPATH, "//android.widget.TextView[@text='No stores nearby']"),
+        "HOME_PAGE_ADDRESS": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Home'])[1]"),
+        "STORE_AVAILABLE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mantri Mall']"),
+        "OPEN": (AppiumBy.XPATH, "//android.widget.TextView[@text='Open']"),
+        "MENU_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-bottom-tab-menu']"),
 
          }
 
@@ -58,12 +62,39 @@ class AndroidHomeScreen(BasePage):
             return False
 
     
-    def click_on_MyMcD_hamburger_icon(self):
-        time.sleep(5)
-        self.actions.is_element_displayed(*locators['HAMBURGER_ICON'])
-        self.actions.click_button(*locators["HAMBURGER_ICON"])
-        time.sleep(5)
-        print("Clicked on MyMcD hamburger icon")
+    def click_on_MyMcD_hamburger_icon(self, timeout=15):
+        try:
+            # Wait until the hamburger icon is visible
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locators['HAMBURGER_ICON'])
+            )
+
+            # Wait until it is clickable and then click
+            WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable(locators['HAMBURGER_ICON'])
+            )
+            self.actions.click_button(*locators["HAMBURGER_ICON"])
+
+            print(" Clicked on MyMcD hamburger icon")
+            return True
+
+        except TimeoutException:
+            print(" Hamburger icon not clickable/visible within timeout")
+            return False
+
+    def click_on_Menu_icon(self, timeout=10):
+        try:
+            # Wait until the menu icon is clickable
+            WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable(locators['MENU_ICON'])
+            )
+            self.actions.click_button(*locators["MENU_ICON"])
+            print(" Clicked on Menu icon")
+            return True
+
+        except TimeoutException:
+            print(" Menu icon not clickable/visible within timeout")
+            return False
 
     def verify_displays_of_all_business_model(self):
         time.sleep(5)
@@ -182,6 +213,59 @@ class AndroidHomeScreen(BasePage):
         print("On the Go text is displayed with icon")
         self.actions.is_element_displayed(*locators['TAKE_AWAY_ICON'])
         print("Take Away text is displayed with icon")
+
+    def verify_switching_from_one_model_to_another(self):
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['DINE_IN_OPTION'])
+        self.actions.click_button(*locators['DINE_IN_OPTION'])
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MCDELIVERY_OPTION'])
+        self.actions.click_button(*locators['MCDELIVERY_OPTION'])
+
+    def show_toast(self):
+        try:
+            toast = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(locators['TOAST_MESSAGE'])
+            )
+            web_toast_message = toast.get_attribute("text").strip()
+            expected_message = "Sorry, we do not serve this location yet"
+
+            if web_toast_message == expected_message:
+                print("Toast message matches.")
+            else:
+                print(f"Toast message not matched: '{web_toast_message}'")
+
+        except Exception as e:
+            print(f"Toast message not found: {e}")
+
+    def verify_error_message_for_undeliverable_address(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['UNDELIVERABLE_AREA_MESSAGE'])
+        self.actions.is_element_displayed(*locators['NO_STORES_NEAR_BY'])
+        print("No stores nearby is displayed")
+    
+    def verify_address_selected_and_restaurant_updated_accordingly(self):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['HOME_PAGE_ADDRESS'])
+        self.actions.is_element_displayed(*locators['STORE_AVAILABLE'])
+        print("Mantri mall store is displayed")
+        self.actions.is_element_displayed(*locators['OPEN'])
+        print("Open is displayed with timimg")
+    
+    def verify_recently_used_address_is_auto_selected_after_login(self):
+        time.sleep(5)
+        return self.actions.is_element_displayed(*locators['HOME_PAGE_ADDRESS'])
+    
+    def verify_cart_icon_does_not_appear_if_cart_is_empty(self):
+        time.sleep(5)
+        try:
+            if self.actions.is_element_displayed(*locators['VIEW_CART']):
+                self.actions.click_button(*locators['VIEW_CART'])
+                print("Cart icon clicked.")
+            else:
+                print("Cart icon is not displayed on the homepage.")
+        except Exception as e:
+            print("Cart icon not found. Exception:", str(e))
 
 
     

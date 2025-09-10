@@ -20,6 +20,8 @@
     "no_items_message": "No matching item found",
     "empty_search_message": "Search menu item",
     "Burger": "Burger",
-    "search_burger": "Burger"
-
+    "search_burger": "Burger",
+    "Coupon_code" : "freedelivery@199",
+    "Flat10_Coupon_code" : "FLAT10",
+    "search_wrap": "Wrap"
 }
