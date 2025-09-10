@@ -195,7 +195,7 @@ class LoginPage(BasePage):
         time.sleep(5)
         if self.actions.is_element_displayed(*locators['MOBILE_NUMBER_INPUT_FIELD']):
             return self.driver.find_element(*locators['MOBILE_NUMBER_INPUT_FIELD'])
-        return None  # or raise an Exception
+        return None  
 
     def inspect_referral_link(self):
         if self.actions.is_element_displayed(*locators['REFERRAL_CODE_LINK']):
@@ -211,6 +211,30 @@ class LoginPage(BasePage):
         if self.actions.is_element_displayed(*locators['TERMS_AND_CONDITIONS_LINK']):
             return self.driver.find_element(*locators['TERMS_AND_CONDITIONS_LINK'])
         return None
+    
+    def verify_login_sceanrio(self, mobile_number, otp):
+        time.sleep(5)
+        self.actions.click_button(*locators['VIEW_ICON'])
+        print("Clicked View Icon On Home Page")
+        time.sleep(5)
+        self.actions.click_button(*locators['LOGIN_BUTTON'])
+        print("Clicked Login button")
+        self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
+        self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], mobile_number)
+        self.actions.click_button(*locators["BUTTON_VERIFY_MOBILE"])
+        time.sleep(5)
+        print("Entered Mobile Number And Clicked On Verify Mobile Button")
+        self.actions.is_element_displayed(*locators['LABEL_ENTER_OTP'])
+        by, value = locators["OTP_INPUT_FIELD"]
+        for index, digit in enumerate(otp):
+            format_value = value.format(index+1)
+            self.actions.enter_text(by, format_value, digit)
+        self.actions.click_button(*locators["BUTTON_VERIFY_OTP"])
+        time.sleep(5)
+        print("Entered OTP And Clicked On Verify Button")
+        self.actions.is_element_displayed(*locators['SUBMIT_BUTTON'])
+        time.sleep(5)
+        self.actions.click_button(*locators["SUBMIT_BUTTON"])
 
     
     

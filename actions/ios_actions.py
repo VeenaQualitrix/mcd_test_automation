@@ -455,7 +455,7 @@ class iOSActions(ActionsParent):
         element = self.driver.find_element(locator_strategy, locator)
         element.clear()  # Optional: clear the field before typing
         element.send_keys(text)
-    
+
 
     def scroll_down(self):
         window_size = self.driver.get_window_size()

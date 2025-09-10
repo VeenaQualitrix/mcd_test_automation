@@ -42,6 +42,7 @@ class AndroidLoginScreen(BasePage):
         return self.actions.is_element_displayed(*locators['LOGIN_SCREEN_HEADER'])
   
     def enter_mobile_number(self, mobile_number):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], mobile_number)
         self.actions.click_button(*locators["BUTTON_VERIFY_MOBILE"])
@@ -49,6 +50,7 @@ class AndroidLoginScreen(BasePage):
         print("Entered Mobile Number And Clicked On Verify Mobile Button")
 
     def enter_otp(self, otp):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_OTP'])
         by, value = locators["OTP_INPUT_FIELD"]
 
@@ -69,11 +71,11 @@ class AndroidLoginScreen(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((verify_by, verify_value))
         )
-
         self.actions.click_button(verify_by, verify_value)
         print("OTP entered and Verify clicked.")
    
     def leave_mobile_field_empty(self):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.click_button(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         time.sleep(2)
@@ -90,30 +92,34 @@ class AndroidLoginScreen(BasePage):
         element = self.driver.find_element(By.XPATH, "//android.widget.Button[@text='Verify Mobile']")
         assert not element.is_enabled(), "Verify button should be disabled for empty or invalid input"
         print("Verified: Button is disabled as expected")
-        # Always close the app, regardless of test pass/fail
-        self.actions.close_app()
 
+        
     def enter_invalid_mobile_number(self, invalid_mobile_number):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], invalid_mobile_number)
         print("Entered invalid Mobile Number")
 
     def enter_alphabets_in_mobile_text_field(self, alphabets_in_mobile_number):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], alphabets_in_mobile_number)
         print("Entered alphabets in mobile number")
 
     def enter_mobile_number_with_space(self, mobile_number_with_space):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], mobile_number_with_space)
         print("Entered mobile number with spaces And Clicked On Verify Mobile Button")
 
     def enter_mobile_number_with_special_char(self, special_characters_in_mobile_field):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], special_characters_in_mobile_field)
         print("Entered mobile number with special characters And Clicked On Verify Mobile Button")
 
     def click_referral_code_link(self):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['REFERRAL_CODE_LINK'])
         self.actions.click_button(*locators["REFERRAL_CODE_LINK"])
         time.sleep(5)
@@ -124,6 +130,7 @@ class AndroidLoginScreen(BasePage):
         return self.actions.is_element_displayed(*locators['REFERRAL_CODE_TEXT_FIELD'])
     
     def enter_referral_code(self, Referral_code):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['REFERRAL_CODE_TEXT_FIELD'])
         self.actions.enter_text(*locators["REFERRAL_CODE_TEXT_FIELD"], Referral_code)
         time.sleep(5)
@@ -139,9 +146,10 @@ class AndroidLoginScreen(BasePage):
         except TimeoutException:
             print("Referral code error is still visible or failed to disappear.")
             return False
-        finally:
-            # Always close the app, regardless of test pass/fail
-            self.actions.close_app()
+        
+    time.sleep(2)
+        
+    
         
     def hide_keyboard_by_tapping_outside(self):
         try:
@@ -169,9 +177,13 @@ class AndroidLoginScreen(BasePage):
                 self.actions.enter_text(*locators["REFERRAL_CODE_TEXT_FIELD"], referral_code)
                 time.sleep(2)
                 self.actions.click_button(*locators["MOBILE_NUMBER_INPUT_FIELD"])
+                self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], "77777777")
+                mobile_field = self.driver.find_element(*locators['MOBILE_NUMBER_INPUT_FIELD'])
+                mobile_field.clear()
                 #self.click_verify_mobile()
                 # ✅ Since we're in the same class, this works
                 self.hide_keyboard_by_tapping_outside()
+                self.driver.tap([(100, 100)]) 
 
                 print("Entered referral code and clicked verify")
             else:
@@ -191,6 +203,7 @@ class AndroidLoginScreen(BasePage):
         return self.actions.is_element_displayed(*locators['LABEL_ENTER_OTP'])
     
     def click_terms_and_conditions_link(self):
+        time.sleep(5)
         self.actions.is_element_displayed(*locators['TERMS_AND_CONDITIONS_LINK'])
         self.actions.click_button(*locators["TERMS_AND_CONDITIONS_LINK"])
         time.sleep(5)
@@ -201,6 +214,7 @@ class AndroidLoginScreen(BasePage):
         return self.actions.is_element_displayed(*locators['TERMS_AND_CONDITIONS_HEADER'])
     
     def enter_mobile_number_one_by_one(self, mobile_number_11_digits):
+        time.sleep(5)
         if not mobile_number_11_digits:
             raise ValueError("Mobile number test data is missing or empty.")
 
@@ -227,6 +241,7 @@ class AndroidLoginScreen(BasePage):
                 break
    
     def get_entered_mobile_number(self):
+        time.sleep(5)
         locator = locators["MOBILE_NUMBER_INPUT_FIELD"]
         print(f"DEBUG: Waiting for visibility of element: {locator}")
 
@@ -241,11 +256,12 @@ class AndroidLoginScreen(BasePage):
 
 
     def copy_mobile_number_to_clipboard(self, mobile_number):
+        time.sleep(5)
         self.driver.set_clipboard_text(mobile_number)
         print(f"Set Mobile Number '{mobile_number}' to device clipboard")
 
-
     def paste_mobile_number_using_clipboard(self):
+        time.sleep(5)
         input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         input_field.click()
         time.sleep(1)
@@ -260,6 +276,7 @@ class AndroidLoginScreen(BasePage):
         
 
     def get_pasted_mobile_number(self):
+        time.sleep(5)
         input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         return input_field.get_attribute("text")
     
@@ -270,16 +287,19 @@ class AndroidLoginScreen(BasePage):
         return None  
 
     def inspect_referral_link(self):
+        time.sleep(5)
         if self.actions.is_element_displayed(*locators['REFERRAL_CODE_LINK']):
             return self.driver.find_element(*locators['REFERRAL_CODE_LINK'])
         return None
 
     def inspect_verify_button(self):
+        time.sleep(5)
         if self.actions.is_element_displayed(*locators['BUTTON_VERIFY_MOBILE']):
             return self.driver.find_element(*locators['BUTTON_VERIFY_MOBILE'])
         return None
 
     def inspect_footer_link(self):
+        time.sleep(5)
         if self.actions.is_element_displayed(*locators['TERMS_AND_CONDITIONS_LINK']):
             return self.driver.find_element(*locators['TERMS_AND_CONDITIONS_LINK'])
         return None
@@ -312,6 +332,7 @@ class AndroidLoginScreen(BasePage):
 
     
     def validate_login_screen_ui(self):
+        time.sleep(5)
         print("Validating visibility, alignment, and non-overlapping of UI elements")
 
         elements = {

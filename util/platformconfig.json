@@ -1,13 +1,12 @@
 {
     "android": {
-        "platformName": "Android",
-        "appium:deviceName": "emulator-5554",
-        "appium:automationName": "UiAutomator2",
-        "appium:app": "/Users/apple/Downloads/McDonalds_3.27.1_APKPure.apk",
-        "appium:noReset": true,
-        "appium:fullReset": false
-    },
-
+    "platformName": "Android",
+    "appium:deviceName": "RZ8N810NC1K",
+    "appium:app": "D:\\UAT-v12.90.10-1756783420465.apk",
+    "appium:automationName": "UiAutomator2",
+    "appium:appPackage": "com.il.mcdelivery",
+    "appium:appActivity": "com.il.mcdelivery.MainActivity"
+},
     
     "web": {
        
@@ -16,12 +15,12 @@
     },
 
     "ios": {
-  "appium:deviceName": "Sunil's iPhone",
-  "appium:platformVersion": "18.5",
-  "appium:automationName": "XCUITest",
-  "platformName": "iOS",
-  "appium:udid": "00008020-000E41810189002E",
-  "appium:noReset" : true
-}
+        "appium:deviceName": "Sunil's iPhone",
+        "appium:platformVersion": "18.5",
+        "appium:automationName": "XCUITest",
+        "platformName": "iOS",
+        "appium:udid": "00008020-000E41810189002E",
+        "appium:noReset" : true
+    }
 
 }

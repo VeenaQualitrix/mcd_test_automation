@@ -1,4 +1,5 @@
 import random
+import pytest
 import time
 import allure
 from allure_commons.types import AttachmentType
@@ -12,6 +13,9 @@ from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
 from selenium.webdriver.common.actions.interaction import Interaction
 from selenium.webdriver.common.actions.interaction import KEY
+from selenium.common.exceptions import NoSuchElementException
+from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from conftest import readConstants
 
 
@@ -27,8 +31,10 @@ class AndroidActions(ActionsParent):
         self.super_wait = WebDriverWait(self.driver, readConstants("SUPER_WAIT"))
         self.dynamic_number = random.randint(1, 10000)
 
+
     def launch_app(self):
         print("Application launch is handled in conftest fixture")
+
 
     def relaunch_app(self, appPackage):
         print("Application is already Launched. Relaunching application again")
@@ -139,7 +145,7 @@ class AndroidActions(ActionsParent):
         print(f"Attempting to click element using locator: {locator_type}, {locator_value}")
 
         try_count = 1
-        max_retries = 5
+        max_retries = 2
 
         while try_count <= max_retries:
             try:
@@ -414,5 +420,43 @@ class AndroidActions(ActionsParent):
         actions.pointer_action.pointer_down()
         actions.pointer_action.pause(hold_duration_ms / 1000)  # pause takes seconds
         actions.pointer_action.pointer_up()
+
+
+    def swipe_up(self, duration=800):
+        """Swipe up from bottom to top (scroll down)."""
+        screen_size = self.driver.get_window_size()
+        width = screen_size['width']
+        height = screen_size['height']
+
+        start_x = width / 2
+        start_y = height * 0.8
+        end_x = width / 2
+        end_y = height * 0.2
+
+        self.driver.swipe(start_x, start_y, end_x, end_y, duration)
+        print(" Swiped up (scroll down)")
+
+    def swipe_down(self, duration=800):
+        """Swipe down from top to bottom (scroll up)."""
+        screen_size = self.driver.get_window_size()
+        width = screen_size['width']
+        height = screen_size['height']
+
+        start_x = width / 2
+        start_y = height * 0.2
+        end_x = width / 2
+        end_y = height * 0.8
+
+        self.driver.swipe(start_x, start_y, end_x, end_y, duration)
+        print(" Swiped down (scroll up)")
+
+
+    
+
+
+        
+
+
+    
 
     

@@ -1,10 +1,11 @@
-
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 import datetime
 from datetime import datetime, timedelta
 import time
@@ -12,11 +13,12 @@ import time
 locators = {
     "PERSONAL_HEADER_DETAILS": (By.XPATH, "//div[contains(text(), 'Personal Details')]"),
     "USER_PROFILE_ICON": (By.XPATH, "//h2[@class = 'avatar__logo-initial-txt']"),
+    "PROFILE_ICON": (By.XPATH, "//div[@title = 'View Profile']"),
     "PROFILE_PAGE_LOGO": (By.XPATH, "//img[@class = 'profile-page__logo']"),
     "USER_NAME": (By.XPATH, "//input[@placeholder='Enter your full name here']"),
     "MOBILE_NUMBER": (By.XPATH, "//input[@mds-profile-edit-input-mblno]"),
     "EMAIL_ID": (By.XPATH, "//input[@placeholder='Enter Your Email ID here']"),
-    "DATE_OF_BIRTH": (By.XPATH, "//input[@placeholder='Click here to select']"),
+    "DATE_OF_BIRTH": (By.XPATH, " //label[contains(text(), 'Select Your Date of Birth')] "),
     "SUBMIT_BUTTON": (By.XPATH, "//button[contains(text(), 'Save Changes')]"),
     "PROFILE_EDIT_ICON": (By.XPATH, "//img[@class = 'profile-page__link-btn']"),
     "PROFILE_EDIT_PAGE": (By.XPATH, "//div[@class = 'profile-edit-page__header ion-hide-lg-down']"),
@@ -24,7 +26,7 @@ locators = {
     "EMPTY_PROFILE_NAME_FIELD_ERROR": (By.XPATH, "//label[contains(text(), 'Please enter valid full name')]"),
     "UPDATED_EMAIL_ADDRESS": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
     "INCORRECT_EMAIL_FORMAT": (By.XPATH, "//label[contains(text(), 'Please enter valid Email ID')]"),
-    "UPDATED_DATE_OF_BIRTH": (By.XPATH, "//input[@type='text']"),
+    "DATE_OF_BIRTH_TEXTFIELD": (By.XPATH, "//input[@placeholder='Click here to select']"),
     "DATE_PICKER": (By.XPATH, "//span[contains(text(), 'Choose DOB')]"),
     "SELECT_BUTTON": (By.XPATH, "//button[contains(text(), 'Select')]"),
     "CHANGE_PICTURE_LINK": (By.XPATH, "//div[contains(text(), ' Change Picture ')]"),
@@ -35,15 +37,27 @@ locators = {
     "DOB_FIELD_ICON": (By.XPATH, "//img[@title = 'ic-calender']"),
     "COLOR_BLIND_FRIENDLY_TEXT": (By.XPATH, "//div[contains(text(), ' Use Colour Blind Friendly ')]"),
     "TOGGLE_BUTTON": (By.XPATH, "(//input[@type = 'checkbox'])[1]"),
-     "TOGGLE_BUTTON_COLOR_SCHEME_PAGE": (By.XPATH, "(//input[@type = 'checkbox'])[2]"),
+    "TOGGLE_BUTTON_COLOR_SCHEME_PAGE": (By.XPATH, "(//input[@type = 'checkbox'])[2]"),
     "COLOR_SCHEME": (By.XPATH, "//div[@class = 'bottom-sheet']"),
     "COLOR_BLIND_BACK_BUTTON": (By.XPATH, "//img[@class = 'address-header__back-btn']"),
     "SELECT_COLOR_BLIND_RADIO_BUTTON": (By.XPATH, "//div[@class = 'bottom-sheet__radio']"),
-     "COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON": (By.XPATH, "//div[@class ='color-correction__para']"),
+    "COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON": (By.XPATH, "//div[@class ='color-correction']"),
+    "TOGGLE_BUTTON_IN_ON_MODE": (By.XPATH, "//label[@class='v1 v1--active']"),
+    "PROFILE_NAME": (By.XPATH, "//div[@class = 'bio__name']"),
+    "PROFILE_MOBILE": (By.XPATH, "//div[@class = 'bio__mobile']"),
+    "PROFILE_EMAIL": (By.XPATH, "//div[@class = 'bio__email txt-ellipsis']"),
+    "MCDELIVERY_ICON": (By.XPATH, "//img[@alt = 'logo']"),
+    "LOG_OUT_BUTTON": (By.XPATH, "//div[contains(text(), 'Logout')]"),
+    "CLOSE_CALENDAR_POPUP": (By.XPATH, "//ion-icon[@name ='close-outline']"),
+
     }
 
 
 class ProfilePage(BasePage):
+
+    def __init__(self, driver):
+        super().__init__(driver)  # This calls BasePage.__init__ and sets up driver and actions
+        self.expected_dob = None
 
     def verify_profile_page_reached(self):
         time.sleep(5)
@@ -159,6 +173,21 @@ class ProfilePage(BasePage):
         time.sleep(5)
         self.actions.click_button(*locators["SUBMIT_BUTTON"])
 
+    def clear_email_field(self):
+        email_field = self.driver.find_element(*locators['EMAIL_ID'])
+        email_field.send_keys(Keys.CONTROL + "a")   # Select all text
+        email_field.send_keys(Keys.BACKSPACE)       # Delete selected text
+        email_field.send_keys(Keys.TAB)
+        time.sleep(2)
+
+        submit_button = self.driver.find_element(*locators["SUBMIT_BUTTON"])
+        # Scroll into view
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", submit_button)
+        time.sleep(1)
+        submit_button.click()
+        print("✅ Submit button clicked after scrolling.")
+
+
     def edit_email_address(self):
         email_field = self.driver.find_element(*locators['EMAIL_ID'])
         email_field.clear()
@@ -186,102 +215,138 @@ class ProfilePage(BasePage):
     def incorrect_email_error(self):
         time.sleep(5)
         return self.actions.is_element_displayed(*locators['INCORRECT_EMAIL_FORMAT'])
-    
+
     def edit_date_of_birth(self):
-        element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         time.sleep(2)
-        self.actions.click_button(*locators['DATE_OF_BIRTH'])
-        # Locate the frame element first, then switch to it
+        
+        # Scroll to Date of Birth section
+        date_of_birth = self.driver.find_element(*locators["DATE_OF_BIRTH"])
+        self.driver.execute_script("arguments[0].scrollIntoView();", date_of_birth)
+        self.actions.is_element_displayed(*locators['DATE_OF_BIRTH'])
+        print("[INFO] Date of birth section is displayed")
+
+        # Open the calendar/date picker
+        self.actions.click_button(*locators['DATE_OF_BIRTH_TEXTFIELD'])
         self.actions.is_element_displayed(*locators['DATE_PICKER'])
-        print("Calendar appeared")
+        print("[INFO] Calendar modal appeared")
+        
+        # Wait for ion-datetime to be visible
+        try:
+            ion_datetime = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "ion-datetime"))
+            )
+        except TimeoutException:
+            raise Exception("[ERROR] ion-datetime component not found within the modal.")
 
-        handles = self.driver.window_handles
-        size = len(handles)
-        parent_handle = self.driver.current_window_handle
-        for x in range(size):
-            if handles[x] != parent_handle:
-                self.driver.switch_to.window(handles[x])
-                print(self.driver.title)
-
-        # Get today's date
+        # Format today's date as 'YYYY-MM-DD'
         today = datetime.now()
-        day_str = str(today.day)
+        formatted_date = today.strftime("%Y-%m-%d")
+        formatted_dob = today.strftime("%d/%m/%Y")  # For assertion use later
+        print(f"[DEBUG] Setting ion-datetime value to {formatted_date}")
 
-        # Select today's date by visible text
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, f"//*[text()='{day_str}']"))
-)
+        # Set value via JavaScript and trigger ionChange
+        self.driver.execute_script("""
+            arguments[0].value = arguments[1];
+            arguments[0].dispatchEvent(new Event('ionChange'));
+        """, ion_datetime, formatted_date)
 
-        # Now find and click it
-        date_cell = self.driver.find_element(By.XPATH, f"//*[text()='{day_str}']")
-        date_cell.click()
+        time.sleep(1)  # Allow UI to react
+
+        # Click the "Select" button
         self.actions.click_button(*locators["SELECT_BUTTON"])
+        print("[INFO] Date selected and confirmed")
+
+        # -------- SCROLL UPWARD AND CLICK SUBMIT --------
+        try:
+            submit_button = self.driver.find_element(*locators["SUBMIT_BUTTON"])
+
+            # Scroll the page upward until the submit button is visible
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+            print("[INFO] Scrolled upward to the Submit button")
+
+            # Wait until the button is clickable
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(locators["SUBMIT_BUTTON"])
+            )
+
+            # Click the Submit button
+            self.actions.click_button(*locators["SUBMIT_BUTTON"])
+            print("[INFO] Submit button clicked successfully")
+
+        except Exception as e:
+            raise Exception(f"[ERROR] Failed to scroll and click Submit button: {str(e)}")
+
         time.sleep(2)
+        return formatted_dob
+
         
+    def verify_updated_date_of_birth(self):
+        time.sleep(5)
+        # get actual DOB from UI
+        dob_element = self.driver.find_element(*locators['DATE_OF_BIRTH_TEXTFIELD'])
 
+        # Try to get 'value' attribute (common for inputs)
+        actual_dob = dob_element.get_attribute("value")
 
-    def updated_date_of_birth(self):
-        self.actions.is_element_displayed(*locators['USER_PROFILE_ICON'])
-        time.sleep(10)
-        self.actions.click_button(*locators['USER_PROFILE_ICON'])
-        element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        time.sleep(2)
+        # If still empty, fallback to text()
+        if not actual_dob:
+            actual_dob = dob_element.text.strip()
 
-        if self.actions.is_element_displayed(*locators['UPDATED_DATE_OF_BIRTH']):
-            return self.driver.find_element(*locators['UPDATED_DATE_OF_BIRTH']).text
-        else:
-            return None
+        print(f"[DEBUG] Actual DOB on profile (value or text): {actual_dob}")
+        return actual_dob
         
-    def enter_future_date_of_birth(self):
-        element = self.driver.find_element(*locators['DATE_OF_BIRTH'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        time.sleep(2)
-        self.actions.click_button(*locators['DATE_OF_BIRTH'])
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(*locators['DATE_PICKER'])
-    )
-        # Define the target future date
-        target_day = 20
-        target_month = "July"
-        target_year = 2025
+    def is_date_selectable(self, day, month, year):
+        try:
+            date_locator = (By.XPATH, f"//td[@data-day='{day}' and @data-month='{month}' and @data-year='{year}']")
+            print(f"[DEBUG] Trying to locate date element: {date_locator}")
+            
+            date_element = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(date_locator)
+            )
+            print("[DEBUG] Date element found")
 
-        # Get current date
-        today = datetime.datetime.today()
-
-        # Create datetime object for the target date
-        target_date_str = f"{target_day} {target_month} {target_year}"
-        target_date = datetime.datetime.strptime(target_date_str, "%d %B %Y")
-
-        # Check if the target date is in the future
-        if target_date > today:
-            print(f"ERROR: Attempt to select a future date ({target_date.date()}) is not allowed.")
-            return
-
-        # Proceed to select the date if it's valid (not in the future)
-        self.actions.select_date_from_calendar(str(target_day), target_month, str(target_year))
-        time.sleep(2)
-        self.actions.click_button(*locators["SUBMIT_BUTTON"])
+            # Check if it's disabled
+            is_disabled = "disabled" in date_element.get_attribute("class")
+            return not is_disabled
+        except TimeoutException:
+            print("[DEBUG] Future date element not found - probably disabled.")
+            return False
 
     def verify_future_dob_disabled(self):
-        self.actions.click_button(*locators['DATE_OF_BIRTH'])
+        time.sleep(5)
+        date_of_birth = self.driver.find_element(*locators["DATE_OF_BIRTH"])
+        self.driver.execute_script("arguments[0].scrollIntoView();", date_of_birth)
+        self.actions.is_element_displayed(*locators['DATE_OF_BIRTH'])
+        print("Date of birth section is displayed")
 
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(locators['DATE_PICKER'])
-    )
+        # Open the calendar/date picker
+        self.actions.click_button(*locators['DATE_OF_BIRTH_TEXTFIELD'])
+        self.actions.is_element_displayed(*locators['DATE_PICKER'])
+        print("Calendar modal appeared")
+        time.sleep(5)
 
-        # Define a known future date (e.g., tomorrow)
+        # Calculate tomorrow's date
         tomorrow = datetime.now() + timedelta(days=1)
-        future_day = str(tomorrow.day)
-        future_month = tomorrow.strftime("%B")
-        future_year = str(tomorrow.year)
+        future_day = tomorrow.day
+        future_month = tomorrow.month
+        future_year = tomorrow.year
 
-    # Try to select the future date using custom method
+        # Check if future date is selectable
         is_selectable = self.actions.is_date_selectable(future_day, future_month, future_year)
+        print(f"[DEBUG] Is future date selectable? {is_selectable}")
 
-    # Validate that future date is not selectable
-        assert not is_selectable, f"Future date {tomorrow.strftime('%Y-%m-%d')} should not be selectable"
+        # If future date is NOT selectable, close the calendar popup
+        if not is_selectable:
+            try:
+                WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable(locators['CLOSE_CALENDAR_POPUP'])
+                ).click()
+                print("[INFO] Calendar popup closed as future date is not selectable")
+            except TimeoutException:
+                print("[ERROR] Unable to close the calendar popup")
+
+        # Return True if date is selectable, else False
+        return is_selectable
 
     def click_change_picture_link(self):
         self.actions.is_element_displayed(*locators['CHANGE_PICTURE_LINK'])
@@ -322,7 +387,6 @@ class ProfilePage(BasePage):
 
 
     def switch_toggle_button(self):
-    # Scroll to and click the first toggle
         element = self.driver.find_element(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
         self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
@@ -337,29 +401,33 @@ class ProfilePage(BasePage):
         # Select radio button
         select_radio = self.driver.find_element(*locators['SELECT_COLOR_BLIND_RADIO_BUTTON'])
         ActionChains(self.driver).move_to_element(select_radio).click().perform()
+        time.sleep(5)
 
         # Confirm text shows up
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
         assert self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT']), "Color blind mode ON text not visible"
         print("Color blind mode is ON.")
+        time.sleep(5)
         toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
         ActionChains(self.driver).move_to_element(toggle_button).click().perform()
-        time.sleep(2)
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
+        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON_COLOR_SCHEME_PAGE'])
+        ActionChains(self.driver).move_to_element(toggle_button).click().perform()
+        time.sleep(5)
     
         # Verify toggle is off
         is_off = not self.actions.is_element_displayed(*locators['TOGGLE_BUTTON'])
         assert is_off, "Toggle button is still ON"
         print("Toggle button is OFF")
+        time.sleep(5)
 
 
     def color_scheme(self):
-        self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
-        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
-        ActionChains(self.driver).move_to_element(toggle_button).click().perform()
-        element = self.driver.find_element(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
         time.sleep(2)
+        return self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
+        
         
     def color_blind_mode_On_and_reload_page(self):
         element = self.driver.find_element(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
@@ -367,22 +435,32 @@ class ProfilePage(BasePage):
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
         toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON'])
         ActionChains(self.driver).move_to_element(toggle_button).click().perform()
-        self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
-        self.actions.click_button(*locators['TOGGLE_BUTTON'])
-        self.actions.click_button(*locators['SELECT_COLOR_BLIND_RADIO_BUTTON'])
-        time.sleep(2)
+        color_scheme = self.actions.is_element_displayed(*locators['COLOR_SCHEME'])
+        print(color_scheme)
+        toggle_button = self.driver.find_element(*locators['TOGGLE_BUTTON_COLOR_SCHEME_PAGE'])
+        ActionChains(self.driver).move_to_element(toggle_button).click().perform()
+        select_radio = self.driver.find_element(*locators['SELECT_COLOR_BLIND_RADIO_BUTTON'])
+        ActionChains(self.driver).move_to_element(select_radio).click().perform()
+        time.sleep(5)
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
         self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT'])
+        assert self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT']), "Color blind mode ON text not visible"
         print("Color blind mode is ON.")
         self.driver.refresh()
-        WebDriverWait(self.driver, 10).until(
-        EC.presence_of_element_located(locators['COLOR_BLIND_FRIENDLY_TEXT'])
-    )
-        print("Page reloaded. Element still present — preference may be retained.")
+        time.sleep(10)
+         # Wait for page to reload and element to reappear
+        element_after_reload = self.driver.find_element(*locators['DATE_OF_BIRTH'])
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element_after_reload)
+        self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON'])
+        # Check if toggle is still ON
+        is_on = self.actions.is_element_displayed(*locators['TOGGLE_BUTTON_IN_ON_MODE'])
+        assert is_on, "Toggle button is OFF"
+        print("Toggle button is ON")
     
 
     def verify_color_blind_preference_retained(self):
         time.sleep(2)
-        return self.actions.is_element_displayed(*locators['COLOR_BLIND_FRIENDLY_TEXT_AFTER_MODE_ON'])
+        return self.actions.is_element_displayed(*locators['TOGGLE_BUTTON_IN_ON_MODE'])
 
     def make_changes_and_refresh_page(self, user_data_store):
         # Save current values before changing
@@ -411,3 +489,69 @@ class ProfilePage(BasePage):
 
         assert current_name == user_data_store["original_name"], f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
         assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
+
+    def Verify_current_profile_info(self, user_data_store):
+        time.sleep(5)
+        self.actions.is_element_displayed(*locators['PROFILE_ICON'])
+        self.actions.click_button(*locators['PROFILE_ICON'])
+        time.sleep(2)
+        user_data_store["original_name"] = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
+        user_data_store["original_mobile"] = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
+        user_data_store["original_email"] = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
+        print("Captured profile info: ")
+        print(user_data_store)
+        time.sleep(2)
+        self.actions.is_element_displayed(*locators['MCDELIVERY_ICON'])
+        self.actions.click_button(*locators['MCDELIVERY_ICON'])
+
+    def Verify_profile_info_remian_unchanged(self, user_data_store):
+        time.sleep(2)
+        current_name = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
+        current_mobile = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
+        current_email = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
+
+        assert current_name == user_data_store["original_name"], f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
+        assert current_mobile == user_data_store["original_name"], f"Expected name: {user_data_store['original_mobile']}, but got: {current_name}"
+        assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
+        print(" Profile info remains unchanged after switching business model.")
+
+    def verify_profile_page_navigation_after_switching_model(self):
+        self.actions.is_element_displayed(*locators['PROFILE_ICON'])
+        self.actions.click_button(*locators['PROFILE_ICON'])
+        time.sleep(3)
+        return self.actions.is_element_displayed(*locators['PROFILE_PAGE_LOGO'])
+    
+    def Click_save_changes_on_profile_details_page(self):
+        self.actions.is_element_displayed(*locators['SUBMIT_BUTTON'])
+        time.sleep(2)
+        self.actions.click_button(*locators["SUBMIT_BUTTON"])
+
+    def Click_log_out_on_profile_details_page(self):
+        try:
+            # Wait for the log out button to be present
+            log_out_button = WebDriverWait(self.driver, 20).until(
+                EC.presence_of_element_located(locators["LOG_OUT_BUTTON"])
+            )
+
+            # Scroll into view (works for Web)
+            try:
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", log_out_button)
+                print("Scrolled to log out button using JavaScript.")
+            except Exception:
+                print(" scrollIntoView failed, attempting manual swipe for mobile.")
+                # Fallback: swipe for mobile native apps
+                self.driver.swipe(500, 1500, 500, 300, 800)
+
+            # Wait until the button is clickable
+            log_out_button = WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable(locators["LOG_OUT_BUTTON"])
+            )
+
+            # Click the button
+            log_out_button.click()
+            print(" Log out button clicked")
+
+        except Exception as e:
+            print(f" Failed to click log out button: {e}")
+            raise
+
