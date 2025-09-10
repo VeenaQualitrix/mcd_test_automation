@@ -1454,7 +1454,7 @@ def verify_donation_amount_removed_from_payable_amount(setup_platform):
 @allure.step("When I click on 'View All' link")
 def click_view_all_link(setup_platform):
     print("click on 'View All' link")
-    AndroidViewCartScreen(setup_platform).click_view_all_link()
+    AndroidViewCartScreen(setup_platform).click_view_all_offers_link()
 
 @then("I verify the user should be redirected to a page displaying all available offers")
 @allure.step("Then I verify the user should be redirected to a page displaying all available offers")
@@ -1651,6 +1651,109 @@ def verify_default_view_restored(setup_platform):
 def verify_default_view_restored(setup_platform):
     print("Verify item added to the cart and quantity updated")
     AndroidViewCartScreen(setup_platform).get_all_cart_items()
+
+@then("I verify the search results for 'Burger' should still be displayed")
+@allure.step("Then I verify the search results for 'Burger' should still be displayed")
+def verify_burger_search_result_persist_post_add(setup_platform):
+    print("verify the search results for 'Burger' should still be displayed")
+    AndroidSearchMenuScreen(setup_platform).verify_burger_search_result_persist_post_add()
+
+@when("I enters 'Wrap' in the search bar")
+@allure.step("When I enters 'Wrap' in the search bar")
+def search_for_burger_item(setup_platform):
+    search_wrap = readPreReqJson("test_data", "search_wrap")
+    print("enters 'Wrap' in the search bar")
+    AndroidSearchMenuScreen(setup_platform).enter_wrap_and_click_search(search_wrap)
+
+@then("I verify filter remains active and only Veg Wrap items should be displayed")
+@allure.step("Then I verify filter remains active and only Veg Wrap items should be displayed")
+def verify_placeholder_shows_search_here(setup_platform):
+    print("verify filter remains active and only Veg Wrap items should be displayed")
+    AndroidSearchMenuScreen(setup_platform).verify_veg_wrap_item_is_displayed()
+
+@then("I verify the placeholder text should be displayed as 'Search here'")
+@allure.step("Then I verify the placeholder text should be displayed as 'Search here'")
+def verify_placeholder_shows_search_here(setup_platform):
+    print("verify the placeholder text should be displayed as 'Search here'")
+    AndroidSearchMenuScreen(setup_platform).verify_placeholder_shows_search_here()
+
+@when("I clicks the close icon of 'Veg' filter button")
+@allure.step("When I clicks the close icon of 'Veg' filter button")
+def click_close_icon_on_veg_filter(setup_platform):
+    print("clicks the close icon of 'Veg' filter button")
+    AndroidSearchMenuScreen(setup_platform).click_close_icon_on_veg_filter()
+
+@then("I verify the default view should be restored")
+@allure.step("Then I verify the default view should be restored")
+def verify_default_view_should_restored(setup_platform):
+    print("verify the default view should be restored")
+    AndroidSearchMenuScreen(setup_platform).verify_display_of_non_veg_items()
+
+@then("I click back button from search menu screen")
+@allure.step("Then I click back button from search menu screen")
+def verify_default_view_should_restored(setup_platform):
+    print("click back button from search menu screen")
+    AndroidSearchMenuScreen(setup_platform).Click_back_button_from_search_menu()
+
+@then("I verify the input box for entering the coupon code should be visible and accept text input")
+@allure.step("Then I verify the input box for entering the coupon code should be visible and accept text input")
+def verify_input_box_for_entering_coupon_code_visible_and_functional(setup_platform):
+    Coupon_code= readPreReqJson("test_data", "Coupon_code")
+    print("verify the input box for entering the coupon code should be visible and accept text input")
+    AndroidOfferPage(setup_platform).verify_input_box_for_entering_coupon_code_visible_and_functional(Coupon_code)
+
+@then("I verify entered coupon code is displayed")
+@allure.step("Then I verify entered coupon code is displayed")
+def verify_freedelivery_offer_card_visible(setup_platform):
+    print("verify entered coupon code is displayed")
+    AndroidOfferPage(setup_platform).verify_freedelivery_offer_card_visible()
+
+@when("I user enters a valid coupon code 'FLAT10' into the input box")
+@allure.step("When I user enters a valid coupon code 'FLAT10' into the input box")
+def enter_a_Flat10_coupon_code_into_the_input_box(setup_platform):
+    Flat10_Coupon_code= readPreReqJson("test_data", "Flat10_Coupon_code")
+    print("enters a valid coupon code 'FLAT10' into the input box")
+    AndroidOfferPage(setup_platform).enter_a_Flat10_coupon_code_into_the_input_box(Flat10_Coupon_code)
+
+@then("I verify an offer card with the code 'FLAT10' should appear")
+@allure.step("Then I verify an offer card with the code 'FLAT10' should appear")
+def verify_flat10_offer_card_visible(setup_platform):
+    print("verify an offer card with the code 'FLAT10' should appear")
+    AndroidOfferPage(setup_platform).verify_flat10_offer_card_visible()
+
+@then("I verify each offer card should displays code, description, Show More link, and Apply button")
+@allure.step("Then I verify each offer card should displays code, description, Show More link, and Apply button")
+def verify_offer_card_displays_correctly(setup_platform):
+    print("verify each offer card should displays code, description, Show More link, and Apply button")
+    AndroidOfferPage(setup_platform).verify_offer_card_displays_correctly()
+
+@then("I verify selected coupon should be applied to the current cart")
+@allure.step("Then I verify selected coupon should be applied to the current cart")
+def verify_applied_offer_displays_in_cart(setup_platform):
+    print("verify selected coupon should be applied to the current cart")
+    AndroidViewCartScreen(setup_platform).verify_applied_offer_displays_in_cart()
+
+@when("I enters a valid coupon code 'FLAT10' and clicks on the Apply button")
+@allure.step("When I enters a valid coupon code 'FLAT10' and clicks on the Apply button")
+def enter_Flat10_coupon_code_click_apply_button(setup_platform):
+    Flat10_Coupon_code= readPreReqJson("test_data", "Flat10_Coupon_code")
+    print("enters a valid coupon code 'FLAT10' and clicks on the Apply button")
+    AndroidOfferPage(setup_platform).enter_Flat10_coupon_code_click_apply_button(Flat10_Coupon_code)
+
+@when("I enters a 'FLAT10' coupon code and clicks on the Apply button")
+@allure.step("When I enters a 'FLAT10' coupon code and clicks on the Apply button")
+def enter_Flat10_coupon_code(setup_platform):
+    Flat10_Coupon_code= readPreReqJson("test_data", "Flat10_Coupon_code")
+    print("enters a 'FLAT10' coupon code and clicks on the Apply button")
+    AndroidOfferPage(setup_platform).enter_Flat10_coupon_code(Flat10_Coupon_code)
+
+@then("I verify a warning should appear with the message 'Promo not applied'")
+@allure.step("Then I verify a warning should appear with the message 'Promo not applied'")
+def verify_coupon_restriction_message(setup_platform):
+    print("verify a warning should appear with the message 'Promo not applied'")
+    AndroidOfferPage(setup_platform).verify_coupon_restriction_message()
+
+
 
 
 

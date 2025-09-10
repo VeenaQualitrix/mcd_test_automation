@@ -26,6 +26,8 @@ from selenium import webdriver as browserDriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
 
 import os
 from pathlib import Path
@@ -210,141 +212,84 @@ def setup_platform(env, request):
     driver = None
     appium_service = None
 
-    """
-    Fixture for setting up the testing environment.
-    """
+    currentPlatform = env.lower()
+    print(f"[DEBUG] Current platform selected: {currentPlatform}")
 
-    # Load constants.json
-    project_root = os.getcwd()
-    constants_path = os.path.join(project_root, 'util', 'constants.json')
-    with open(constants_path) as constant_file:
-        constant_value = json.load(constant_file)
-    with open(constants_path, "w") as constant_file:
-        json.dump(constant_value, constant_file, indent=4)
-
-    currentPlatform = env
-    appToLaunch = request.config.getoption("--appFileName")
-    print('currentApp', currentPlatform)
-
-    def safe_action(action, retries=2, wait=3):
-        """Retries an action if it fails due to socket issues."""
-        for attempt in range(retries):
-            try:
-                return action()
-            except WebDriverException as e:
-                if "socket hang up" in str(e).lower():
-                    print(f"[WARN] Socket hang up detected. Retrying... ({attempt + 1}/{retries})")
-                    time.sleep(wait)
-                else:
-                    raise
-        raise Exception("Failed due to repeated 'socket hang up' errors")
-
-    # ===== ANDROID SETUP =====
+    # Android Setup
     if currentPlatform == 'android':
-        print("Inside android")
+        print("[DEBUG] Starting Appium for Android...")
         appium_service = AppiumService()
         appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
         if not appium_service.is_running:
             raise Exception("Appium server did not start!")
 
         capabilities = load_capabilities(currentPlatform)
-        print('capabilities to load', capabilities)
+        print("[DEBUG] Loaded Android capabilities:", capabilities)
+
         options = UiAutomator2Options().load_capabilities(capabilities)
-        print("Loading options ====", options)
 
         def create_android_driver():
-            drv = androidDriver.Remote("http://127.0.0.1:4723", options=options)
+            drv = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
             drv.implicitly_wait(10)
-            WebDriverWait(drv, 30).until(
-                lambda d: d.current_activity is not None
-            )
+            WebDriverWait(drv, 30).until(lambda d: d.current_activity is not None)
             print("[DEBUG] Android driver launched successfully.")
             return drv
 
-        driver = safe_action(create_android_driver)
+        driver = create_android_driver()
 
-        # Ensure app is restarted fresh
+        # Restart app cleanly
+        app_package = readConstants("current_app_package")
         try:
-            driver.terminate_app(readConstants("current_app_package"))
+            driver.terminate_app(app_package)
             time.sleep(2)
-            driver.activate_app(readConstants("current_app_package"))
+            driver.activate_app(app_package)
         except Exception as e:
-            print(f"[WARN] App restart failed: {e}")
+            print(f"[WARN] Failed to restart Android app: {e}")
 
-    # ===== WEB SETUP =====
+    # Web Setup
     elif currentPlatform == 'web':
         driver = launchChromeheadless()
-        print("Launch chrome browser ", type(driver))
+        print("[DEBUG] Web driver launched successfully.")
 
-    # ===== iOS SETUP =====
+    # iOS Setup
     elif currentPlatform == 'ios':
-        print("Launching iOS app")
+        print("[DEBUG] Starting Appium for iOS...")
         appium_service = start_appium_service_with_retry()
-        appium_service.start()
-        webDriverAgentUrl = request.config.getoption("--webDriverAgentUrl")
         if not appium_service.is_running:
             raise Exception("Appium server did not start!")
 
         capabilities = load_capabilities(currentPlatform)
+        webDriverAgentUrl = request.config.getoption("--webDriverAgentUrl")
         capabilities["webDriverAgentUrl"] = webDriverAgentUrl
-        print('Capabilities for iOS', capabilities)
 
         options = XCUITestOptions().load_capabilities(capabilities)
-        print("Loading options ====", options)
 
         def create_ios_driver():
-            drv = None
-            for attempt in range(3):
-                try:
-                    drv = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
-                    if drv is not None:
-                        break
-                except Exception as e:
-                    print(f"[WARN] Attempt {attempt + 1} to create iOS driver failed: {e}")
-                    time.sleep(5)
-            if not drv:
-                raise Exception("Failed to create iOS driver after retries")
+            drv = appiumDriver.Remote("http://127.0.0.1:4723", options=options)
             drv.implicitly_wait(30)
             return drv
 
-        driver = safe_action(create_ios_driver)
-
-        # Restart iOS app
-        bundleId = 'com.il.mcd'
-        try:
-            driver.execute_script('mobile: terminateApp', {'bundleId': bundleId})
-        except Exception as e:
-            print(f"[WARN] Failed to terminate iOS app {bundleId}: {e}")
-        driver.execute_script('mobile: activateApp', {'bundleId': bundleId})
+        driver = create_ios_driver()
 
     else:
         raise ValueError(f"Unknown platform: {currentPlatform}")
 
-    # ===== TEARDOWN =====
-    if driver:
-        print('Yielding driver instance')
-        yield driver
-        print('After yielding driver, starting teardown')
+    yield driver
 
+    # Teardown
+    if driver:
         try:
             driver.quit()
-            print("[DEBUG] Driver quit cleanly.")
+            print("[DEBUG] Driver quit successfully.")
         except Exception as e:
-            if "invalid session id" in str(e).lower():
-                print("[WARN] Driver session already ended, skipping quit().")
-            else:
-                print(f"[ERROR] Unexpected error during driver.quit(): {e}")
+            print(f"[WARN] Error quitting driver: {e}")
 
-        if appium_service and appium_service.is_running:
-            try:
-                appium_service.stop()
-                print("[DEBUG] Appium service stopped cleanly.")
-            except Exception as e:
-                print(f"[WARN] Error stopping Appium service: {e}")
-    else:
-        print('Yielding None - no driver created')
-        yield None
-
+    if appium_service and appium_service.is_running:
+        try:
+            appium_service.stop()
+            print("[DEBUG] Appium service stopped successfully.")
+        except Exception as e:
+            print(f"[WARN] Error stopping Appium service: {e}")
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):

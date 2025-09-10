@@ -1,14 +1,12 @@
 {
     "android": {
-        "platformName": "Android",
-        "appium:deviceName": "RZ8N810NC1K",
-        "appium:app": "D:\\\\UAT-v12.90.10-1756783420465.apk",
-        "appium:automationName": "UiAutomator2",
-        "appium:appPackage": "com.il.mcdelivery",
-        "appium:appActivity": "com.il.mcdelivery.MainActivity",
-        "appium:enforceXPath1": true
-    },
-
+    "platformName": "Android",
+    "appium:deviceName": "RZ8N810NC1K",
+    "appium:app": "D:\\UAT-v12.90.10-1756783420465.apk",
+    "appium:automationName": "UiAutomator2",
+    "appium:appPackage": "com.il.mcdelivery",
+    "appium:appActivity": "com.il.mcdelivery.MainActivity"
+},
     
     "web": {
        

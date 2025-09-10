@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium.webdriver.common.appiumby import AppiumBy
@@ -29,7 +30,7 @@ locators = {
         "BROWNIE_PRODUCT_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Chocochip Muffin']"),
         "MILLET_BUN_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='McSpicy Paneer Burger with Multi-Millet Bun']"),
         "TOTAL_PAYABLE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Total Payable']/following-sibling::android.widget.TextView"),
-        "DROP_DOWN_ICON": (AppiumBy.XPATH, "//android.widget.TextView[@text='Total Payable']/following-sibling::android.widget.TextView"),
+        "DROP_DOWN_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-down-cart']"),
         "REMOVE_ITEM_FROM_CART_PAGE" : (AppiumBy.XPATH, " (//android.widget.Image[@text='ic-subtract'])[1]"),
         "BURGER_XPATH": (AppiumBy.XPATH, "//android.widget.TextView[@text='{}']"),
         "MEXICAN_BURGER_ADDED": (AppiumBy.XPATH, "//android.widget.TextView[@text='Mexican Grilled Chicken & Cheese Burger + Fries (M)']"),
@@ -40,12 +41,13 @@ locators = {
         "HANDLING_CHARGES" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Handling Charges']"),
         "CGST" : (AppiumBy.XPATH, "//android.widget.TextView[@text='CGST']"),
         "SGST" : (AppiumBy.XPATH, "//android.widget.TextView[@text='SGST']"),
+        "DISCOUNT" : (AppiumBy.XPATH, "//android.widget.TextView[@text='Discount']"),
         "ADD_DELIVERY_INSTRUCTIONS": (AppiumBy.XPATH, "//android.view.View[@text='Add Delivery Instructions ic-address__add']"),
         "NOTE_TEXT_AREA": (AppiumBy.XPATH, "//android.widget.EditText"),
         "RECOMMENDATION": (AppiumBy.XPATH, "//android.widget.TextView[@text='Recommendation']"),
         "RECOMMENDATION_ADD_BUTTON": (AppiumBy.XPATH, "(//android.widget.Image[@text='ic-add'])[1]"),
         "OFFERS_FOR_YOU": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offers For You']"),
-        "VIEW_ALL": (AppiumBy.XPATH, "//android.widget.TextView[@text='View All']"),
+        "VIEW_ALL": (AppiumBy.XPATH, "//android.widget.TextView[@text='View All Offers']"),
         "KNOW_MORE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Know More']"),
         "DONATE_CHECKBOX_CHECKED": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-checkeddonate']"),
         "CHARITY_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Donate ₹ 3 for Ronald Mcdonald House of Charity.']"),
@@ -62,6 +64,7 @@ locators = {
         "CHANGE_OFFER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Change Offer']"),
         "FIRST_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='SPD82AA49EE9040']"),
         "SECOND_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='SPDB28292DD88C1']"),
+        "FLAT10_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='FLAT10']"),
 
 
          }
@@ -629,8 +632,14 @@ class AndroidViewCartScreen(BasePage):
         self.driver.back()
         time.sleep(1)
 
-    def click_view_all_link(self):
-        time.sleep(3)
+    def click_view_all_offers_link(self):
+        time.sleep(2)
+        self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true))'
+            '.scrollIntoView(new UiSelector().textContains("Total Payable"));'
+        )
+        time.sleep(1)
         self.actions.is_element_displayed(*locators['VIEW_ALL'])
         print("View all link is displayed")
         time.sleep(1)
@@ -792,6 +801,15 @@ class AndroidViewCartScreen(BasePage):
         else:
             raise AssertionError("❌ Discount not applied correctly. Total amount did not decrease.")
 
+        time.sleep(1)
+        self.driver.back()
+
+    def verify_applied_offer_displays_in_cart(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['OFFER_APPLIED_TEXT'])
+        print("offer applied text is displayed")
+        self.actions.is_element_displayed(*locators['FLAT10_OFFER_NAME'])
+        print("'Flat10' offer name is displayed")
         time.sleep(1)
         self.driver.back()
 
