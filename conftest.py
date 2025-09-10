@@ -217,7 +217,7 @@ def setup_platform(env, request):
         capabilities = load_capabilities(currentPlatform)
         appPath = os.path.abspath(os.getcwd())
        
-        capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
+        #capabilities["appium:app"] = os.path.join(appPath, 'builds', appToLaunch)
         print('capabilities to load', capabilities)
         
         options = UiAutomator2Options().load_capabilities(capabilities)
