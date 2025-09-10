@@ -35,7 +35,7 @@ class BasePage:
             raise Exception(f" Unsupported driver type: {type(driver)}. Actions not initialized.")
 
 
-    def launch_application(self, appURL):
+    def launch_application(self, appURL =None):
         if appURL:
             self.actions.launch_browser_url(appURL)
             print("Opened McD Website")
