@@ -13,7 +13,7 @@ from pages.android_search_menu_screen import AndroidSearchMenuScreen
 from pages.android_address_screen import AndroidAddressScreen
 from pages.android_view_cart_screen import AndroidViewCartScreen
 from pages.android_menu_screen import AndroidMenuScreen
-from pages.android_offer_screen import AndroidOfferPage
+# from pages.android_offer_screen import AndroidOfferPage
 from conftest import readPreReqJson
 import allure
 import time
