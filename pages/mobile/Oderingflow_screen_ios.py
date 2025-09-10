@@ -201,14 +201,12 @@ class OderingScreenIos(BasePage):
         print("Entered address: Flat No - Gurugram")    
 
     def clear_order(self):
-        time.sleep(2)
-        if self.actions.is_element_displayed(*locators['CLEAR_ORDER_BUTTON']):
-            self.actions.click_button(*locators['CLEAR_ORDER_BUTTON'])
-            if self.actions.is_element_displayed(*locators['CLEAR_ORDER_OK_BUTTON']):
-                self.actions.click_button(*locators['CLEAR_ORDER_OK_BUTTON'])
-            print("Order cleared")
-        else:
-            print("No order to clear")
+        self.actions.click_button(*locators['CLEAR_ORDER_BUTTON'])
+        self.actions.click_button(*locators['CLEAR_ORDER_OK_BUTTON'])
+        print("Order cleared successfully.")
+                
+
+
   
 
     def search_location_outofstock(self):

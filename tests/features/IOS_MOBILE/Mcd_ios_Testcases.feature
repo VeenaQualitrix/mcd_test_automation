@@ -1437,7 +1437,7 @@ Scenario: Search for an existing menu item
     Then I verify the app home screen is displayed
     When I click on the Search icon
     And I enter Fries in the search bar
-    And I click on the search icon inside the search bar
+    # And I click on the search icon inside the search bar
     Then I verify the search results display matching items
 
 @TC_IOS_Search_Mobile_0002 @TC_Demo
@@ -1446,7 +1446,7 @@ Scenario: Search for a non-existent menu item
     Then I verify the app home screen is displayed
     When I click on the Search icon
     And I enter a non-existent menu item
-    And I click on the search icon inside the search bar
+    # And I click on the search icon inside the search bar
     Then I verify the No items found message is displayed
 
 @TC_IOS_Search_Mobile_0003 @TC_Demo
@@ -1454,8 +1454,48 @@ Scenario: Search with empty input
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     When I click on the Search icon
-    And I click on the search icon inside the search bar
+    # And I click on the search icon inside the search bar
     Then I verify the prompt message is displayed for empty input
+
+
+@TC_IOS_Search_Mobile_00031 @TC_Demo
+Scenario: Use Veg filter to filter results
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I click on the Veg filter button
+    Then verify only veg items should be displayed in the results
+    
+
+
+@TC_IOS_Search_Mobile_00032 @TC_Demo
+Scenario: Use Non-Veg filter to filter results
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I click on the Non-Veg filter button
+    Then verify only non-veg items should be displayed in the results
+
+@TC_IOS_Search_Mobile_00033 @TC_Demo
+Scenario: Search while Veg filter is active
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I click on the Veg filter button
+    And I enter Burger in the search bar
+    Then verify only veg items containing Burger are displayed in the results
+
+@TC_IOS_Search_Mobile_00034 @TC_Demo
+Scenario: Clear search and reset filters
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I enter Burger in the search bar
+    # And I click on the search icon inside the search bar
+    And I click on the Veg filter button
+    And I clear the search input
+    Then verify the default view is restored with no filters applied
+
 
 
 @TC_IOS_Search_Mobile_0004 @TC_Demo
@@ -1464,7 +1504,7 @@ Scenario: Add item to cart from search result
     Then I verify the app home screen is displayed
     When I click on the Search icon
     And I enter Fries in the search bar
-    And I click on the search icon inside the search bar
+    # And I click on the search icon inside the search bar
     Then  I click on an item to Add
     And I click on Add to Cart
     And I click on View Cart
@@ -1478,12 +1518,23 @@ Scenario: Maintain search term after adding to cart
     Then I verify the app home screen is displayed
     When I click on the Search icon
     And I enter Burger in the search bar
-    And I click on the search icon inside the search bar
+    # And I click on the search icon inside the search bar
     Then  I click on an item to Add
     And I click on Add to Cart
     Then I verify the search results for Burger are still displayed
     And I click on View Cart
     Then I clear the order
+
+@TC_IOS_Search_Mobile_00037 @TC_Demo
+Scenario: Filter buttons maintain state across search
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    # And I click on the search icon inside the search bar
+    And I click on the Veg filter button
+    And I enter Wrap in the search bar
+    Then I verify only items containing Wrap are displayed in the results
+
 
 @TC_IOS_Search_Mobile_0006 @TC_Demo
 Scenario: Verify placeholder text in search input
@@ -1491,3 +1542,63 @@ Scenario: Verify placeholder text in search input
     Then I verify the app home screen is displayed
     When I click on the Search icon
     Then I verify the placeholder text in the search bar is displayed as Search here
+
+
+@TC_IOS_Search_Mobile_00040 @TC_Demo
+Scenario: Search responsiveness on different screen sizes
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I click on the Veg filter button
+    And I enter Burger in the search bar
+    Then verify only veg items containing Burger are displayed in the results
+
+@TC_IOS_Search_Mobile_00041 @TC_Demo
+Scenario: Filter button toggle behavior
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I click on the Veg filter button
+    And I click  the Veg filter button again
+    Then I verify the default view is restored with no filters applied
+
+@TC_IOS_Search_Mobile_00042 @TC_Demo
+Scenario: Search persists across page reload
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    When I click on the Search icon
+    And I enter Burger in the search bar
+    Then  I clicked on the back button in search page
+
+@TC_IOS_Offer_Mobile_001 @TC_Demo
+Scenario: View All Offers Functionality
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link
+    Then I verify that the offers page is displayed  
+    Then  I clicked on the back button in search page 
+        
+@TC_IOS_Offer_Mobile_002 @TC_Demo
+Scenario: View All Offers Functionality
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    And I tap on the View All Offers link    
+    And I enter a valid coupon code "FLAT10" in the coupon input field  
+    And I tap on the search button
+    Then I verify that an offer card with code "FLAT10" is displayed
+
+
+@TC_IOS_Offer_Mobile_003 @TC_Demo
+Scenario: View All Offers Functionality
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    And I tap on the View All Offers link    
+    And I scroll through all the offer cards
+    Then I verify  coupon code, description, Show More link, and Apply button
