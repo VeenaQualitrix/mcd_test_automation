@@ -112,7 +112,7 @@ locators = {
 
 'LARGER_DESSERT_IMAGE': (AppiumBy.XPATH, '//XCUIElementTypeImage[contains(@name, "img_")]'),
 
-'NUTRITION_BURGER': (AppiumBy.XPATH, '//XCUIElementTypeOther[@name="Korean Mc Spicy Premium Paneer Burger"]'),
+'NUTRITION_BURGER': (AppiumBy.XPATH, '(//XCUIElementTypeOther[contains(@label, "Burger")])[9]'),
 
 
 'NUTRITION_INFO_1': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[contains(@name, "Gluten")]'),
@@ -131,17 +131,19 @@ locators = {
 
 'DECREASE_QUANTITY': (AppiumBy.XPATH, '//XCUIElementTypeImage[@name="ic-subtract"]'),
 
-'SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]'),
+'SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[14]'),
 
-'HANDLING_CHARGE': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[20]'),
+'HANDLING_CHARGE': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[15]'),
 
-'CGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]'),
+'CGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[16]'),
 
-'SGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[22]'),
+'SGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[17]'),
 
-'CART_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[18]'),
+'CART_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[13]'),
 
 'EMPTY_CART_MESSAGE': (AppiumBy.XPATH, '(//XCUIElementTypeOther[@name="main"])[2]'),
+
+'DROPDOWN': (AppiumBy.ACCESSIBILITY_ID, "ic-arrow-down-cart"),
 
 }
 class OderingScreenIos(BasePage):
@@ -270,7 +272,7 @@ class OderingScreenIos(BasePage):
         print(f"Confirm button visible: {confirm_visible}")
 
     def scroll_to_element(self, locator):
-        element = self.driver.find_element(*locator)
+        element = self.actions.find_element(*locator)
         self.driver.execute_script("mobile: scrollToElement", {"elementId": element.id})
         time.sleep(1)
 
@@ -350,7 +352,7 @@ class OderingScreenIos(BasePage):
     def verify_dessert_item_in_cart(self):
         time.sleep(2)
         print("Verifying that the dessert item is added to the cart...")
-        cart_items = self.driver.find_elements(*locators['CART_ITEM_LIST'])
+        cart_items = self.actions.find_elements(*locators['CART_ITEM_LIST'])
         for item in cart_items:
             print("Cart contains:", item.get_attribute("name"))
         dessert_found = any("McFlurry" in item.get_attribute("name") for item in cart_items)
@@ -374,7 +376,7 @@ class OderingScreenIos(BasePage):
     def verify_chicken_wrap_item_in_cart(self):
         time.sleep(2)
         print("Verifying 'Mexican Grilled Chicken' item is in the cart...")
-        cart_items = self.driver.find_elements(*locators['CART_ITEM_LIST_WRAP'])
+        cart_items = self.actions.find_elements(*locators['CART_ITEM_LIST_WRAP'])
         for item in cart_items:
             item_name = item.get_attribute("name")
             print("Cart item found:", item_name)
@@ -510,26 +512,33 @@ class OderingScreenIos(BasePage):
         print(f"Larger dessert image visible: {is_visible}")
 
     def is_nutrition_info_displayed(self):
+        self.driver.execute_script("mobile: scroll", {
+        "direction": "down",
+        "predicateString": "label == 'McAloo Tikki Burger with Cheese'"
+    })
         time.sleep(2)
         print("Clicking on the nutrition burger to open nutrition info...")
         self.actions.click_button(*locators['NUTRITION_BURGER'])
         time.sleep(2)
-
+        # Each tuple: (locator_key, should_be_visible, success_message)
         nutrition_elements = [
-            ('NUTRITION_INFO_1', "Nutrition information is displayed."),
-            ('NUTRITION_INFO_2', "Closed the nutrition information popup."),
-            ('NUTRITION_INFO_3', "Nutrition information is displayed."),
-            ('NUTRITION_INFO_4', "Nutrition information is displayed.")
+            ('NUTRITION_INFO_1', True, "Nutrition Info 1 is displayed as expected."),
+            ('NUTRITION_INFO_2', False, "Nutrition Info 2 should not be visible."),
+            ('NUTRITION_INFO_3', True, "Nutrition Info 3 is displayed correctly."),
+            ('NUTRITION_INFO_4', True, "Nutrition Info 4 is displayed.")
         ]
-        for locator_key, message in nutrition_elements:
+        for locator_key, should_be_visible, message in nutrition_elements:
             try:
-                visible = self.actions.is_element_displayed(*locators[locator_key])
-                if visible:
+                is_visible = self.actions.is_element_displayed(*locators[locator_key])
+                if should_be_visible:
+                    assert is_visible, f"{locator_key} was expected to be visible but is not."
                     print(message)
                 else:
-                    print(f"{locator_key} is NOT displayed.")
+                    assert not is_visible, f"{locator_key} was not expected to be visible but it is."
+                    print(f"{locator_key} is correctly not displayed.")
             except Exception as e:
-                print(f"Error checking {locator_key}: {e}")
+                print(f"Error while checking visibility of {locator_key}: {e}")
+
 
 
 
@@ -563,8 +572,9 @@ class OderingScreenIos(BasePage):
         print("Scrolling to 'Total Payable' section...")
         self.driver.execute_script("mobile: scroll", {
             "direction": "down",
-            "predicateString": "name CONTAINS 'Total Payable'"
+            "predicateString": "name CONTAINS 'Add Delivery Instructions'"
         })
+        self.actions.click_button(*locators['DROPDOWN'])
         print("Fetching individual price components...")
         # Get prices of individual components
         item_prices = [

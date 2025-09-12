@@ -368,7 +368,7 @@ def pytest_runtest_makereport(item, call):
 
 
 consecutive_failure_abort = "False"
-consecutive_failure_count = 5
+consecutive_failure_count = 10
 consecutive_failures = 0
 
 

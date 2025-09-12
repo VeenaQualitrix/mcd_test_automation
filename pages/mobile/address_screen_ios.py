@@ -100,11 +100,16 @@ class AddressScreenIos(BasePage):
     
     def click_next_button(self):
         print("Attempting to click on the 'Next' button...")
-        if self.actions.is_element_displayed(*locators['NEXT_BUTTON']):
-            self.actions.click_button(*locators['NEXT_BUTTON'])
-            print(" Successfully clicked on the 'Next' button.")
-        else:
-            print("'Next' button is not visible. Skipping the click.")
+        try:
+            next_button = self.actions.find_element(*locators['NEXT_BUTTON'])
+            if next_button:
+                self.actions.click_button(*locators['NEXT_BUTTON'])
+                print("Successfully clicked on the 'Next' button.")
+            else:
+                print("'Next' button element was not found.")
+        except Exception as e:
+            print(f"Failed to click 'Next' button: {e}")
+
 
 
         
@@ -172,7 +177,7 @@ class AddressScreenIos(BasePage):
 
     def is_save_button_disabled(self):
         time.sleep(1)  # Use explicit wait ideally
-        save_button = self.driver.find_element(*locators['SAVE_ADDRESS_BUTTON'])
+        save_button = self.actions.find_element(*locators['SAVE_ADDRESS_BUTTON'])
         is_enabled = save_button.is_enabled()
         print(f"'Save' button enabled state: {is_enabled}")
         return not is_enabled
@@ -216,7 +221,7 @@ class AddressScreenIos(BasePage):
     def verify_duplicate_address_saved(self):
         time.sleep(2)  
         # Get all address elements from the "All Address" section
-        address_elements = self.driver.find_elements(*locators["ALL_ADDRESS"])
+        address_elements = self.actions.find_elements(*locators["ALL_ADDRESS"])
 
         # Extract the text of each address
         addresses = [el.text.strip() for el in address_elements]
