@@ -80,6 +80,12 @@ locators = {
 
 'SELECT_ADDRESS': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[@name="Home"])[1]'),
 
+'DROPDOWN': (AppiumBy.ACCESSIBILITY_ID, 'ic-arrow-down-cart'),
+
+'BACKBUTTON': (AppiumBy.ACCESSIBILITY_ID, 'ic-arrow-left-primary'),
+
+
+
 }
 class CartScreenIos(BasePage):
 
@@ -126,7 +132,8 @@ class CartScreenIos(BasePage):
         time.sleep(2)
         print("Fetching individual item prices from the cart...")
         # Get all item price elements in the cart (e.g., "₹179")
-        item_price_elements = self.driver.find_elements(*locators['CART_ITEM_PRICE_LIST'])
+        self.actions.click_button(*locators['DROPDOWN'])
+        item_price_elements = self.actions.find_elements(*locators['CART_ITEM_PRICE_LIST'])
         item_prices = []
         for elem in item_price_elements:
             price_text = elem.text.strip()
@@ -215,12 +222,17 @@ class CartScreenIos(BasePage):
         self.actions.click_button(*locators['CHARITY_DONATION_CHECKBOX'])
         print("Charity donation checkbox selected")
 
+    import re
+
     def validate_donation_amount(self):
-        print("Validating donation amount of ₹3 is displayed...")
+        self.actions.click_button(*locators['DROPDOWN'])
+        print("Validating donation amount of ₹3.00 is displayed...")
         donation_text = self.actions.get_text(*locators['DONATION_AMOUNT'])
+        print(f"Donation text found: {donation_text}")
         donation_value = float(re.sub(r"[^\d.]", "", donation_text))
-        assert donation_value == 3.0, "Donation amount is not ₹3 as expected."
-        print("Donation amount of ₹3 is correctly displayed.")
+        assert donation_value == 3.0, f"Donation amount is not ₹3.00 Found: ₹{donation_value}"
+        print("Donation amount of ₹3.00 is correctly displayed.")
+
 
     def uncheck_charity_donation(self):
         print("Scrolling to 'Donation' section...")
@@ -316,7 +328,7 @@ class CartScreenIos(BasePage):
 
     def is_total_price_correct(self):
         print("Fetching all item prices...")
-        item_price_elements = self.driver.find_elements(*locators['CART_ITEM_PRICE_LIST'])
+        item_price_elements = self.actions.find_elements(*locators['CART_ITEM_PRICE_LIST'])
 
         item_prices = []
         for elem in item_price_elements:
@@ -339,7 +351,7 @@ class CartScreenIos(BasePage):
         })
 
         print("Fetching displayed total price...")
-        total_element = self.driver.find_element(*locators['SUB_TOTAL'])
+        total_element = self.actions.find_element(*locators['SUB_TOTAL'])
         displayed_total_text = total_element.text.strip()
         print(f"Displayed total text: {displayed_total_text}")
 
@@ -357,7 +369,7 @@ class CartScreenIos(BasePage):
         
     def validate_estimated_delivery_time(self):
         print("Validating visibility of 'Estimated Delivery Time' below the delivery address...")
-        element = self.driver.find_element(*locators['ESTIMATED_DELIVERY_TIME'])
+        element = self.actions.find_element(*locators['ESTIMATED_DELIVERY_TIME'])
         if element.is_displayed():
             print("'Estimated Delivery Time' is displayed correctly.")
         else:
@@ -391,7 +403,7 @@ class CartScreenIos(BasePage):
 
     
     def validate_single_promo_code_applied(self):
-        applied_promo_elements = self.driver.find_elements(*locators['APPLIED_PROMO_CODES'])
+        applied_promo_elements = self.actions.find_elements(*locators['APPLIED_PROMO_CODES'])
         visible_promo_codes = [elem for elem in applied_promo_elements if elem.is_displayed()]
         print(f"Number of visible applied promo codes: {len(visible_promo_codes)}")
         return len(visible_promo_codes) == 1
@@ -420,46 +432,34 @@ class CartScreenIos(BasePage):
         self.actions.click_button(*locators['CLICK_OK'])
         print("Second promo code application confirmed.")
 
-    
-
-
-
 
 
     def validate_discount_deduction(self):
         print("Fetching all cart item prices...")
-        
-        # Fetch all item prices
-        item_price_elements = self.driver.find_elements(*locators['CART_ITEM_PRICE_LIST'])
+        item_price_elements = self.actions.find_elements(*locators['CART_ITEM_PRICE_LIST'])
         item_prices = []
-
         for elem in item_price_elements:
             price_text = elem.text.strip()
             print(f"Item price: {price_text}")
             
             if not price_text.startswith("₹"):
                 raise AssertionError(f"Item price does not start with ₹: {price_text}")
-            
             # Remove ₹ and comma, convert to float, then to int (removes decimals)
             price = int(float(price_text.replace("₹", "").replace(",", "").strip()))
             item_prices.append(price)
-
         # Fetch discount percentage text
-        discount_text = self.driver.find_element(*locators['DISCOUNT_LABEL']).text.strip()
+        discount_text = self.actions.find_element(*locators['DISCOUNT_LABEL']).text.strip()
         print(f"Discount text: {discount_text}")
-        
         # Extract numeric part from discount (e.g., "10%" or "10per")
         match = re.search(r"(\d+)", discount_text)
         if not match:
             raise AssertionError(f"Discount text does not contain a number: {discount_text}")
         discount_percentage = float(match.group(1))
         print(f"Discount percentage extracted: {discount_percentage}%")
-
         # Calculate discount amount
         total_price = sum(item_prices)
         discount = (discount_percentage / 100) * total_price
         print(f"Calculated discount: ₹{discount:.2f}")
-
         # Scroll to bring subtotal into view
         print("Scrolling to subtotal section...")
         self.driver.execute_script("mobile: scroll", {
@@ -468,7 +468,7 @@ class CartScreenIos(BasePage):
         })
 
         # Fetch subtotal
-        subtotal_text = self.driver.find_element(*locators['DISCOUNT_SUB_TOTAL']).text.strip()
+        subtotal_text = self.actions.find_element(*locators['DISCOUNT_SUB_TOTAL']).text.strip()
         print(f"Subtotal text: {subtotal_text}")
         if not subtotal_text.startswith("₹"):
             raise AssertionError(f"Subtotal text does not start with ₹: {subtotal_text}")
@@ -506,6 +506,7 @@ class CartScreenIos(BasePage):
             f"Expected message '{expected_message}', but got '{actual_message}'"
         print(" Error message verified successfully.")
         self.actions.click_button(*locators['CLICK_OK'])
+        self.actions.click_button(*locators['BACKBUTTON'])
 
     def add_delivery_instruction(self, notes):
         print("Scrolling to 'Add Delivery Instructions'...")

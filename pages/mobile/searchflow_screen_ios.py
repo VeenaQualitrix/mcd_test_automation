@@ -23,9 +23,9 @@ locators = {
 
 'SEARCH_RESULT_ITEMS': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Fries (Large)"]'),
 
-"NO_ITEMS_MESSAGE": (AppiumBy.ACCESSIBILITY_ID, "No matching item found"),
+"NO_ITEMS_MESSAGE": (AppiumBy.ACCESSIBILITY_ID, "Oops, no results found!"),
 
-"EMPTY_ITEMS_MESSAGE": (AppiumBy.ACCESSIBILITY_ID, "Search menu item"),
+"EMPTY_ITEMS_MESSAGE": (AppiumBy.XPATH, "(//XCUIElementTypeOther[@name='main'])[2]/XCUIElementTypeOther[3]"),
 
 'CART_ITEM_NAME': (AppiumBy.XPATH, "(//XCUIElementTypeImage[contains(@name, 'Fries')])[1]"),
 
@@ -46,6 +46,8 @@ locators = {
 "VEG_FILTER_BUTTON_CLOSE": (AppiumBy.ACCESSIBILITY_ID, "ic-close-red"),
 
 "BACK_BUTTON": (AppiumBy.ACCESSIBILITY_ID, "ic-arrow-left-primary"),
+
+'EMPTY_SEARCH_ICON': (AppiumBy.XPATH, "//XCUIElementTypeTextField[@value='Search here']"),
 
 }
 class SearchScreenIos(BasePage):
@@ -83,8 +85,13 @@ class SearchScreenIos(BasePage):
     def get_no_items_message(self):
         return self.actions.get_text(*locators["NO_ITEMS_MESSAGE"])
     
+    
     def get_no_items_empty_message(self):
-        return self.actions.get_text(*locators["EMPTY_ITEMS_MESSAGE"])
+        print("Checking if the prompt message is displayed for empty search input...")
+        prompt_element = self.actions.find_element(*locators["EMPTY_ITEMS_MESSAGE"])
+        assert self.actions.is_element_displayed(prompt_element), "Prompt message is not displayed."
+        actual_text = prompt_element.text.strip()
+        print(f"Prompt message displayed: '{actual_text}'")
 
 
     def get_cart_item_name(self):
@@ -195,3 +202,8 @@ class SearchScreenIos(BasePage):
             print(" Verified: Previous screen is displayed after clicking back")
         except Exception as e:
             print(f"Warning: Could not verify previous screen. Details: {e}")
+
+    def click_empty_search_icon(self):
+        print("Clicking on the empty search icon inside the search bar...")
+        self.actions.click_button(*locators["EMPTY_SEARCH_ICON"])
+        print("Successfully clicked the empty search icon.")
