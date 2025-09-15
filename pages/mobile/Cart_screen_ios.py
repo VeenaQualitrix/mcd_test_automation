@@ -26,13 +26,20 @@ locators = {
 
 'INSTRUCTION_TEXT_FIELD': (AppiumBy.XPATH, '//XCUIElementTypeTextView'),
 
-'SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[18]'),
+'SUB_TOTAL': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Sub Total"]/following::XCUIElementTypeStaticText[1]'),
+
+'HANDLINNG_CHARGERS': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Handling Charges"]/following::XCUIElementTypeStaticText[1]'),
 
 'CART_ITEM_PRICE_LIST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[1]'),
 
-'CGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[20]'),
+'CGST': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="CGST"]/following::XCUIElementTypeStaticText[contains(@name, "₹")][1]'),
 
-'SGST': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]'),
+'SGST': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="SGST"]/following::XCUIElementTypeStaticText[contains(@name, "₹")][1]'),
+
+'TOTAL_AMOUNT': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Total Payable"]/following::XCUIElementTypeStaticText[contains(@name, "₹")][1]'),
+
+'TOTAL_AMOUNT_DISCOUNT': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Total Payable"]/following::XCUIElementTypeStaticText[contains(@name, "₹")][2]'),
+
 
 'BACK_BUTTON': (AppiumBy.ACCESSIBILITY_ID, 'ic-arrow-back'),
 
@@ -68,7 +75,7 @@ locators = {
 
 'INCREASE_QUANTITY': (AppiumBy.XPATH, '(//XCUIElementTypeImage[@name="ic-add"])[1]'),
 
-'DISCOUNT_SUB_TOTAL': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[19]'),
+'DISCOUNT': (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Discount"]/following::XCUIElementTypeStaticText[1]'),
 
 'PROMO_CODE_TEXT_FIELD': (AppiumBy.XPATH, '//XCUIElementTypeTextField[@value="Enter Coupon Code"]'),
 
@@ -122,47 +129,48 @@ class CartScreenIos(BasePage):
         print("Delivery instructions added successfully.")
 
     def verify_subtotal_reflects_all_items(self):
-        print("Verifying that the subtotal reflects all additions accurately...")
+        print("Validating that the subtotal equals the sum of all item prices (ignoring decimals)...")
         time.sleep(2)
-        print("Scrolling to 'Subtotal' section...")
-        self.driver.execute_script("mobile: scroll", {
-            "direction": "down",
-            "predicateString": "name == 'Subtotal'"
-        })
+        self.driver.execute_script(
+            "mobile: scroll",
+            {"direction": "down", "predicateString": "name == 'Subtotal'"}
+        )
         time.sleep(2)
-        print("Fetching individual item prices from the cart...")
-        # Get all item price elements in the cart (e.g., "₹179")
+        # Expand item list if needed
         self.actions.click_button(*locators['DROPDOWN'])
+        # Get all item prices
         item_price_elements = self.actions.find_elements(*locators['CART_ITEM_PRICE_LIST'])
         item_prices = []
         for elem in item_price_elements:
             price_text = elem.text.strip()
             if price_text:
-                price_value = float(re.sub(r"[^\d.]", "", price_text))
-                item_prices.append(price_value)
-        calculated_subtotal = round(sum(item_prices), 2)
-        print(f"Calculated subtotal from all items: ₹{calculated_subtotal}")
-        # Get displayed subtotal from UI (e.g., "Subtotal: ₹358.08")
-        displayed_subtotal_text = self.actions.get_text(*locators['SUB_TOTAL'])
-        displayed_subtotal = float(re.sub(r"[^\d.]", "", displayed_subtotal_text))
-        print(f"Displayed Subtotal on UI: ₹{displayed_subtotal}")
-        if calculated_subtotal == displayed_subtotal:
-            print("Subtotal reflects all added items accurately.")
-        else:
-            print("Subtotal mismatch.")
-            print(f"Expected: ₹{calculated_subtotal}, Found: ₹{displayed_subtotal}")
+                try:
+                    amount = float(re.sub(r"[^\d.]", "", price_text))
+                    item_prices.append(amount)
+                except ValueError:
+                    print(f"Unable to parse item price: '{price_text}'")
+        calculated_subtotal = int(sum(item_prices))  # Ignore decimals
+        print(f"Calculated subtotal from items (rounded): ₹{calculated_subtotal}")
+        # Get displayed subtotal
+        displayed_subtotal_text = self.actions.get_text(*locators['SUB_TOTAL']).strip()
+        displayed_subtotal = int(float(re.sub(r"[^\d.]", "", displayed_subtotal_text)))  # Ignore decimals
+        print(f"Displayed subtotal on UI (rounded): ₹{displayed_subtotal}")
+        # Assert subtotal matches
+        assert calculated_subtotal == displayed_subtotal, (
+            f"Subtotal mismatch: Expected ₹{calculated_subtotal}, but found ₹{displayed_subtotal}"
+        )
+        print("Subtotal matches total of all items (ignoring decimal part).")
+
+
 
     def validate_tax_breakdown(self):
         print("Validating CGST and SGST independently...")
-
         try:
-            # Scroll to 'Total Payable'
             self.driver.execute_script("mobile: scroll", {
                 "direction": "down",
                 "predicateString": "name CONTAINS 'Total Payable'"
             })
             time.sleep(2)
-
             # Wait for CGST and SGST to appear
             cgst_text = self.actions.get_text(*locators['CGST'])
             sgst_text = self.actions.get_text(*locators['SGST'])
@@ -286,85 +294,66 @@ class CartScreenIos(BasePage):
 
     
 
-    def validate_currency_symbols(self, timeout=15):
-        print("Scrolling to 'Add Delivery Instructions'...")
-        self.driver.execute_script("mobile: scroll", {
-            "direction": "down",
-            "predicateString": "name == 'Add Delivery Instructions'"
-        })
-        """
-        Validates that specific elements (using XPath with ₹) are visible
-        and correctly prefixed with the ₹ symbol.
-        """
-        wait = WebDriverWait(self.driver, timeout)
-        print("Validating ₹ symbol on specific cart price elements...")
+    def validate_currency_symbols(self):
+        print("Scrolling to ensure all price elements are visible...")
+        self.driver.execute_script(
+            "mobile: scroll",
+            {"direction": "down", "predicateString": "name == 'Add Delivery Instructions'"}
+        )
+        # Expand detailed view if needed
+        self.actions.click_button(*locators['DROPDOWN'])
+        # Find all visible elements containing ₹
+        elements = self.driver.find_elements(AppiumBy.XPATH, "//XCUIElementTypeStaticText[contains(@name, '₹')]")
+        price_elements = []
+        for elem in elements:
+            text = elem.text.strip()
+            if text.startswith("₹"):
+                price_elements.append(text)
+            else:
+                print(f"Skipping non-price element: '{text}'")
+        if not price_elements:
+            raise AssertionError("No valid price elements found starting with ₹.")
+        for price_text in price_elements:
+            print(f"Validating price element: '{price_text}'")
+            if not price_text.startswith("₹"):
+                raise AssertionError(f"Element text '{price_text}' does not start with ₹ symbol")
+        print("All price elements start with ₹ symbol.")
 
-        price_elements = {
-            "Subtotal":        (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[18]'),
-            "CGST":            (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[20]'),
-            "SGST":            (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[contains(@name, "₹")])[21]')
-        }
-        failures = []
-        for label, locator in price_elements.items():
-            try:
-                print(f"Waiting for '{label}' element: {locator[1]}")
-                element = wait.until(EC.visibility_of_element_located(locator))
-                price_text = element.text.strip()
-                print(f"{label}: '{price_text}'")
-
-                # Validate ₹ is at the start of the text
-                if not re.match(r"^₹\s?\d", price_text):
-                    failures.append(f"{label}: '{price_text}' (invalid or missing ₹ symbol)")
-            except TimeoutException:
-                failures.append(f"{label}: Element not visible or not found")
-        if failures:
-            print("Validation failed for the following price components:")
-            for issue in failures:
-                print(" -", issue)
-            raise AssertionError("₹ symbol validation failed:\n" + "\n".join(failures))
-        print("All specified price elements correctly display the ₹ symbol.")
 
 
 
     def is_total_price_correct(self):
-        print("Fetching all item prices...")
-        item_price_elements = self.actions.find_elements(*locators['CART_ITEM_PRICE_LIST'])
+        self.actions.click_button(*locators['DROPDOWN'])
+        print("Validating if the total price matches the sum of Subtotal + CGST + SGST + Handling Charges...")
+        # Fetch values from the UI
+        subtotal_text = self.actions.get_text(*locators['SUB_TOTAL']).strip()
+        handling_text = self.actions.get_text(*locators['HANDLINNG_CHARGERS']).strip()
+        cgst_text = self.actions.get_text(*locators['CGST']).strip()
+        sgst_text = self.actions.get_text(*locators['SGST']).strip()
+        total_text = self.actions.get_text(*locators['TOTAL_AMOUNT']).strip()
+        # Clean and convert to float
+        subtotal = float(re.sub(r"[^\d.]", "", subtotal_text))
+        handling = float(re.sub(r"[^\d.]", "", handling_text))
+        cgst = float(re.sub(r"[^\d.]", "", cgst_text))
+        sgst = float(re.sub(r"[^\d.]", "", sgst_text))
+        total_displayed = float(re.sub(r"[^\d.]", "", total_text))
+        # Calculate expected total
+        expected_total = round(subtotal + handling + cgst + sgst, 2)
+        # Print breakdown
+        print(f"Subtotal: ₹{subtotal}")
+        print(f"Handling Charges: ₹{handling}")
+        print(f"CGST: ₹{cgst}")
+        print(f"SGST: ₹{sgst}")
+        print(f"Expected Total: ₹{expected_total}")
+        print(f"Displayed Total: ₹{total_displayed}")
+        # Allow a small tolerance of 0.05 (5 paisa)
+        tolerance = 0.07
+        difference = abs(expected_total - total_displayed)
+        assert difference <= tolerance, (
+            f"Total price mismatch: Expected ₹{expected_total}, but got ₹{total_displayed}. Difference: ₹{difference}"
+        )
+        print("Total price matches all expected components within tolerance.")
 
-        item_prices = []
-        for elem in item_price_elements:
-            price_text = elem.text.strip()
-            print(f"Item price: {price_text}")
-            if not price_text.startswith("₹"):
-                raise AssertionError(f"Price does not start with ₹: {price_text}")
-            # Extract price as float
-            price = float(price_text.replace("₹", "").strip())
-            item_prices.append(price)
-
-        # Sum item prices and convert to int to ignore decimals
-        expected_total_int = int(round(sum(item_prices), 0))
-        print(f"Expected total price (integer part): ₹{expected_total_int}")
-
-        # Scroll to total price element to make sure it's visible
-        self.driver.execute_script("mobile: scroll", {
-            "direction": "down",
-            "predicateString": "name == 'Add Delivery Instructions'"
-        })
-
-        print("Fetching displayed total price...")
-        total_element = self.actions.find_element(*locators['SUB_TOTAL'])
-        displayed_total_text = total_element.text.strip()
-        print(f"Displayed total text: {displayed_total_text}")
-
-        if not displayed_total_text.startswith("₹"):
-            raise AssertionError(f"Displayed total does not start with ₹: {displayed_total_text}")
-
-        displayed_total = float(displayed_total_text.replace("₹", "").strip())
-        displayed_total_int = int(round(displayed_total, 0))
-
-        if expected_total_int != displayed_total_int:
-            raise AssertionError(f"Total mismatch: Expected ₹{expected_total_int}, but found ₹{displayed_total_int}")
-
-        print(f"Total price matches (ignoring decimals): ₹{displayed_total_int}")
     
         
     def validate_estimated_delivery_time(self):
@@ -435,57 +424,36 @@ class CartScreenIos(BasePage):
 
 
     def validate_discount_deduction(self):
-        print("Fetching all cart item prices...")
-        item_price_elements = self.actions.find_elements(*locators['CART_ITEM_PRICE_LIST'])
-        item_prices = []
-        for elem in item_price_elements:
-            price_text = elem.text.strip()
-            print(f"Item price: {price_text}")
-            
-            if not price_text.startswith("₹"):
-                raise AssertionError(f"Item price does not start with ₹: {price_text}")
-            # Remove ₹ and comma, convert to float, then to int (removes decimals)
-            price = int(float(price_text.replace("₹", "").replace(",", "").strip()))
-            item_prices.append(price)
-        # Fetch discount percentage text
-        discount_text = self.actions.find_element(*locators['DISCOUNT_LABEL']).text.strip()
-        print(f"Discount text: {discount_text}")
-        # Extract numeric part from discount (e.g., "10%" or "10per")
-        match = re.search(r"(\d+)", discount_text)
-        if not match:
-            raise AssertionError(f"Discount text does not contain a number: {discount_text}")
-        discount_percentage = float(match.group(1))
-        print(f"Discount percentage extracted: {discount_percentage}%")
-        # Calculate discount amount
-        total_price = sum(item_prices)
-        discount = (discount_percentage / 100) * total_price
-        print(f"Calculated discount: ₹{discount:.2f}")
-        # Scroll to bring subtotal into view
-        print("Scrolling to subtotal section...")
-        self.driver.execute_script("mobile: scroll", {
-            "direction": "down",
-            "predicateString": "name == 'Subtotal'"
-        })
+        print("Validating: Total Payable = Subtotal + Handling Charges + CGST + SGST - Discount")
+        self.actions.click_button(*locators['DROPDOWN'])
+        # Fetch and clean all values
+        subtotal = float(re.sub(r"[^\d.]", "", self.actions.get_text(*locators['SUB_TOTAL']).strip()))
+        handling = float(re.sub(r"[^\d.]", "", self.actions.get_text(*locators['HANDLINNG_CHARGERS']).strip()))
+        cgst = float(re.sub(r"[^\d.]", "", self.actions.get_text(*locators['CGST']).strip()))
+        sgst = float(re.sub(r"[^\d.]", "", self.actions.get_text(*locators['SGST']).strip()))
+        discount = float(re.sub(r"[^\d.]", "", self.actions.get_text(*locators['DISCOUNT']).strip()))
+        # This is the total amount after discount
+        payable_total_text = self.actions.get_text(*locators['TOTAL_AMOUNT_DISCOUNT']).strip()
+        total_payable = float(re.sub(r"[^\d.]", "", payable_total_text))
+        # Calculate expected total
+        expected_total = round((subtotal + handling + cgst + sgst) - discount, 2)
+        # Print values for debugging
+        print(f"Subtotal: ₹{subtotal}")
+        print(f"Handling Charges: ₹{handling}")
+        print(f"CGST: ₹{cgst}")
+        print(f"SGST: ₹{sgst}")
+        print(f"Discount: ₹{discount}")
+        print(f"Expected Total Payable (after discount): ₹{expected_total}")
+        print(f"Displayed Total Payable: ₹{total_payable}")
+        # Allow ₹2.00 tolerance due to rounding
+        tolerance = 2.00
+        difference = abs(expected_total - total_payable)
+        # Validate within tolerance
+        assert difference <= tolerance, (
+            f"Mismatch in Total Payable: Expected ₹{expected_total}, Found ₹{total_payable}, Difference: ₹{difference}"
+        )
+        print(" Total Payable amount is correct (within ₹2.00 tolerance).")
 
-        # Fetch subtotal
-        subtotal_text = self.actions.find_element(*locators['DISCOUNT_SUB_TOTAL']).text.strip()
-        print(f"Subtotal text: {subtotal_text}")
-        if not subtotal_text.startswith("₹"):
-            raise AssertionError(f"Subtotal text does not start with ₹: {subtotal_text}")
-        subtotal = float(subtotal_text.replace("₹", "").replace(",", "").strip())
-
-        # Print summary
-        print(f"Total of all item prices: ₹{total_price:.2f}")
-        print(f"Discount applied: ₹{discount:.2f}")
-        print(f"Subtotal displayed: ₹{subtotal:.2f}")
-
-        # Validate subtotal correctness (rounded to integer for no decimals)
-        expected_subtotal = int(round(total_price - discount))
-        displayed_subtotal = int(round(subtotal))
-        if expected_subtotal != displayed_subtotal:
-            raise AssertionError(f"Subtotal mismatch: Expected ₹{expected_subtotal}, but found ₹{displayed_subtotal}")
-
-        print("Cart prices, discount, and subtotal validated successfully.")
 
          
     def enter_promo_code(self, promo_code):

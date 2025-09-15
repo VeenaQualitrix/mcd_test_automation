@@ -197,7 +197,7 @@ class SearchScreenIos(BasePage):
         self.actions.click_button(*locators['BACK_BUTTON'])
         print("Back button clicked successfully.")
         try:
-            assert self.actions.is_displayed(*locators['PREVIOUS_SCREEN_IDENTIFIER']), \
+            assert self.actions.is_element_displayed(*locators['PREVIOUS_SCREEN_IDENTIFIER']), \
                 " Failed: Previous screen not displayed after clicking back"
             print(" Verified: Previous screen is displayed after clicking back")
         except Exception as e:

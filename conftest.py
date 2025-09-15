@@ -468,3 +468,11 @@ def context():
     
 
     
+@pytest.fixture
+def user_data_store():
+    """Fixture to store user input temporarily across steps."""
+    return {}
+
+@pytest.fixture
+def context():
+    return {}
