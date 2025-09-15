@@ -14,6 +14,7 @@ locators = {
         "BACK_ICON": (AppiumBy.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
         "PROFILE_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='Test User01']"),
         "PROFILE_MOBILE": (AppiumBy.XPATH, "//android.widget.TextView[@text='+917777777777']"),
+        "MY_ORDERS": (AppiumBy.XPATH, "//android.widget.TextView[@text='My orders']"),
     
     }
 
@@ -75,5 +76,13 @@ class AndroidViewScreen(BasePage):
         assert current_mobile == user_data_store["original_mobile"], \
             f"Expected mobile: {user_data_store['original_mobile']}, but got: {current_mobile}"
         print(" Profile info remains unchanged after switching business model.")
+
+    def click_on_my_orders(self):
+        time.sleep(3)
+        self.actions.is_element_displayed(*locators['MY_ORDERS'])
+        print("My orders text is displayed")
+        time.sleep(1)
+        self.actions.click_button(*locators['MY_ORDERS'])
+        print("Clicked My Orders button")
 
     

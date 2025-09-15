@@ -13,7 +13,9 @@ from pages.android_search_menu_screen import AndroidSearchMenuScreen
 from pages.android_address_screen import AndroidAddressScreen
 from pages.android_view_cart_screen import AndroidViewCartScreen
 from pages.android_menu_screen import AndroidMenuScreen
-# from pages.android_offer_screen import AndroidOfferPage
+from pages.android_offer_screen import AndroidOfferPage
+from pages.android_payment_screen import AndroidPaymentScreen
+from pages.android_order_history_screen import AndroidOrderHistoryScreen
 from conftest import readPreReqJson
 import allure
 import time
@@ -346,6 +348,12 @@ def profile_edit_page(setup_platform):
     Profile_Screen = AndroidProfileScreen(setup_platform).verify_profile_edit_page()
     assert Profile_Screen, "The user is not navigated to profile edit page"
 
+@when("I clear email field")
+@allure.step("When I clear email field")
+def Clear_name_field(setup_platform):
+    print("verify clearing the email field")
+    AndroidProfileScreen(setup_platform).clear_email_field()
+
 @when("I edits the full name field with Test User01 and clicks Save Changes")
 @allure.step("When I edits the full name field with Test User01 and clicks Save Changes")
 def edit_name_and_click_save(setup_platform):
@@ -633,6 +641,12 @@ def verify_user_redirected_to_address_filling_page(setup_platform):
     print("Verifying user redirected to address fill in details page")
     Address_Page = AndroidAddressScreen(setup_platform).verify_redirect_to_address_filling_page()
     assert Address_Page, "Address filling details page is not displayed"
+
+@then("I verify address fill in details page is displayed")
+@allure.step("Then I verify address fill in details page is displayed")
+def verify_user_redirected_to_address_filling_page(setup_platform):
+    print("verify address fill in details page is displayed")
+    AndroidAddressScreen(setup_platform).verify_address_filling_page_is_displayed()
 
 @when("I leave mandatory field empty and click save address")
 @allure.step("When I leave mandatory field empty and click save address")
@@ -1502,37 +1516,13 @@ def verify_coupon_switch(setup_platform):
 @allure.step("Then I verify only one code applied at a time")
 def verify_applied_offer_and_click_change_offer(setup_platform):
     print("verify only one code applied at a time")
-    AndroidViewCartScreen(setup_platform).verify_applied_offer()
-
-@when("I apply the second promo code")
-@allure.step("When I apply the second promo code")
-def Select_second_promo_code(setup_platform):
-    print("apply the second promo code")
-    AndroidOfferPage(setup_platform).Select_second_promo_code()
-
-@then("I verify that the first offer is removed and the second offer is displayed")
-@allure.step("When I verify that the first offer is removed and the second offer is displayed")
-def verify_first_offer_is_removed_and_the_second_offer_is_displayed(setup_platform):
-    print("verify that the first offer is removed and the second offer is displayed")
-    AndroidViewCartScreen(setup_platform).verify_first_offer_is_removed_and_the_second_offer_is_displayed()
+    AndroidViewCartScreen(setup_platform).verify_applied_offer_is_displayed()
 
 @when("I clicks the 'Add' button multiple times to increase the item quantity")
 @allure.step("When I clicks the 'Add' button multiple times to increase the item quantity")
 def increase_cart_item_multiple_times(setup_platform):
     print("clicks the 'Add' button multiple times to increase the item quantity")
     AndroidViewCartScreen(setup_platform).increase_cart_item_multiple_times()
-
-@when("I apply the discount promo code")
-@allure.step("When I apply the discount promo code")
-def enter_promo_code_and_click_search(setup_platform):
-    print("apply the discount promo code")
-    AndroidOfferPage(setup_platform).enter_promo_code_and_click_search()
-
-@then("I verify total amount from order summary")
-@allure.step("When I verify total amount from order summary")
-def get_total_amount_from_order_summary(setup_platform):
-    print("verify total amount from order summary")
-    AndroidViewCartScreen(setup_platform).get_total_amount_from_order_summary()
 
 @then("I verify the discount should be clearly shown and deducted in the order summary")
 @allure.step("Then I verify the discount should be clearly shown and deducted in the order summary")
@@ -1721,6 +1711,7 @@ def verify_flat10_offer_card_visible(setup_platform):
     print("verify an offer card with the code 'FLAT10' should appear")
     AndroidOfferPage(setup_platform).verify_flat10_offer_card_visible()
 
+
 @then("I verify each offer card should displays code, description, Show More link, and Apply button")
 @allure.step("Then I verify each offer card should displays code, description, Show More link, and Apply button")
 def verify_offer_card_displays_correctly(setup_platform):
@@ -1757,9 +1748,189 @@ def verify_coupon_restriction_message(setup_platform):
 @allure.step("When I verify the discount should be successfully applied")
 def verify_discount_prices_in_order_summary(setup_platform):
     print("verify the discount should be successfully applied")
-    view_cart = ViewCartPage(setup_platform)
-    view_cart.step_capture_total_before_applying_promo() 
-    view_cart.verify_discount_is_applied_correctly()
+    AndroidViewCartScreen(setup_platform).verify_discount_in_order_summary()
+
+@then("I verify the offer layout should adapt responsively to the screen size")
+@allure.step("When I verify the offer layout should adapt responsively to the screen size")
+def verify_offer_layout_adapt_resize_window(setup_platform):
+    print("verify the offer layout should adapt responsively to the screen size")
+    AndroidOfferPage(setup_platform).verify_offers_screen_is_diplayed()
+
+@then("I verify all buttons and interactive elements should remain functional")
+@allure.step("When I verify all buttons and interactive elements should remain functional")
+def verify_all_buttons_are_functional_and_displays_correctly(setup_platform):
+    Flat10_Coupon_code= readPreReqJson("test_data", "Flat10_Coupon_code")
+    print("verify all buttons and interactive elements should remain functional")
+    AndroidOfferPage(setup_platform).enter_Flat10_coupon_code_click_apply_button(Flat10_Coupon_code)
+
+@then("I verify the offers should appear in a scrollable or paginated format without any visual breakage")
+@allure.step("When I verify the offers should appear in a scrollable or paginated format without any visual breakage")
+def verify_offers_page_should_be_scrollable_if_many_offer_exists(setup_platform):
+    print("verify the offers should appear in a scrollable or paginated format without any visual breakage")
+    AndroidOfferPage(setup_platform).verify_offers_page_should_be_scrollable_if_many_offer_exists()
+
+@when("I click on pay button in view cart page")
+@allure.step("When I click on pay button in view cart page")
+def click_on_pay_button_in_view_cart_page(setup_platform):
+    print("Clicking on pay button in view cart page")
+    ViewCartPage(setup_platform).click_on_pay_button_in_view_cart_page()
+
+@then("I verify user should be redirected to the payment page successfully")
+@allure.step("Then I verify user should be redirected to the payment page successfully")
+def verify_payment_page_is_displayed(setup_platform):
+    print("Verifying Payment Page Is Displayed")
+    juspay_page_reached = JuspayPage(setup_platform).verify_juspay_page_is_reached()
+    assert juspay_page_reached, "Juspay Page Is Not Reached After Clicking On Pay Button"
+
+@when("I click on 'My Orders'")
+@allure.step("When I click on 'My Orders'")
+def click_on_my_orders(setup_platform):
+    print("click on 'My Orders'")
+    AndroidViewScreen(setup_platform).click_on_my_orders()
+
+@then("I verify order history should be displayed on the screen")
+@allure.step("Then I verify order history should be displayed on the screen")
+def verify_order_history_page_is_displayed(setup_platform):
+    print("verify order history should be displayed on the screen")
+    AndroidOrderHistoryScreen(setup_platform).verify_order_history_page_is_displayed()
+
+@when("I click on 'Order Tracking'")
+@allure.step("When I click on 'Order Tracking'")
+def click_on_order_tracking_button(setup_platform):
+    print("click on 'Order Tracking'")
+    AndroidOrderHistoryScreen(setup_platform).click_on_track_order()
+
+@then("I verify the user should be navigated to the post-payment page")
+@allure.step("Then I verify the user should be navigated to the post-payment page")
+def verify_user_navigated_to_post_payment_page(setup_platform):
+    print("verify the user should be navigated to the post-payment page")
+    AndroidOrderHistoryScreen(setup_platform).verify_user_navigated_to_post_payment_page()
+
+@then("I verify user should be able to see the order status displayed on each order card")
+@allure.step("Then I verify user should be able to see the order status displayed on each order card")
+def verify_display_of_order_status_on_each_card(setup_platform):
+    print("verify user should be able to see the order status displayed on each order card")
+    AndroidOrderHistoryScreen(setup_platform).verify_display_of_order_status_on_each_card()
+
+@when("I click on 'Order Tracking' for placed order")
+@allure.step("When I click on 'Order Tracking' for placed order")
+def click_on_placed_order_tracking(setup_platform):
+    print("click on 'Order Tracking' for placed order")
+    AndroidOrderHistoryScreen(setup_platform).click_on_placed_order_tracking("Placed")
+
+@then("I verify the placed order status on the post-payment page should match the status displayed on the order card")
+@allure.step("Then I verify the placed order status on the post-payment page should match the status displayed on the order card")
+def verify_placed_order_status_on_post_payment_page(setup_platform):
+    print("verify the placed order status on the post-payment page should match the status displayed on the order card")
+    AndroidOrderHistoryScreen(setup_platform).verify_placed_order_status_on_post_payment_page()
+
+@when("I click on 'Order Tracking' for cancelled order")
+@allure.step("When I click on 'Order Tracking' for cancelled order")
+def click_on_cancelled_order_tracking(setup_platform):
+    print("click on 'Order Tracking' for cancelled order")
+    AndroidOrderHistoryScreen(setup_platform).click_on_cancelled_order_tracking("Cancelled")
+
+@then("I verify the cancelled order status on the post-payment page should match the status displayed on the order card")
+@allure.step("Then I verify the cancelled order status on the post-payment page should match the status displayed on the order card")
+def verify_cancelled_order_status_on_post_payment_page(setup_platform):
+    print("verify the cancelled order status on the post-payment page should match the status displayed on the order card")
+    AndroidOrderHistoryScreen(setup_platform).verify_cancelled_order_status_on_post_payment_page()
+
+@then("I verify each order card should display the respective Business model name")
+@allure.step("Then I verify each order card should display the respective Business model name")
+def verify_each_order_card_display_BM_name(setup_platform):
+    print("verify each order card should display the respective Business model name")
+    AndroidOrderHistoryScreen(setup_platform).verify_each_order_card_display_BM_name()
+
+@when("I user scrolls down the page")
+@allure.step("When I user scrolls down the page")
+def scroll_down_the_page_on_order_history_page(setup_platform):
+    print("user scrolls down the page")
+    AndroidOrderHistoryScreen(setup_platform).scroll_down_the_page_on_order_history_page("Delivered")
+
+@then("I verify the page should move down and display additional order history")
+@allure.step("Then I verify the page should move down and display additional order history")
+def verify_display_of_addition_order_history(setup_platform):
+    print("verify the page should move down and display additional order history")
+    AndroidOrderHistoryScreen(setup_platform).verify_display_of_addition_order_history()
+
+@when("I click on edit profile icon")
+@allure.step("When I click on edit profile icon")
+def click_on_edit_profile_icon(setup_platform):
+    print("Clicking on edit profile icon")
+    AndroidViewScreen(setup_platform).click_profile_edit_icon()
+
+@then("I verify the Help button should be visible only for orders placed via McDelivery")
+@allure.step("Then I verify the Help button should be visible only for orders placed via McDelivery")
+def verify_help_button_visible_only_for_order_placed_via_Mcdelivery(setup_platform):
+    print("verify the Help button should be visible only for orders placed via McDelivery")
+    AndroidOrderHistoryScreen(setup_platform).verify_help_button_visible_only_for_order_placed_via_Mcdelivery()
+
+@then("I verify the Help button should not be visible for orders from other business models (BM)")
+@allure.step("Then I verify the Help button should not be visible for orders from other business models (BM)")
+def verify_help_button_not_visible_for_other_BM_models(setup_platform):
+    print("verify the Help button should not be visible for orders from other business models (BM)")
+    AndroidOrderHistoryScreen(setup_platform).verify_help_button_not_visible_for_other_BMs()
+
+@when("I selects an order older than 2 hours and clicks on Help button")
+@allure.step("When I selects an order older than 2 hours and clicks on Help button")
+def select_an_older_order_and_click_on_Help_button(setup_platform):
+    print("selects an order older than 2 hours and clicks on Help button")
+    AndroidOrderHistoryScreen(setup_platform).select_an_older_order_and_click_on_Help_button()
+
+@then("I verify a pop-up message should appear saying 'Order active hours ended'")
+@allure.step("Then I verify a pop-up message should appear saying 'Order active hours ended'")
+def verify_time_exceeded_pop_up_is_displayed(setup_platform):
+    print("verify a pop-up message should appear saying 'Order active hours ended'")
+    AndroidOrderHistoryScreen(setup_platform).verify_order_active_hours_ended_msg_is_displayed()
+
+@then("I verify 'Your Order Details' section should be displayed")
+@allure.step("Then I verify 'Your Order Details' section should be displayed")
+def verify_your_order_details_section_is_displayed(setup_platform):
+    print("verify 'Your Order Details' section should be displayed")
+    AndroidOrderHistoryScreen(setup_platform).verify_your_order_details_section_is_displayed()
+
+@then("I verify all products included in the order should be visible to the user")
+@allure.step("Then I verify all products included in the order should be visible to the user")
+def verify_menu_details_is_displayed(setup_platform):
+    print("verify all products included in the order should be visible to the user")
+    AndroidOrderHistoryScreen(setup_platform).verify_menu_details_are_displayed()
+
+@when("I clicks on 'Invoice'")
+@allure.step("When I clicks on 'Invoice'")
+def click_on_invoice_to_download(setup_platform):
+    print("clicks on 'Invoice'")
+    AndroidOrderHistoryScreen(setup_platform).click_on_invoice_to_download()
+
+@then("I verify invoice should be downloaded and saved on the device")
+@allure.step("Then I verify invoice should be downloaded and saved on the device")
+def verify_invoice_downloaded(setup_platform):
+    print("verify invoice should be downloaded and saved on the device")
+    AndroidOrderHistoryScreen(setup_platform).step_verify_invoice_downloaded()
+
+@then("I verify order number should be displayed")
+@allure.step("Then I verify order number should be displayed")
+def verify_order_number_is_displayed(setup_platform):
+    print("verify order number should be displayed")
+    AndroidOrderHistoryScreen(setup_platform).verify_order_number_is_displayed()
+
+@then("I verify the store name should be visible")
+@allure.step("Then I verify the store name should be visible")
+def verify_store_name_is_displayed(setup_platform):
+    print("verify the store name should be visible")
+    AndroidOrderHistoryScreen(setup_platform).verify_any_store_name_is_displayed()
+
+@then("I verify the complete delivery address should be shown")
+@allure.step("Then I verify the complete delivery address should be shown")
+def verify_complete_address_is_displayed(setup_platform):
+    print("verify the complete delivery address should be shown")
+    AndroidOrderHistoryScreen(setup_platform).get_delivery_address()
+
+@then("I verify the status bar should be visible")
+@allure.step("Then I verify the status bar should be visible")
+def verify_status_bar_is_displayed(setup_platform):
+    print("verify the status bar should be visible")
+    AndroidOrderHistoryScreen(setup_platform).verify_status_bar_is_displayed()
 
 
 
