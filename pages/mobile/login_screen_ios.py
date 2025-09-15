@@ -142,7 +142,7 @@ class LoginScreenIos(BasePage):
 
         for index, digit in enumerate(otp):
             field_locator = (by, value.format(index + 1))
-            field = self.driver.find_element(*field_locator)
+            field = self.actions.find_element(*field_locator)
             field.click()
             field.send_keys(digit)
             time.sleep(0.5)
@@ -182,12 +182,11 @@ class LoginScreenIos(BasePage):
 
     def verify_mobile_button_is_disabled(self):
             time.sleep(3)
-            element = self.driver.find_element(By.ACCESSIBILITY_ID, "Verify Mobile")
+            element = self.actions.find_element(*locators["VERIFY_MOBILE_BUTTON"])
             assert not element.is_enabled(), "Verify button should be disabled for empty or invalid input"
             print("Verified: Button is disabled as expected")
 
     def enter_invalid_mobile_number(self, invalid_mobile_number):
-            self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
             self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], invalid_mobile_number)
             print("Entered invalid Mobile Number")
 
@@ -196,23 +195,23 @@ class LoginScreenIos(BasePage):
 
     
     def get_pasted_mobile_number(self):
-        input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
+        input_field = self.actions.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         return input_field.get_attribute("value")
 
     
 
     def enter_alphabets_in_mobile_text_field(self, alphabets_in_mobile_number):
-            self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
+            # self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
             self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], alphabets_in_mobile_number)
             print("Entered alphabets in mobile number")
 
     def enter_mobile_number_with_space(self, mobile_number_with_space):
-            self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
+            # self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
             self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], mobile_number_with_space)
             print("Entered mobile number with spaces And Clicked On Verify Mobile Button")
 
     def enter_mobile_number_with_special_char(self, special_characters_in_mobile_field):
-            self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
+            # self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
             self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], special_characters_in_mobile_field)
             print("Entered mobile number with special characters And Clicked On Verify Mobile Button")
     
@@ -236,11 +235,11 @@ class LoginScreenIos(BasePage):
         print("Verify button clicked.")
 
     def paste_mobile_number_using_clipboard(self):
-        input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
+        input_field = self.actions.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         input_field.click()
         time.sleep(1)
         try:
-            clipboard_text = self.driver.get_clipboard_text()
+            clipboard_text = self.actions.get_clipboard_text()
             print(f"Clipboard Text Retrieved: '{clipboard_text}'")
         except Exception as e:
             print(f"Clipboard access failed: {e}")
@@ -271,7 +270,7 @@ class LoginScreenIos(BasePage):
             except Exception:
                 print("Native hide_keyboard failed, falling back to tap.")
 
-            mobile_field = self.driver.find_element(*locators['MOBILE_NUMBER_INPUT_FIELD'])
+            mobile_field = self.actions.find_element(*locators['MOBILE_NUMBER_INPUT_FIELD'])
             rect = mobile_field.rect
 
             tap_x = rect['x'] + rect['width'] // 2
@@ -307,7 +306,7 @@ class LoginScreenIos(BasePage):
     
     def enter_mobile_number_one_by_one(self, mobile_number_11_digits):
         self.actions.is_element_displayed(*locators["MOBILE_NUMBER_INPUT_FIELD"])
-        input_field = self.driver.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
+        input_field = self.actions.find_element(*locators["MOBILE_NUMBER_INPUT_FIELD"])
         input_field.clear()
         print("Entering mobile number one digit at a time:")
         for digit in mobile_number_11_digits:

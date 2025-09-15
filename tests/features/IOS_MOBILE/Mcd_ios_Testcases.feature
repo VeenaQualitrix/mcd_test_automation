@@ -25,7 +25,7 @@ Scenario Outline: Verify referral code input
     And  I enter referral code
     Then  I verify referral code accepted without error
 
-# @TC_IOS_Login_Mobile_0003 @TC_Demo1
+# @TC_IOS_Login_Mobile_0003 
 # Scenario: Validate that mobile number field
 #     Given I launch the mobile application
 #     Then I verify the app home screen is displayed
@@ -33,7 +33,7 @@ Scenario Outline: Verify referral code input
 #     Then I verify the Login Sign Up screen appears
 #     When I tap on the Login Sign Up Button
 #     And I enter alphabets in mobile number field
-#     Then I confirm 'verify mobile' button is disabled
+#     Then I confirm the 'verify mobile' button is disabled
 
 
 @TC_IOS_Login_Mobile_00012 @TC_01 @TC_Demo
@@ -44,7 +44,7 @@ Scenario Outline: Validate empty mobile number
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
     When  I leave mobile field empty 
-    Then  I confirm 'verify mobile' button is disabled
+    Then  I confirm the 'verify mobile' button is disabled
     
     
 
@@ -55,8 +55,8 @@ Scenario Outline: Validate short mobile number
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    When  I enter a mobile number with less than 10 digits
-    Then  I confirm 'verify mobile' button is disabled
+    When  I entered a mobile number with less than 10 digits
+    Then  I confirm the 'verify mobile' button is disabled
 
 @TC_IOS_Login_Mobile_0005 @TC_01 @TC_Demo
 Scenario Outline: Validate alphabetic input in mobile field
@@ -65,8 +65,8 @@ Scenario Outline: Validate alphabetic input in mobile field
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    When  I enter alphabets in mobile number field
-    Then  I confirm 'verify mobile' button is disabled
+    When  I enter the alphabets in mobile number field
+    Then  I confirm the 'verify mobile' button is disabled
 
 @TC_IOS_Login_Mobile_0006 @TC_01 @TC_Demo
 Scenario Outline: Verify referral code without entering mobile number
@@ -86,8 +86,8 @@ Scenario Outline: Verify mobile number with spaces
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    When  I enter mobile number with spaces and click verify
-    Then  I confirm 'verify mobile' button is disabled
+    When  I enter the mobile number with spaces and click verify
+    Then  I confirm the 'verify mobile' button is disabled
 
 @TC_IOS_Login_Mobile_0008 @TC_01 @TC_Demo
 Scenario Outline: Verify mobile number with special characters
@@ -96,8 +96,8 @@ Scenario Outline: Verify mobile number with special characters
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    When  I enter mobile number with special characters and click verify
-    Then  I confirm 'verify mobile' button is disabled
+    When  I enter the mobile number with special characters and click verify
+    Then  I confirm the 'verify mobile' button is disabled
    
 @TC_IOS_Login_Mobile_0009 @TC_01 @TC_Demo
 Scenario Outline: Verify UI alignment and presence of elements
@@ -128,7 +128,7 @@ Scenario Outline: Verify Verify Mobile button is disabled initially and OTP scre
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    Then   I confirm 'verify mobile' button is disabled
+    Then   I confirm the 'verify mobile' button is disabled
     When  I enter a valid mobile number click on verify
     Then  I verify OTP screen navigation
 
@@ -139,7 +139,7 @@ Scenario Outline: Check navigation after successful mobile entry
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    Then   I confirm 'verify mobile' button is disabled
+    Then   I confirm the 'verify mobile' button is disabled
     When  I enter a valid mobile number click on verify
     Then  I verify OTP screen navigation
 
@@ -160,7 +160,7 @@ Scenario Outline: Verify 10digit valid mobile number
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    Then   I confirm 'verify mobile' button is disabled
+    Then   I confirm the 'verify mobile' button is disabled
     When  I enter a valid mobile number click on verify
  
 
@@ -174,7 +174,7 @@ Scenario: Validate error for 11-digit mobile number input
     And I enter a mobile number with more than 10 digits
 #   not able to enter more than 10 digits in mobile field
 
-@TC_IOS_Login_Mobile_00017 @TC_01 @TC_Demo
+@TC_IOS_Login_Mobile_00017 @TC_01 @TC_Demo1
 Scenario: Verify pasting a mobile number from clipboard into the input field
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -191,7 +191,7 @@ Scenario Outline: Check mobile field input limit
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
-    Then   I confirm 'verify mobile' button is disabled
+    Then   I confirm the 'verify mobile' button is disabled
     When  I enter a valid mobile number click on verify
 
 @TC_IOS_Profile_Mobile_00001 @TC_022 @TC_Demo
@@ -389,7 +389,7 @@ Scenario: Incorrect login from Add Address screen
     And I click on Add to Cart
     And I click on View Cart
     And I tap on the login continue button
-    When  I enter mobile number with special characters and click verify    
+    When  I enter the mobile number with special characters and click verify    
     Then  I close the login screen
     Then I clear the order
 
@@ -712,13 +712,14 @@ Scenario: Ensure address list remains consistent across sessions
     When I click the Add Address button
     Then I verify that the selected address is applied
 
-@TC_IOS_Address_Store_Mobile_0013 @TC_Demo
+@TC_IOS_Address_Store_Mobile_0013 @TC_Demo11
 Scenario: Verify behavior when all addresses are deleted
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     When I click the Add Address button
     When I delete all saved addresses
-    Then I verify that the last address is not deleted as it is set as the default address
+    # Then I verify that the last address is not deleted as it is set as the default address
+    # One address is default
 
 @TC_IOS_Address_Store_Mobile_0014  @TC_Demo
 Scenario: Test address tagging (“Home”, “Work”) feature
@@ -778,7 +779,7 @@ Scenario: Verify customization options appear for customizable items
     And I click on Add item
     Then I click on the customization options and verify
     
-@TC_IOS_Ordering_Mobile_004 @TC_Demo
+@TC_IOS_Ordering_Mobile_004 @TC_Demo11
 Scenario: Add multiple items to the cart and verify cart contents
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -799,7 +800,7 @@ Scenario: Add multiple items to the cart and verify cart contents
     And I click on View Cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_005 @TC_Demo
+@TC_IOS_Ordering_Mobile_005 @TC_Demo11
 Scenario: Place an order with only 1 item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -818,7 +819,7 @@ Scenario: Place an order with only 1 item
     And I verify the payment method and button
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_006 @TC_Demo
+@TC_IOS_Ordering_Mobile_006 @TC_Demo11
 Scenario: Verify menu item pricing
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1032,7 +1033,7 @@ Scenario: User views image of a dessert
     And I select the random dersert item
     Then I verify that a larger image of the dessert is displayed when tapped
 
-@TC_IOS_Ordering_Mobile_0019 @TC_Demo
+@TC_IOS_Ordering_Mobile_0019 @TC_Demo11
 Scenario: View nutrition description for a menu item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1040,7 +1041,7 @@ Scenario: View nutrition description for a menu item
     And I click on the Burgers & Wraps menu
     Then I verify that the nutrition information is displayed    
 
-@TC_IOS_Ordering_Mobile_0020 @TC_Demo
+@TC_IOS_Ordering_Mobile_0020 @TC_Demo11
 Scenario: Remove an item from the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1049,6 +1050,7 @@ Scenario: Remove an item from the cart
     And I click on the Next button
     And I click on Add to Cart
     And I click on another item to Add
+    And I click on the Next button
     And I click on Add to Cart
     And I click on View Cart
     And I remove the item from the cart
@@ -1066,7 +1068,7 @@ Scenario: Update item quantity in the cart
     And I update the item quantity in the cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_0022 @TC_Demo
+@TC_IOS_Ordering_Mobile_0022 @TC_Demo11
 Scenario: Check total price calculation with multiple items in cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1129,7 +1131,7 @@ Scenario: Verify and Clear cart
     And I click on View Cart
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_004 @TC_Demo
+@TC_IOS_Cart_Mobile_004 @TC_Demo11
 Scenario: Validate total price breakdown
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1138,7 +1140,7 @@ Scenario: Validate total price breakdown
     And I click on the Next button
     And I click on Add to Cart
     And I click on another item to Add
-    # And I click on the Next button
+    And I click on the Next button
     And I click on Add to Cart
     And I click on View Cart
     And I verify the total price calculation is correct
@@ -1156,29 +1158,29 @@ Scenario: Add delivery instructions
     And I add delivery instructions in the cart
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_006 @TC_Demo
-Scenario: Validate subtotal after all additions
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    Then I click on the Menu option
-    And I click on an item to Add
-    And I click on the Next button
-    And I click on Add to Cart    
-    And I click on View Cart
-    And I verify the subtotal reflects all additions accurately
-    Then I clear the order    
+# @TC_IOS_Cart_Mobile_006 @TC_Demo
+# Scenario: Validate subtotal after all additions
+#     Given I launch the mobile application
+#     Then I verify the app home screen is displayed
+#     Then I click on the Menu option
+#     And I click on an item to Add
+#     And I click on the Next button
+#     And I click on Add to Cart    
+#     And I click on View Cart
+#     And I verify the subtotal reflects all additions accurately
+#     Then I clear the order    
 
-@TC_IOS_Cart_Mobile_007 @TC_Demo
-Scenario: Validate taxes
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    Then I click on the Menu option
-    And I click on an item to Add
-    And I click on the Next button
-    And I click on Add to Cart    
-    And I click on View Cart  
-    And I verify the taxes are calculated correctly based on the subtotal
-    Then I clear the order  
+# @TC_IOS_Cart_Mobile_007 @TC_Demo
+# Scenario: Validate taxes
+#     Given I launch the mobile application
+#     Then I verify the app home screen is displayed
+#     Then I click on the Menu option
+#     And I click on an item to Add
+#     And I click on the Next button
+#     And I click on Add to Cart    
+#     And I click on View Cart  
+#     And I verify the taxes are calculated correctly based on the subtotal
+#     Then I clear the order  
 
 @TC_IOS_Cart_Mobile_008 @TC_03 @TC_Demo
 Scenario: Log in to Proceed with Order
@@ -1211,7 +1213,7 @@ Scenario: Charity Donation Info
     And I click on the Know More link in charity donation option 
     And  I verify that the charity donation information is displayed in the cart
 
-@TC_IOS_Cart_Mobile_0010 @TC_Demo
+@TC_IOS_Cart_Mobile_0010 @TC_Demo11
 Scenario: Select charity donation checkbox
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
@@ -1228,20 +1230,20 @@ Scenario: Uncheck charity donation and verify ₹3 is removed from total
     Then I verify that the donation amount is removed from the total price in the cart    
 
 @TC_IOS_Cart_Mobile_0012 @TC_Demo
-Scenario: View All Offers Functionality
+Scenario: View All Offers Functionalities inn cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
     And I click on View Cart
     And I tap on the View All Offers link
     Then I verify that the offers page is displayed
 
-@TC_IOS_Cart_Mobile_0013 @TC_Demo
-Scenario: verify that all price components display the ₹ symbol
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed    
-    And I click on View Cart
-    Then I verify that all price components display the ₹ symbol
-    Then I clear the order
+# @TC_IOS_Cart_Mobile_0013 @TC_Demo
+# Scenario: verify that all price components display the ₹ symbol
+#     Given I launch the mobile application
+#     Then I verify the app home screen is displayed    
+#     And I click on View Cart
+#     Then I verify that all price components display the ₹ symbol
+#     Then I clear the order
 
 @TC_IOS_Cart_Mobile_0014  @TC_Demo
 Scenario: Attempt checkout without login
@@ -1263,18 +1265,18 @@ Scenario: Attempt checkout without login
     Then I clear the order 
 
 
-@TC_IOS_Cart_Mobile_0015 @TC_Demo
-Scenario: Remove item from cart and total price should update correctly
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    Then I click on the Menu option
-    And I click on an item to Add
-    And I click on the Next button
-    And I click on Add to Cart
-    And I click on View Cart
-    And I update the item quantity in the cart
-    And I verify the total price should update correctly
-    Then I clear the order
+# @TC_IOS_Cart_Mobile_0015 @TC_Demo
+# Scenario: Remove item from cart and total price should update correctly
+#     Given I launch the mobile application
+#     Then I verify the app home screen is displayed
+#     Then I click on the Menu option
+#     And I click on an item to Add
+#     And I click on the Next button
+#     And I click on Add to Cart
+#     And I click on View Cart
+#     And I update the item quantity in the cart
+#     And I verify the total price should update correctly
+#     Then I clear the order
     
 
 @TC_IOS_Cart_Mobile_0016 @TC_Demo
@@ -1333,7 +1335,7 @@ Scenario: Promo Code Application
     Then I verify only one promo code is applied
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_0020 @TC_Demo
+@TC_IOS_Cart_Mobile_0020 @TC_Demo11
 Scenario: Update quantity for multiple items in cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1342,29 +1344,29 @@ Scenario: Update quantity for multiple items in cart
     And I click on the Next button
     And I click on Add to Cart
     And I click on another item to Add
-    # And I click on the Next button
+    And I click on the Next button
     And I click on Add to Cart
     And I click on View Cart
     And I verify the total price calculation is correct
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_0021 @TC_Demo
-Scenario: Validate discount shown in order summary
-    Given I launch the mobile application
-    Then I verify the app home screen is displayed
-    Then I click on the Menu option
-    And I click on an item to Add
-    And I click on the Next button
-    And I click on Add to Cart
-    And I click on View Cart
-    And I add multiple quantity items
-    And I tap on the View All Offers link
-    And I click on the discount flat 
-    Then I verify the discount is correctly deducted from the subtotal
-    Then I clear the order
+# @TC_IOS_Cart_Mobile_0021 @TC_Demo
+# Scenario: Validate discount shown in order summary
+#     Given I launch the mobile application
+#     Then I verify the app home screen is displayed
+#     Then I click on the Menu option
+#     And I click on an item to Add
+#     And I click on the Next button
+#     And I click on Add to Cart
+#     And I click on View Cart
+#     And I add multiple quantity items
+#     And I tap on the View All Offers link
+#     And I click on the discount flat 
+#     Then I verify the discount is correctly deducted from the subtotal
+#     Then I clear the order
     # need to check the discount is displaying wrong more than 1000 rupee and need to use 77777777
 
-@TC_IOS_Cart_Mobile_0022 @TC_Demo
+@TC_IOS_Cart_Mobile_0022 @TC_Demo11
 Scenario: Validate behavior with expired promo code
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1378,7 +1380,7 @@ Scenario: Validate behavior with expired promo code
     Then I should see a message indicating the code is invalid or expired
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_0023 @TC_Demo
+@TC_IOS_Cart_Mobile_0023 @TC_Demo11
 Scenario: Check total with delivery charges added
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1440,7 +1442,7 @@ Scenario: Search for an existing menu item
     # And I click on the search icon inside the search bar
     Then I verify the search results display matching items
 
-@TC_IOS_Search_Mobile_0002 @TC_Demo
+@TC_IOS_Search_Mobile_0002 @TC_Demo11
 Scenario: Search for a non-existent menu item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1449,12 +1451,12 @@ Scenario: Search for a non-existent menu item
     # And I click on the search icon inside the search bar
     Then I verify the No items found message is displayed
 
-@TC_IOS_Search_Mobile_0003 @TC_Demo
+@TC_IOS_Search_Mobile_0003 @TC_Demo11
 Scenario: Search with empty input
     Given I launch the mobile application
     Then I verify the app home screen is displayed
     When I click on the Search icon
-    # And I click on the search icon inside the search bar
+    And I click on the empty search icon inside the search bar
     Then I verify the prompt message is displayed for empty input
 
 
@@ -1570,7 +1572,7 @@ Scenario: Search persists across page reload
     And I enter Burger in the search bar
     Then  I clicked on the back button in search page
 
-@TC_IOS_Offer_Mobile_001 @TC_Demo
+@TC_IOS_Offers_Mobile_001 @TC_Demo
 Scenario: View All Offers Functionality
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
@@ -1583,8 +1585,8 @@ Scenario: View All Offers Functionality
     Then I verify that the offers page is displayed  
     Then  I clicked on the back button in search page 
         
-@TC_IOS_Offer_Mobile_002 @TC_Demo
-Scenario: View All Offers Functionality
+@TC_IOS_Offers_Mobile_002 @TC_Demo
+Scenario: Validate manual coupon entry and search
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
     And I click on View Cart
@@ -1594,11 +1596,71 @@ Scenario: View All Offers Functionality
     Then I verify that an offer card with code "FLAT10" is displayed
 
 
-@TC_IOS_Offer_Mobile_003 @TC_Demo
-Scenario: View All Offers Functionality
+@TC_IOS_Offers_Mobile_003 @TC_Demo11
+Scenario: Validate offer cards display correctly
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
     And I click on View Cart
-    And I tap on the View All Offers link    
+    And I tap on the View All Offers link
     And I scroll through all the offer cards
     Then I verify  coupon code, description, Show More link, and Apply button
+
+
+@TC_IOS_Offers_Mobile_004 @TC_Demo
+Scenario: Verify Apply button functionality on offer card
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart    
+    And I add multiple quantity items
+    And I tap on the View All Offers link
+    And I scroll through all the offer cards
+    And I tap on the Apply button under a valid offer
+    Then I verify the coupon is applied to the current cart if eligibility criteria are met
+    Then I clear the order
+
+
+@TC_IOS_Offers_Mobile_005 @TC_Demo
+Scenario: Validate cart value restriction when applying a coupon
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link
+    And I scroll through all the offer cards
+    And I tap on the Apply button under a valid offer
+    Then I verify the warning message "Minimum cart value not met" is displayed
+
+@TC_IOS_Offers_Mobile_006 @TC_Demo
+Scenario: Validate cart value eligibility
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart    
+    And I add multiple quantity items
+    And I tap on the View All Offers link
+    And I scroll through all the offer cards
+    And I tap on the Apply button under a valid offer
+    Then I verify the coupon is applied to the current cart if eligibility criteria are met    
+    Then I clear the order
+
+
+@TC_IOS_Offers_Mobile_007 @TC_Demo
+Scenario: Validate one coupon per order policy
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I add multiple quantity items
+    And I tap on the View All Offers link
+    And I scroll through all the offer cards
+    And I tap on the Apply button under a valid offer
+    Then I verify the coupon is applied to the current cart if eligibility criteria are met  
+    And I click on the change offer
+    And I apply the another coupon
+    Then  I verified the updated coupon order
+    

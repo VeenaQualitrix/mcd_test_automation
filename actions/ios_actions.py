@@ -484,3 +484,9 @@ class iOSActions(ActionsParent):
         return self.driver.find_element(by, value)
 
     
+    def is_element_displayed(self, element_or_locator, locator_value=None):
+        if locator_value:
+            element = self.driver.find_element(element_or_locator, locator_value)
+        else:
+            element = element_or_locator
+        return element.is_displayed()

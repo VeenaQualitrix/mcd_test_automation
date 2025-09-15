@@ -17,7 +17,7 @@
     "menu_item": "Fries",
     "fries_item_display": "Fries (Large)",
     "menu_item_nonexistent": "Pasta",
-    "no_items_message": "No matching item found",
+    "no_items_message": "Oops, no results found!",
     "empty_search_message": "Search menu item",
     "Burger": "Burger",
     "search_burger": "Burger",
@@ -28,5 +28,6 @@
     "Valid_Coupon_Code": "FLAT10",
     "Coupon_code" : "freedelivery@199",
     "Flat10_Coupon_code" : "FLAT10",
-    "search_wrap": "Wrap"
+    "search_wrap": "Wrap",
+    "updated_coupon_code": "Gofree"
 }

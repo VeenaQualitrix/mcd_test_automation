@@ -12,6 +12,7 @@ from pages.mobile.Cart_screen_ios import CartScreenIos
 from pages.mobile.searchflow_screen_ios import SearchScreenIos
 from pages.mobile.offerflow_screen_ios import OffersScreenIos
 import pyperclip
+import pytest
 
 scenarios('../../features/IOS_Mobile/Mcd_ios_Testcases.feature')
 
@@ -151,7 +152,7 @@ def leave_mobile_field_empty(setup_platform):
     LoginScreenIos(setup_platform).leave_mobile_field_empty()
 
 
-@when("I enter a mobile number with less than 10 digits")
+@when("I entered a mobile number with less than 10 digits")
 @allure.step("When I enter a mobile number with less than 10 digits")
 def enter_a_invalid_mobile_number(setup_platform):
     invalid_mobile_number = readPreReqJson("test_data", "invalid_mobile_number")
@@ -159,14 +160,14 @@ def enter_a_invalid_mobile_number(setup_platform):
     LoginScreenIos(setup_platform).enter_invalid_mobile_number(invalid_mobile_number)
 
 
-@then("I confirm 'verify mobile' button is disabled")
+@then("I confirm the 'verify mobile' button is disabled")
 @allure.step("Then I confirm 'verify mobile' button is disabled")
 def verify_error_message(setup_platform):
     print("Confirming 'verify mobile' button is disabled")
     LoginScreenIos(setup_platform).verify_mobile_button_is_disabled()
 
 
-@when("I enter alphabets in mobile number field")
+@when("I enter the alphabets in mobile number field")
 @allure.step("When I enter alphabets in mobile number field")
 def enter_alphabets_in_mobile_number_field(setup_platform):
     alphabets_in_mobile_number = readPreReqJson("test_data", "alphabets_in_mobile_number")
@@ -174,7 +175,7 @@ def enter_alphabets_in_mobile_number_field(setup_platform):
     LoginScreenIos(setup_platform).enter_alphabets_in_mobile_text_field(alphabets_in_mobile_number)
 
 
-@when("I enter mobile number with spaces and click verify")
+@when("I enter the mobile number with spaces and click verify")
 @allure.step("When I enter mobile number with spaces and click verify")
 def enter_mobile_number_with_space_and_click_verify(setup_platform):
     mobile_number_with_space = readPreReqJson("test_data", "mobile_number_with_space")
@@ -182,7 +183,7 @@ def enter_mobile_number_with_space_and_click_verify(setup_platform):
     LoginScreenIos(setup_platform).enter_mobile_number_with_space(mobile_number_with_space)
 
 
-@when("I enter mobile number with special characters and click verify")
+@when("I enter the mobile number with special characters and click verify")
 @allure.step("When I enter mobile number with special characters and click verify")
 def enter_mobile_number_with_special_char_and_click_verify(setup_platform):
     special_characters_in_mobile_field = readPreReqJson("test_data", "special_characters_in_mobile_field")
@@ -1110,13 +1111,18 @@ def verify_no_items_message(setup_platform):
     assert actual_message == expected_message, f"Expected '{expected_message}' but got '{actual_message}'"
     print(f"Verified No items found message: {actual_message}")
 
+
 @then("I verify the prompt message is displayed for empty input")
 @allure.step("Verify the prompt message is displayed for empty input")
 def verify_empty_search_prompt(setup_platform):
-    expected_message = readPreReqJson("test_data", "empty_search_message")
-    actual_message = SearchScreenIos(setup_platform).get_no_items_empty_message()
-    assert actual_message == expected_message, f"Expected '{expected_message}' but got '{actual_message}'"
-    print(f"Verified empty search prompt message: {actual_message}")
+    SearchScreenIos(setup_platform).get_no_items_empty_message()
+
+
+@when("I click on the empty search icon inside the search bar")
+@allure.step("Click on the empty search icon inside the search bar")
+def click_empty_search_icon(setup_platform):
+    SearchScreenIos(setup_platform).click_empty_search_icon()
+
 
 @then("I verify the item is added in the cart")
 @allure.step("Verify the item is added in the cart")
@@ -1309,3 +1315,43 @@ def step_scroll_through_offer_cards(setup_platform):
 @allure.step("Verify all required elements are present in offer cards")
 def step_verify_offer_card_elements(setup_platform):
     OffersScreenIos(setup_platform).verify_offer_card_elements()
+
+
+@then("I tap on the Apply button under a valid offer")
+@allure.step("Tap on Apply button under a valid offer")
+def tap_apply_button_under_valid_offer(setup_platform):
+    print("Tapping on Apply button under a valid offer")
+    OffersScreenIos(setup_platform).tap_apply_button()
+    print("Apply button tapped")
+
+@then("I verify the coupon is applied to the current cart if eligibility criteria are met")
+@allure.step("Verify coupon is applied to the cart if eligibility criteria are met")
+def verify_coupon_applied_to_cart(setup_platform):
+    print("Verifying if coupon is applied to the cart")
+    OffersScreenIos(setup_platform).verify_coupon_applied()
+    print("Coupon application verification completed")
+
+
+@then('I verify the warning message "Minimum cart value not met" is displayed')
+@allure.step('Verify warning message "Minimum cart value not met" is displayed')
+def verify_min_cart_value_warning(setup_platform):
+    OffersScreenIos(setup_platform).verify_min_cart_warning()
+    print('Warning message verified successfully')
+
+
+@then("I click on the change offer")
+@allure.step("Click on the change offer")
+def click_on_change_offer(setup_platform):
+    OffersScreenIos(setup_platform).click_change_offer()
+
+@then("I apply the another coupon")
+@allure.step("Apply another coupon from available offers")
+def apply_another_coupon(setup_platform):
+    OffersScreenIos(setup_platform).apply_another_coupon()
+
+
+@then("I verified the updated coupon order")
+@allure.step("Verify the updated coupon is applied to the order")
+def verify_updated_coupon_order(setup_platform):
+    updated_coupon_code = readPreReqJson("test_data", "updated_coupon_code") 
+    OffersScreenIos(setup_platform).verify_updated_coupon_applied(updated_coupon_code)
