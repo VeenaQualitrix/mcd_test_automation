@@ -54,6 +54,9 @@ locators = {
 
 'ALL_ADDRESS': (AppiumBy.XPATH, '(//XCUIElementTypeStaticText[@name="101, 5, Sunset Plaza, Sri Sai Collections"])[1]'),
 
+"CLEAR_ORDER_BUTTON": (AppiumBy.XPATH, '//XCUIElementTypeStaticText[@name="Clear All"]'),
+
+"CLEAR_ORDER_OK_BUTTON": (AppiumBy.ACCESSIBILITY_ID, "OK"),
 
 }
 class AddressScreenIos(BasePage):
@@ -247,6 +250,27 @@ class AddressScreenIos(BasePage):
 
 
     
+    def clear_order_if_present(self):
+        try:
+            # Check and click View Cart if visible
+            if self.actions.is_element_displayed(*locators["VIEW_CART_BUTTON"]):
+                self.actions.click_button(*locators["VIEW_CART_BUTTON"])
+                print("Clicked on 'View Cart' button.")
+                # After opening cart, check for Clear Order button
+                if self.actions.is_element_displayed(*locators["CLEAR_ORDER_BUTTON"]):
+                    self.actions.click_button(*locators["CLEAR_ORDER_BUTTON"])
+                    print("Clicked on 'Clear Order' button.")
+                    # Confirm the clear order action
+                    self.actions.click_button(*locators["CLEAR_ORDER_OK_BUTTON"])
+                    print("Order cleared successfully.")
+                else:
+                    print("No 'Clear Order' button found in cart.")
+            else:
+                print("'View Cart' button not present. No active order to clear.")
+        except Exception as e:
+            print(f"Exception while trying to clear order: {e}")
+
+
     
 
 

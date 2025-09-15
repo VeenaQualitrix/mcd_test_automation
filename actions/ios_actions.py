@@ -490,3 +490,11 @@ class iOSActions(ActionsParent):
         else:
             element = element_or_locator
         return element.is_displayed()
+    
+    def find_elements_from_element(self, parent_element, by, locator):
+        try:
+            return parent_element.find_elements(by, locator)
+        except Exception as e:
+            print(f"Exception while finding elements inside parent: {e}")
+            return []
+

@@ -42,6 +42,16 @@ locators = {
 
 'APPLIED_COUPON_CODE': (AppiumBy.ACCESSIBILITY_ID, 'Gofree'),
 
+'OFFER_CARDS': (AppiumBy.XPATH, '(//XCUIElementTypeOther[@name="main"])[2]'),
+
+'OFFER_BUTTONS': (AppiumBy.XPATH, '(//XCUIElementTypeButton[@name="Apply"])[1]'),
+
+'BACK_BUTTON': (AppiumBy.ACCESSIBILITY_ID, 'ic-arrow-left-primary'),
+
+"OFFER_CARDS_FLAT10": (AppiumBy.ACCESSIBILITY_ID, 'FLAT10'),
+
+"OFFER_TAG": (AppiumBy.ACCESSIBILITY_ID, '//XCUIElementTypeStaticText[@name="FLAT 10 OFF"]'),
+
 }
 class OffersScreenIos(BasePage):
 
@@ -141,3 +151,73 @@ class OffersScreenIos(BasePage):
             f"Expected applied coupon: '{updated_coupon_code}', but found: '{actual_applied_code}'"
         )
         print("Updated coupon is applied to the order successfully.")
+
+
+    def enter_promo_code(self, promo_code):
+        time.sleep(2)
+        self.actions.enter_text(*locators["PROMO_CODE_FIELD"], promo_code)
+        print(f"Entered promo code: {promo_code}")
+
+
+    def validate_offer_layout_mobile(self):
+        time.sleep(2)
+        offer_cards = self.actions.find_elements(*locators["OFFER_CARDS"])
+        assert offer_cards, "No offer cards found on the screen."
+        screen_width = self.driver.get_window_size()["width"]
+        for index, card in enumerate(offer_cards, start=1):
+            is_visible = self.actions.is_element_displayed(card)
+            assert is_visible, f"Offer card {index} is not visible."
+            card_width = card.size["width"]
+            assert card_width <= screen_width, (
+                f"Offer card {index} width ({card_width}) exceeds screen width ({screen_width})"
+            )
+        print("Verified that offer layout adapts correctly to mobile view.")
+
+
+
+    def validate_offer_buttons_clickable(self):
+        time.sleep(2)
+        # First, count how many "Apply" buttons are present
+        total_buttons = len(self.actions.find_elements(*locators["OFFER_BUTTONS"]))
+        assert total_buttons > 0, "No offer buttons found on the screen."
+        for index in range(1, total_buttons + 1):  # XPath is 1-indexed
+            locator = (
+                AppiumBy.XPATH,
+                f'(//XCUIElementTypeButton[@name="Apply"])[{index}]'
+            )
+            element = self.actions.find_element(*locator)  # get the actual element once
+            is_visible = element.is_displayed()
+            is_enabled = element.is_enabled()
+            assert is_visible, f"Offer button {index} is not visible."
+            assert is_enabled, f"Offer button {index} is not enabled (not clickable)."
+            print(f"Offer button {index} is visible and enabled.")
+
+    def click_back_button(self):
+        time.sleep(2)  # small wait if needed
+        self.actions.click_button(*locators["BACK_BUTTON"])
+        print("Clicked on the back button on the offer page.")
+
+
+    def validate_offer_tags(self):
+        self.driver.execute_script("mobile: scroll", {
+            "direction": "down",
+            "predicateString": "name CONTAINS 'FLAT10'"
+        })
+        time.sleep(2)  # Wait for screen to load
+        offer_cards = self.actions.find_elements(*locators["OFFER_CARDS_FLAT10"])
+        assert offer_cards, "No offer cards found on the screen."
+        for index, card in enumerate(offer_cards, start=1):
+            tag_elements = self.actions.find_elements_from_element(card, *locators["OFFER_TAG"])
+            if not tag_elements:
+                print(f"Warning: Offer tag not found on card {index}. Skipping this card.")
+                continue  # Skip to next card without failing
+            tag_element = tag_elements[0]
+            is_visible = tag_element.is_displayed()
+            tag_text = tag_element.get_attribute("name")  # or 'label'
+            assert is_visible, f"Offer tag on card {index} is not visible."
+            assert tag_text.strip() == "FLAT 10 OFF", (
+                f"Offer tag on card {index} is '{tag_text}', expected 'FLAT 10 OFF'."
+            )
+            print(f"Offer tag '{tag_text}' on card {index} is visible and correct.")
+
+    

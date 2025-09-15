@@ -6,6 +6,7 @@ Feature: McD Mobile App Functionality
 Scenario Outline: Verify login with valid mobile number
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I tap on the My McD bottom tab
     Then I verify the Login Sign Up screen appears
     When I tap on the Login Sign Up Button
@@ -174,7 +175,7 @@ Scenario: Validate error for 11-digit mobile number input
     And I enter a mobile number with more than 10 digits
 #   not able to enter more than 10 digits in mobile field
 
-@TC_IOS_Login_Mobile_00017 @TC_01 @TC_Demo1
+@TC_IOS_Login_Mobile_00017 @TC_01 @TC_Demo
 Scenario: Verify pasting a mobile number from clipboard into the input field
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -383,6 +384,7 @@ Scenario: Cancel login from Add Address prompt
 Scenario: Incorrect login from Add Address screen
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     And I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -712,7 +714,7 @@ Scenario: Ensure address list remains consistent across sessions
     When I click the Add Address button
     Then I verify that the selected address is applied
 
-@TC_IOS_Address_Store_Mobile_0013 @TC_Demo11
+@TC_IOS_Address_Store_Mobile_0013 @TC_Demo
 Scenario: Verify behavior when all addresses are deleted
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -753,6 +755,7 @@ Scenario: Place an order with available breakfast item
 Scenario: User attempts to order an out-of-stock item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I search for out of stock item location
@@ -779,7 +782,7 @@ Scenario: Verify customization options appear for customizable items
     And I click on Add item
     Then I click on the customization options and verify
     
-@TC_IOS_Ordering_Mobile_004 @TC_Demo11
+@TC_IOS_Ordering_Mobile_004 @TC_Demo
 Scenario: Add multiple items to the cart and verify cart contents
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -800,10 +803,11 @@ Scenario: Add multiple items to the cart and verify cart contents
     And I click on View Cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_005 @TC_Demo11
+@TC_IOS_Ordering_Mobile_005 @TC_Demo
 Scenario: Place an order with only 1 item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I search for the location
@@ -819,10 +823,11 @@ Scenario: Place an order with only 1 item
     And I verify the payment method and button
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_006 @TC_Demo11
+@TC_IOS_Ordering_Mobile_006 @TC_Demo
 Scenario: Verify menu item pricing
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I search for the location
@@ -842,6 +847,7 @@ Scenario: Verify menu item pricing
 Scenario: Verify out-of-stock label handling
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I search for out of stock item location
@@ -877,6 +883,7 @@ Scenario: verify the item is added to the cart
 Scenario: Handle Sold Out McBreakfast Items
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I search for out of stock item location
@@ -909,6 +916,7 @@ Scenario: View 3Pc Meals Category
 Scenario: user should selecet product from dessert
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I click on confirm location
@@ -928,6 +936,7 @@ Scenario: user should selecet product from dessert
 Scenario: Add Chicken Wrap from Burgers & Wraps
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I click on confirm location
@@ -947,6 +956,7 @@ Scenario: Add Chicken Wrap from Burgers & Wraps
 Scenario: Customize a burger and add to cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I click on confirm location
@@ -968,6 +978,7 @@ Scenario: Customize a burger and add to cart
 Scenario: verify and Add fries to cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I click on confirm location
@@ -987,6 +998,7 @@ Scenario: verify and Add fries to cart
 Scenario: verify and add coffee Beverages
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on the Coffee & Beverages menu  
     And I select the cappuccino coffee item
@@ -1001,6 +1013,7 @@ Scenario: verify and add coffee Beverages
 Scenario: Adds a brownie to the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on the Cakes brownies menu
     And I select the chcochip muffin brownie item
@@ -1015,6 +1028,7 @@ Scenario: Adds a brownie to the cart
 Scenario: User adds a millet bun burger to the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on the Protein Plus and Burgers with Millet Bun menu
     And I select the Chicken Burger with Millet Bun item
@@ -1028,12 +1042,13 @@ Scenario: User adds a millet bun burger to the cart
 Scenario: User views image of a dessert
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on the dessert menu
     And I select the random dersert item
     Then I verify that a larger image of the dessert is displayed when tapped
 
-@TC_IOS_Ordering_Mobile_0019 @TC_Demo11
+@TC_IOS_Ordering_Mobile_0019 @TC_Demo
 Scenario: View nutrition description for a menu item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1041,7 +1056,7 @@ Scenario: View nutrition description for a menu item
     And I click on the Burgers & Wraps menu
     Then I verify that the nutrition information is displayed    
 
-@TC_IOS_Ordering_Mobile_0020 @TC_Demo11
+@TC_IOS_Ordering_Mobile_0020 @TC_Demo
 Scenario: Remove an item from the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1060,6 +1075,7 @@ Scenario: Remove an item from the cart
 Scenario: Update item quantity in the cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1068,10 +1084,11 @@ Scenario: Update item quantity in the cart
     And I update the item quantity in the cart
     Then I clear the order
 
-@TC_IOS_Ordering_Mobile_0022 @TC_Demo11
+@TC_IOS_Ordering_Mobile_0022 @TC_Demo
 Scenario: Check total price calculation with multiple items in cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1087,6 +1104,7 @@ Scenario: Check total price calculation with multiple items in cart
 Scenario: Scroll through all menu categories on smaller screen resolution
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     Then I scroll through all menu categories
 
@@ -1112,6 +1130,7 @@ Scenario: Verify cart item details
 Scenario: Update item quantity in cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1124,6 +1143,7 @@ Scenario: Update item quantity in cart
 Scenario: Verify and Clear cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1131,10 +1151,11 @@ Scenario: Verify and Clear cart
     And I click on View Cart
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_004 @TC_Demo11
+@TC_IOS_Cart_Mobile_004 @TC_Demo
 Scenario: Validate total price breakdown
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1150,6 +1171,7 @@ Scenario: Validate total price breakdown
 Scenario: Add delivery instructions
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1158,34 +1180,37 @@ Scenario: Add delivery instructions
     And I add delivery instructions in the cart
     Then I clear the order
 
-# @TC_IOS_Cart_Mobile_006 @TC_Demo
-# Scenario: Validate subtotal after all additions
-#     Given I launch the mobile application
-#     Then I verify the app home screen is displayed
-#     Then I click on the Menu option
-#     And I click on an item to Add
-#     And I click on the Next button
-#     And I click on Add to Cart    
-#     And I click on View Cart
-#     And I verify the subtotal reflects all additions accurately
-#     Then I clear the order    
+@TC_IOS_Cart_Mobile_006 @TC_Demo
+Scenario: Validate subtotal after all additions
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart
+    And I verify the subtotal reflects all additions accurately
+    Then I clear the order    
 
-# @TC_IOS_Cart_Mobile_007 @TC_Demo
-# Scenario: Validate taxes
-#     Given I launch the mobile application
-#     Then I verify the app home screen is displayed
-#     Then I click on the Menu option
-#     And I click on an item to Add
-#     And I click on the Next button
-#     And I click on Add to Cart    
-#     And I click on View Cart  
-#     And I verify the taxes are calculated correctly based on the subtotal
-#     Then I clear the order  
+@TC_IOS_Cart_Mobile_007 @TC_Demo
+Scenario: Validate taxes
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart    
+    And I click on View Cart  
+    And I verify the taxes are calculated correctly based on the subtotal
+    Then I clear the order
 
 @TC_IOS_Cart_Mobile_008 @TC_03 @TC_Demo
 Scenario: Log in to Proceed with Order
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I tap on the My McD bottom tab
     And I log out of the application
     Then I click on the Menu option
@@ -1205,6 +1230,7 @@ Scenario: Log in to Proceed with Order
 Scenario: Charity Donation Info
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1213,7 +1239,7 @@ Scenario: Charity Donation Info
     And I click on the Know More link in charity donation option 
     And  I verify that the charity donation information is displayed in the cart
 
-@TC_IOS_Cart_Mobile_0010 @TC_Demo11
+@TC_IOS_Cart_Mobile_0010 @TC_Demo
 Scenario: Select charity donation checkbox
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
@@ -1237,18 +1263,19 @@ Scenario: View All Offers Functionalities inn cart
     And I tap on the View All Offers link
     Then I verify that the offers page is displayed
 
-# @TC_IOS_Cart_Mobile_0013 @TC_Demo
-# Scenario: verify that all price components display the ₹ symbol
-#     Given I launch the mobile application
-#     Then I verify the app home screen is displayed    
-#     And I click on View Cart
-#     Then I verify that all price components display the ₹ symbol
-#     Then I clear the order
+@TC_IOS_Cart_Mobile_0013 @TC_Demo
+Scenario: verify that all price components display the ₹ symbol
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed    
+    And I click on View Cart
+    Then I verify that all price components display the ₹ symbol
+    Then I clear the order
 
 @TC_IOS_Cart_Mobile_0014  @TC_Demo
 Scenario: Attempt checkout without login
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I tap on the My McD bottom tab
     And I log out of the application
     Then I click on the Menu option
@@ -1265,24 +1292,26 @@ Scenario: Attempt checkout without login
     Then I clear the order 
 
 
-# @TC_IOS_Cart_Mobile_0015 @TC_Demo
-# Scenario: Remove item from cart and total price should update correctly
-#     Given I launch the mobile application
-#     Then I verify the app home screen is displayed
-#     Then I click on the Menu option
-#     And I click on an item to Add
-#     And I click on the Next button
-#     And I click on Add to Cart
-#     And I click on View Cart
-#     And I update the item quantity in the cart
-#     And I verify the total price should update correctly
-#     Then I clear the order
+@TC_IOS_Cart_Mobile_0015 @TC_Demo
+Scenario: Remove item from cart and total price should update correctly
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I update the item quantity in the cart
+    And I verify the total price should update correctly
+    Then I clear the order
     
 
 @TC_IOS_Cart_Mobile_0016 @TC_Demo
 Scenario: Verify that not allwoing to process with sold out item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     And I tap on Add New Address
     And I search for out of stock item location
@@ -1297,6 +1326,7 @@ Scenario: Verify that not allwoing to process with sold out item
 Scenario: Validate Estimated Delivery Time at Checkout
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1310,6 +1340,7 @@ Scenario: Validate Estimated Delivery Time at Checkout
 Scenario: Cart Persistence on Refresh
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1324,6 +1355,7 @@ Scenario: Cart Persistence on Refresh
 Scenario: Promo Code Application
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1335,10 +1367,11 @@ Scenario: Promo Code Application
     Then I verify only one promo code is applied
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_0020 @TC_Demo11
+@TC_IOS_Cart_Mobile_0020 @TC_Demo
 Scenario: Update quantity for multiple items in cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1350,26 +1383,28 @@ Scenario: Update quantity for multiple items in cart
     And I verify the total price calculation is correct
     Then I clear the order
 
-# @TC_IOS_Cart_Mobile_0021 @TC_Demo
-# Scenario: Validate discount shown in order summary
-#     Given I launch the mobile application
-#     Then I verify the app home screen is displayed
-#     Then I click on the Menu option
-#     And I click on an item to Add
-#     And I click on the Next button
-#     And I click on Add to Cart
-#     And I click on View Cart
-#     And I add multiple quantity items
-#     And I tap on the View All Offers link
-#     And I click on the discount flat 
-#     Then I verify the discount is correctly deducted from the subtotal
-#     Then I clear the order
+@TC_IOS_Cart_Mobile_0021 @TC_Demo
+Scenario: Validate discount shown in order summary
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I add multiple quantity items
+    And I tap on the View All Offers link
+    And I click on the discount flat 
+    Then I verify the discount is correctly deducted from the subtotal
+    Then I clear the order
     # need to check the discount is displaying wrong more than 1000 rupee and need to use 77777777
 
-@TC_IOS_Cart_Mobile_0022 @TC_Demo11
+@TC_IOS_Cart_Mobile_0022 @TC_Demo
 Scenario: Validate behavior with expired promo code
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1380,10 +1415,11 @@ Scenario: Validate behavior with expired promo code
     Then I should see a message indicating the code is invalid or expired
     Then I clear the order
 
-@TC_IOS_Cart_Mobile_0023 @TC_Demo11
+@TC_IOS_Cart_Mobile_0023 @TC_Demo
 Scenario: Check total with delivery charges added
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1400,6 +1436,7 @@ Scenario: Check total with delivery charges added
 Scenario: Ensure guest checkout not allowed/ redirect to login page
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I tap on the My McD bottom tab
     And I log out of the application
     Then I click on the Menu option
@@ -1417,6 +1454,7 @@ Scenario: Ensure guest checkout not allowed/ redirect to login page
 Scenario: Validate emoji/special character handling in notes
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click the Add Address button
     Then I should be redirected to the login screen 
     When I tap on the login continue
@@ -1437,12 +1475,13 @@ Scenario: Validate emoji/special character handling in notes
 Scenario: Search for an existing menu item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click on the Search icon
     And I enter Fries in the search bar
     # And I click on the search icon inside the search bar
     Then I verify the search results display matching items
 
-@TC_IOS_Search_Mobile_0002 @TC_Demo11
+@TC_IOS_Search_Mobile_0002 @TC_Demo
 Scenario: Search for a non-existent menu item
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1451,7 +1490,7 @@ Scenario: Search for a non-existent menu item
     # And I click on the search icon inside the search bar
     Then I verify the No items found message is displayed
 
-@TC_IOS_Search_Mobile_0003 @TC_Demo11
+@TC_IOS_Search_Mobile_0003 @TC_Demo
 Scenario: Search with empty input
     Given I launch the mobile application
     Then I verify the app home screen is displayed
@@ -1518,6 +1557,7 @@ Scenario: Add item to cart from search result
 Scenario: Maintain search term after adding to cart
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click on the Search icon
     And I enter Burger in the search bar
     # And I click on the search icon inside the search bar
@@ -1531,6 +1571,7 @@ Scenario: Maintain search term after adding to cart
 Scenario: Filter buttons maintain state across search
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     When I click on the Search icon
     # And I click on the search icon inside the search bar
     And I click on the Veg filter button
@@ -1596,7 +1637,7 @@ Scenario: Validate manual coupon entry and search
     Then I verify that an offer card with code "FLAT10" is displayed
 
 
-@TC_IOS_Offers_Mobile_003 @TC_Demo11
+@TC_IOS_Offers_Mobile_003 @TC_Demo
 Scenario: Validate offer cards display correctly
     Given I launch the mobile application
     Then I verify the app home screen is displayed    
@@ -1623,6 +1664,7 @@ Scenario: Verify Apply button functionality on offer card
 Scenario: Validate cart value restriction when applying a coupon
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1650,6 +1692,7 @@ Scenario: Validate cart value eligibility
 Scenario: Validate one coupon per order policy
     Given I launch the mobile application
     Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
     Then I click on the Menu option
     And I click on an item to Add
     And I click on the Next button
@@ -1663,4 +1706,67 @@ Scenario: Validate one coupon per order policy
     And I click on the change offer
     And I apply the another coupon
     Then  I verified the updated coupon order
-    
+    Then I clear the order
+
+@TC_IOS_Offers_Mobile_008 @TC_Demo
+Scenario: User enters an expired or inactive coupon code
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link
+    And I enter the expired promo code
+    Then I should see a message indicating the code is invalid or expired
+    Then I clear the order
+
+@TC_IOS_Offers_Mobile_008 @TC_Demo
+Scenario: Check successful offer reflection in order summary
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I add multiple quantity items
+    And I tap on the View All Offers link
+    And I click on the discount flat 
+    Then I verify the discount is correctly deducted from the subtotal
+    Then I clear the order    
+
+@TC_IOS_Offers_Mobile_009 @TC_Demo
+Scenario: UI Responsiveness of Offer Page
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link
+    And I verify that the offer layout adapts to mobile view
+    And I verify that all offer buttons are visible
+    And I click the back button in offerpage
+    Then I clear the order 
+
+@TC_IOS_Offers_Mobile_0010 @TC_Demo
+Scenario: Verify offer tags are visible and clear on each offer card
+    Given I launch the mobile application
+    Then I verify the app home screen is displayed
+    And I clear the oder which is present in home page
+    Then I click on the Menu option
+    And I click on an item to Add
+    And I click on the Next button
+    And I click on Add to Cart
+    And I click on View Cart
+    And I tap on the View All Offers link    
+    Then I should see offer tags like visible and distinguishable
+    And I click the back button in offerpage
+    Then I clear the order
+

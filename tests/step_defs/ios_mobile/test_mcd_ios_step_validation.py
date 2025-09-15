@@ -1355,3 +1355,40 @@ def apply_another_coupon(setup_platform):
 def verify_updated_coupon_order(setup_platform):
     updated_coupon_code = readPreReqJson("test_data", "updated_coupon_code") 
     OffersScreenIos(setup_platform).verify_updated_coupon_applied(updated_coupon_code)
+
+@then("I clear the oder which is present in home page")
+@allure.step("Clear the existing order from the home page")
+def clear_existing_order(setup_platform):
+    AddressScreenIos(setup_platform).clear_order_if_present()
+
+
+@then("I enter the expired promo code")
+@allure.step("Enter the expired promo code into the promo field")
+def enter_expired_promo_code(setup_platform):
+    Expired_Promo_Code = readPreReqJson("test_data", "Expired_Promo_Code")
+    print(f"Entering expired promo code: {Expired_Promo_Code}")
+    OffersScreenIos(setup_platform).enter_promo_code(Expired_Promo_Code)
+
+
+@then("I verify that the offer layout adapts to mobile view")
+@allure.step("Verify that the offer layout adapts properly for mobile view")
+def verify_offer_layout_mobile_view(setup_platform):
+    OffersScreenIos(setup_platform).validate_offer_layout_mobile()
+
+
+@then("I verify that all offer buttons are visible")
+@allure.step("Verify all offer buttons are visible and clickable")
+def verify_offer_buttons_clickable(setup_platform):
+    OffersScreenIos(setup_platform).validate_offer_buttons_clickable()
+
+
+@then("I click the back button in offerpage")
+@allure.step("Click back button on offer page")
+def click_back_button(setup_platform):
+    OffersScreenIos(setup_platform).click_back_button()
+
+
+@then("I should see offer tags like visible and distinguishable")
+@allure.step("Verify offer tags visibility and clarity on offer cards")
+def verify_offer_tags_visible(setup_platform):
+    OffersScreenIos(setup_platform).validate_offer_tags()
