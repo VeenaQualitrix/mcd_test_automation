@@ -179,6 +179,24 @@ class AndroidAddressScreen(BasePage):
         except TimeoutException:
             print(" Address filling screen not displayed within timeout")
             return False
+        
+    def verify_address_filling_page_is_displayed(self, timeout=10):
+        try:
+            # Wait until the address screen header is visible
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locators['ADDRESS_SCREEN_HEADER'])
+            )
+            print("Address filling screen is displayed")
+            return True
+        except TimeoutException:
+            print("Address filling screen not displayed within timeout")
+            
+            # Go back twice if not displayed
+            self.driver.back()
+            time.sleep(1)
+            self.driver.back()
+            return False
+
     
     def _scroll_bottom_sheet_until_text(self, text, max_scrolls=8):
         """
@@ -770,7 +788,7 @@ class AndroidAddressScreen(BasePage):
             EC.visibility_of_element_located(locators['SELECT_DELIVERY_ADDRESS_HEADER'])
         )
 
-        target_address = "Dadar, Mukund Mansion, Ayan Fresh"
+        target_address = "Dadar"
 
         try:
             # Scroll downward only until the address is visible

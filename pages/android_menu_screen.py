@@ -336,18 +336,22 @@ class AndroidMenuScreen(BasePage):
         print("'Add to cart' button clicked")
 
     def Select_Desserts_menu(self):
-            time.sleep(5)
-            Select_Desserts = self.driver.find_element(
-                AppiumBy.ANDROID_UIAUTOMATOR,
+        # Wait for the MENU_HEADER to be visible
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['MENU_HEADER'])
+        )
+        print("Our Menu header is displayed")
+        Select_Desserts = self.driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
                 'new UiScrollable(new UiSelector().scrollable(true))'
                 '.scrollIntoView(new UiSelector().textContains("Desserts"));'
             )
 
-            Select_Desserts.click()
-            print("Clicked on Desserts menu")
+        Select_Desserts.click()
+        print("Clicked on Desserts menu")
 
     def add_Desserts_product_in_cart(self):
-        time.sleep(1)
+        time.sleep(3)
         self.actions.is_element_displayed(*locators['DESSERTS_ITEM'])
         self.actions.click_button(*locators['DESSERTS_ITEM'])
         # Now click on Add button
@@ -368,52 +372,70 @@ class AndroidMenuScreen(BasePage):
         print("The desserts thumbnails image is loded and clearly displayed under menu section")
 
     def Select_Burgers_and_wrap_menu(self):
-        time.sleep(5)
-        Select_Burgers_and_Wraps = self.driver.find_element(
-            AppiumBy.ANDROID_UIAUTOMATOR,
-            'new UiScrollable(new UiSelector().scrollable(true))'
-            '.scrollIntoView(new UiSelector().textContains("Burgers & Wraps"));'
+        # Wait for the MENU_HEADER to be visible
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(locators['MENU_HEADER'])
         )
+        print("Our Menu header is displayed")
+        max_scrolls = 10  # Avoid infinite loops
 
-        Select_Burgers_and_Wraps.click()
-        print("Clicked on Burgers & Wraps menu")
+        for _ in range(max_scrolls):
+            try:
+                element = self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    'new UiSelector().textContains("Burgers & Wraps")'
+                )
+                element.click()
+                print("Clicked on Burgers & Wraps menu")
+                return
+            except:
+                # Scroll down
+                self.driver.find_element(
+                    AppiumBy.ANDROID_UIAUTOMATOR,
+                    'new UiScrollable(new UiSelector().scrollable(true)).scrollForward()'
+                )
 
+        raise Exception("Could not find 'Burgers & Wraps' menu after scrolling.")
+    
     def add_Chicken_wrap_to_cart(self):
         time.sleep(5)
-        scrollable = 'new UiScrollable(new UiSelector().resourceId("background-content"))'
         item_text = "Big Spicy Chicken Wrap"
-        max_scrolls = 5   
+        max_scrolls = 10
+        found = False
 
         for i in range(max_scrolls):
             try:
-                # Try to scroll to and find the item
+                # Try to find the item without scrollIntoView (no auto scroll in any direction)
                 Big_Spicy_Chicken_Wrap = self.driver.find_element(
                     AppiumBy.ANDROID_UIAUTOMATOR,
-                    f'{scrollable}.scrollIntoView(new UiSelector().text("{item_text}"));'
+                    f'new UiSelector().text("{item_text}")'
                 )
                 Big_Spicy_Chicken_Wrap.click()
-                print(f" Clicked on {item_text}")
+                print(f"Clicked on {item_text}")
+                found = True
                 break
             except Exception:
-                # If not found, scroll forward and retry
+                # Scroll down manually
                 self.driver.find_element(
                     AppiumBy.ANDROID_UIAUTOMATOR,
-                    f'{scrollable}.scrollForward()'
+                    'new UiScrollable(new UiSelector().resourceId("background-content")).scrollForward()'
                 )
-        else:
-            raise Exception(f" Could not find {item_text} after {max_scrolls} scrolls")
 
-        # Now click on Add button
+        if not found:
+            raise Exception(f"Could not find {item_text} after {max_scrolls} downward scrolls")
+
+        # Click the "Add" button
         add_btn = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(locators['ADD_BUTTON'])
         )
         add_btn.click()
-        print(" 'Add' button is clicked")
+        print("'Add' button is clicked")
         time.sleep(1)
+
         self.actions.click_button(*locators['NEXT_BUTTON'])
         time.sleep(1)
         self.actions.click_button(*locators['ADD_TO_CART_BUTTON'])
-        print(" 'Add to cart' button is clicked")
+        print("'Add to cart' button is clicked")
 
     def Select_Coffee_and_beverages_menu(self):
         time.sleep(5)

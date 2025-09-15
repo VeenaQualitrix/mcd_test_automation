@@ -1204,7 +1204,7 @@ Scenario: Ensure “Add New” opens address entry popup or page
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_013
+@TC_AD_013 @sanityweb
 Scenario: Ensure Address list remains consistent after logout and login
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1236,7 +1236,7 @@ Scenario: Ensure Address list remains consistent after logout and login
         |https://www.uat.mcdapp.co|
 
 
-@TC_AD_018
+@TC_AD_018 @sanityweb
 Scenario: Verify user can tag an address as "Home", "Work", etc.
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1259,7 +1259,7 @@ Scenario: Verify user can tag an address as "Home", "Work", etc.
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_AD_017
+@TC_AD_017 @sanityweb
 Scenario: Verify behavior when all addresses are deleted
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1278,7 +1278,7 @@ Scenario: Verify behavior when all addresses are deleted
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_003 @testmcd1
+@TC_ORDER_003 @sanityweb
 Scenario: Check customization option availability
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1288,7 +1288,7 @@ Scenario: Check customization option availability
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_004 @testmcd1
+@TC_ORDER_004 @sanityweb
 Scenario: Add multiple items to cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1299,7 +1299,7 @@ Scenario: Add multiple items to cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_006 @testmcd1
+@TC_ORDER_006 @sanityweb
 Scenario: Ensure menu item prices are correctly displayed and reflected in cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1312,7 +1312,7 @@ Scenario: Ensure menu item prices are correctly displayed and reflected in cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_007 @testmcd1
+@TC_ORDER_007 
 Scenario: Prevent adding items marked as sold out
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1333,7 +1333,7 @@ Scenario: Prevent adding items marked as sold out
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_010 
+@TC_ORDER_010  @sanityweb
 Scenario: View 3Pc Meals
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1356,7 +1356,7 @@ Scenario: View 3Pc Meals
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_016 @testmcd1
+@TC_ORDER_016 @sanityweb
 Scenario: Customize burger before adding to cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1371,7 +1371,7 @@ Scenario: Customize burger before adding to cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_024 @testmcd1
+@TC_ORDER_024 @sanityweb
 Scenario: Remove item from the cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1384,7 +1384,7 @@ Scenario: Remove item from the cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_025 @testmcd1
+@TC_ORDER_025 @sanityweb
 Scenario: Update item quantity in cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1399,7 +1399,7 @@ Scenario: Update item quantity in cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_026 @testmcd1
+@TC_ORDER_026 @sanityweb
 Scenario: Check total price calculation
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1410,7 +1410,7 @@ Scenario: Check total price calculation
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_ORDER_029 @testmcd1
+@TC_ORDER_029 @sanityweb
 Scenario: Validate cart icon does not appear on the homepage if the cart is empty
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1419,7 +1419,7 @@ Scenario: Validate cart icon does not appear on the homepage if the cart is empt
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_002 @testmcd1
+@TC_CO_002 @sanityweb
 Scenario: Update item quantity
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1436,7 +1436,7 @@ Scenario: Update item quantity
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_003 @testmcd1
+@TC_CO_003 @sanityweb
 Scenario: Verify clear cart when items are already in cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1450,7 +1450,7 @@ Scenario: Verify clear cart when items are already in cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_009 @testmcd1
+@TC_CO_009 @sanityweb
 Scenario: Prompt user to log in before proceeding with order
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1465,7 +1465,7 @@ Scenario: Prompt user to log in before proceeding with order
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_015 @testmcd1
+@TC_CO_015 @sanityweb
 Scenario: Redirect user to login when attempting checkout without being logged in
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1480,7 +1480,7 @@ Scenario: Redirect user to login when attempting checkout without being logged i
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_016 @testmcd1
+@TC_CO_016 @sanityweb
 Scenario: Remove item from cart by decreasing quantity to zero
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1493,7 +1493,7 @@ Scenario: Remove item from cart by decreasing quantity to zero
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_020 @testmcd1
+@TC_CO_020  @sanityweb
 Scenario: Verify cart persists after browser refresh
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1504,7 +1504,7 @@ Scenario: Verify cart persists after browser refresh
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_010 @testmcd1
+@TC_CO_010 @sanityweb
 Scenario: Verify 'Know More' for charity donation
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1520,7 +1520,7 @@ Scenario: Verify 'Know More' for charity donation
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_011 @testmcd1
+@TC_CO_011 @sanityweb
 Scenario: Select charity donation checkbox
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1536,7 +1536,7 @@ Scenario: Select charity donation checkbox
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_012 @testmcd1
+@TC_CO_012 @sanityweb
 Scenario: Uncheck charity donation checkbox
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1554,7 +1554,7 @@ Scenario: Uncheck charity donation checkbox
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_013 @testmcd1
+@TC_CO_013 @sanityweb
 Scenario: View all available offers
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1570,7 +1570,7 @@ Scenario: View all available offers
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_014 @testmcd1
+@TC_CO_014 @sanityweb
 Scenario: Ensure currency symbol is correctly shown for all price components
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1585,7 +1585,7 @@ Scenario: Ensure currency symbol is correctly shown for all price components
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_005 @testmcd1
+@TC_CO_005 @sanityweb
 Scenario: Validate total price breakdown in order summary
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1600,7 +1600,7 @@ Scenario: Validate total price breakdown in order summary
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_025 @testmcd1
+@TC_CO_025 @sanityweb
 Scenario: Validate behavior with an expired promo code
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1626,7 +1626,7 @@ Scenario: Validate behavior with an expired promo code
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_028 @testmcd1
+@TC_CO_028 @sanityweb
 Scenario: Ensure guest checkout not allowed
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1641,7 +1641,7 @@ Scenario: Ensure guest checkout not allowed
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_001 @testmcd1
+@TC_CO_001 @sanityweb
 Scenario: Validate cart contains correct item details
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1655,7 +1655,7 @@ Scenario: Validate cart contains correct item details
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_006 @testmcd1
+@TC_CO_006 @sanityweb
 Scenario: Add Delivery Instructions on Checkout Page
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1671,7 +1671,7 @@ Scenario: Add Delivery Instructions on Checkout Page
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_029 @testmcd1
+@TC_CO_029 @sanityweb
 Scenario: Add special characters in delivery instruction
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1687,7 +1687,7 @@ Scenario: Add special characters in delivery instruction
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_022 @testmcd1
+@TC_CO_022  @sanityweb
 Scenario: Update quantity for multiple items in cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1699,7 +1699,7 @@ Scenario: Update quantity for multiple items in cart
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_007 @newtestmcd1
+@TC_CO_007 @sanityweb
 Scenario: Validate subtotal after all additions
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1714,7 +1714,7 @@ Scenario: Validate subtotal after all additions
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_CO_008 @testmcd1
+@TC_CO_008 @sanityweb
 Scenario: Validate tax calculation in cart
     Given  I open the Chrome browser
     When   I hit the URL
@@ -1824,7 +1824,7 @@ Scenario: Check total with delivery charges added
         |https://www.uat.mcdapp.co|
 
 
-@TC_SM_001 @newtestmcd1
+@TC_SM_001 @sanityweb
 Scenario Outline: Search for an existing menu item
     Given I open the Chrome browser
     When I launch <appURL>
@@ -1837,7 +1837,7 @@ Scenario Outline: Search for an existing menu item
         |appURL|
         |https://www.uat.mcdapp.co|
 
-@TC_SM_002 @newtestmcd1
+@TC_SM_002 @sanityweb
 Scenario Outline: Search for an non-existing menu item
     Given I open the Chrome browser
     When I launch <appURL>
@@ -1851,7 +1851,7 @@ Scenario Outline: Search for an non-existing menu item
         |https://www.uat.mcdapp.co|
 
 
-@TC_SM_003 @newtestmcd1
+@TC_SM_003 @sanityweb
 Scenario Outline: User attempts to search with empty input
     Given I open the Chrome browser
     When I launch <appURL>

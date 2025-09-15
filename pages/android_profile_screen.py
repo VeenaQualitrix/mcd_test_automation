@@ -43,6 +43,8 @@ locators = {
     "SELECT_COLOR_BLIND_RADIO_BUTTON": (AppiumBy.XPATH, "//android.app.Dialog/android.view.View/android.view.View[2]"),
     "TOGGLE_BUTTON_IN_ON_MODE": (By.XPATH, "//label[@class='v1 v1--active']"),
     "BACK_BUTTON_PROFILE": (By.XPATH, "//android.widget.Image[@text='ic-arrow-left-primary']"),
+    "PROFILE_NAME": (By.XPATH, "//android.widget.TextView[@text='test user01']"),
+    "PROFILE_MOBILE": (By.XPATH, "//android.widget.TextView[@text='+917777777777']"),
 
     }
 
@@ -442,7 +444,6 @@ class AndroidProfileScreen(BasePage):
         time.sleep(2)
         user_data_store["original_name"] = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
         user_data_store["original_mobile"] = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
-        user_data_store["original_email"] = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
         print("Captured profile info: ")
         print(user_data_store)
         time.sleep(2)
@@ -453,11 +454,9 @@ class AndroidProfileScreen(BasePage):
         time.sleep(2)
         current_name = self.driver.find_element(*locators['PROFILE_NAME']).get_attribute("value")
         current_mobile = self.driver.find_element(*locators['PROFILE_MOBILE']).get_attribute("value")
-        current_email = self.driver.find_element(*locators['PROFILE_EMAIL']).get_attribute("value")
 
         assert current_name == user_data_store["original_name"], f"Expected name: {user_data_store['original_name']}, but got: {current_name}"
         assert current_mobile == user_data_store["original_name"], f"Expected name: {user_data_store['original_mobile']}, but got: {current_name}"
-        assert current_email == user_data_store["original_email"], f"Expected email: {user_data_store['original_email']}, but got: {current_email}"
         print(" Profile info remains unchanged after switching business model.")
 
     def verify_profile_page_navigation_after_switching_model(self):

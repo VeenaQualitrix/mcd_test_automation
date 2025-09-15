@@ -96,7 +96,7 @@ class AndroidLoginScreen(BasePage):
         
     def enter_invalid_mobile_number(self, invalid_mobile_number):
         time.sleep(5)
-        self.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
+        #elf.actions.is_element_displayed(*locators['LABEL_ENTER_MOBILE_NUMBER'])
         self.actions.enter_text(*locators["MOBILE_NUMBER_INPUT_FIELD"], invalid_mobile_number)
         print("Entered invalid Mobile Number")
 

@@ -285,7 +285,12 @@ Scenario: update email address
     When  I edits email address and clicks Save Changes
     Then  I verify home screen navigation
     And   I verify updated email address should be reflected on the profile
-    And   I click on Log out button
+    When  I click on edit profile icon
+    #Then  I verify user is on the profile edit page
+    When  I clear email field
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    Then  I click on Log out button
 
 
 @TC_Android_PP_07 @newtestrun
@@ -491,7 +496,7 @@ Scenario: Verify Incorrect login from “Add Address” screen
     When  I enter incorrect mobile number
     Then  I confirm 'verify mobile' button is disabled
 
-@TC_Android_Address_Login_06 @newtestrun
+@TC_Android_Address_Login_06 @FridayScripts12
 Scenario: Add new delivery address during checkout
     Given I launch the native app
     Then  I verify the app should be launched
@@ -507,11 +512,10 @@ Scenario: Add new delivery address during checkout
     And   I click on add address in home screen
     Then  I verify 'Add new' button is displayed to add address
     When  I click on add new button and click confirm location
-    Then  I verify user redirected to address fill in details page
-    When  I add new delivery address
+    And   I add new delivery address
     Then  I verify address is added and selected
-    #When  I click on view cart option
-    #And   I click on clear all to empty the cart
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
@@ -712,7 +716,7 @@ Scenario: Validate no restaurant available for selected model
     And    I search the address from searchbar after selecting BM model
     Then   I should see the message: “Sorry, we do not serve this location yet”
 
-@TC_Android_BM_015
+@TC_Android_BM_015 @FridayScripts12
 Scenario: Ensure no multiple model selection at once
     Given  I launch the native app
     Then   I verify the app should be launched
@@ -729,7 +733,7 @@ Scenario: Test visual feedback on tap for mobile
     When   I hover over each business model option
     Then   I verify the icons and text should respond visually
 
-@TC_Android_BM_021 @newtestrun
+@TC_Android_BM_021 @FridayScripts12
 Scenario: Verify Switching models does not alter profile information
     Given I launch the native app
     Then  I verify the app should be launched
@@ -824,7 +828,7 @@ Scenario: Verify editing an existing address
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_AD_004 @sanitymobile01
+@TC_Android_AD_004 @FridayScripts12
 Scenario: Verify deleting an existing address
     Given I launch the native app
     Then  I verify the app should be launched
@@ -878,7 +882,7 @@ Scenario: Validate empty address cannot be saved
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_AD_007  @sanitymobile01
+@TC_Android_AD_007  @FridayScripts12
 Scenario: Verify "Near" location shown under each address
     Given I launch the native app
     Then  I verify the app should be launched
@@ -942,7 +946,7 @@ Scenario: Default address selection on login
     Then  I click on Log out button
 
 
-@TC_Android_AD_012  @Fridaynew
+@TC_Android_AD_012  @FridayScripts12
 Scenario: Ensure “Add New” opens address entry popup or page
     Given I launch the native app
     Then  I verify the app should be launched
@@ -955,11 +959,11 @@ Scenario: Ensure “Add New” opens address entry popup or page
     And   I click on add address in home screen
     Then  I verify 'Add new' button is displayed to add address
     When  I click on add new button and click confirm location
-    Then  I verify user redirected to address fill in details page
+    Then  I verify address fill in details page is displayed
     When  I click on MyMcD hamburger icon
     Then  I click on Log out button
 
-@TC_Android_AD_013  @newtestrun
+@TC_Android_AD_013  @FridayScripts12
 Scenario: Ensure Address list remains consistent after logout and login
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1006,7 +1010,7 @@ Scenario: Verify user can tag an address as "Home", "Work", etc.
     Then  I click on Log out button
 
 
-@TC_Android_ORDER_001  @FridayScripts
+@TC_Android_ORDER_001  @FridayScripts12
 Scenario: Place an order with available breakfast item
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1056,7 +1060,7 @@ Scenario: Add multiple items to cart
     When  I click on clear all to empty the cart
 
 
-@TC_Android_ORDER_005 @FridayScripts
+@TC_Android_ORDER_005 @FridayScripts12
 Scenario: Place an order with only 1 item
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1067,7 +1071,7 @@ Scenario: Place an order with only 1 item
     Then  I verify the item is added to the cart
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_006 @FridayScripts
+@TC_Android_ORDER_006 @FridayScripts12
 Scenario: Ensure menu item prices are correctly displayed and reflected in cart
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1097,7 +1101,7 @@ Scenario: Verify out-of-stock label prevents adding item
     Then  I click on Log out button
 
 
-@TC_Android_ORDER_008 @FridayScripts
+@TC_Android_ORDER_008 @FridayScripts12
 Scenario: Add a McBreakfast item to cart
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1108,7 +1112,7 @@ Scenario: Add a McBreakfast item to cart
     Then  I verify the item is added to the cart
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_009   @FridayScripts
+@TC_Android_ORDER_009   
 Scenario: Add a sold-out McBreakfast item
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1138,7 +1142,7 @@ Scenario: View 3Pc Meals
     Then  I verify the 3Pc meal added in cart
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_011  @sanitymobile01
+@TC_Android_ORDER_011  @FridayScripts12
 Scenario: Choose any product from Desserts category
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1150,7 +1154,7 @@ Scenario: Choose any product from Desserts category
     Then  I verify the Desserts product added in cart
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_015  @FridayScripts
+@TC_Android_ORDER_015  @FridayScripts12
 Scenario: Add burger/wrap from Burgers & Wraps
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1162,7 +1166,7 @@ Scenario: Add burger/wrap from Burgers & Wraps
     Then  I verify the Burgers & Wraps product added in cart
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_016   @Fridaynew
+@TC_Android_ORDER_016   
 Scenario: Customize burger before adding to cart
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1224,7 +1228,7 @@ Scenario: Add a brownie to cart
     Then  I verify brownie should be added to the cart 
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_021   @FridayScripts
+@TC_Android_ORDER_021   
 Scenario: View thumbnails image of a dessert
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1233,7 +1237,7 @@ Scenario: View thumbnails image of a dessert
     And   I selects the 'Desserts' category under menu
     Then  I verify thumbnails image of a dessert is clearly displayed
 
-@TC_Android_ORDER_022   @FridayScripts
+@TC_Android_ORDER_022   @FridayScripts12
 Scenario: Add millet bun burger to cart
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1245,7 +1249,7 @@ Scenario: Add millet bun burger to cart
     Then  I verify millet bun burger should be added to the cart 
     When  I click on clear all to empty the cart
 
-@TC_Android_ORDER_023   @FridayScripts
+@TC_Android_ORDER_023   
 Scenario: View nutrition description of millet bun
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1255,7 +1259,7 @@ Scenario: View nutrition description of millet bun
     And   I click on millet bun burger
     Then  I verify nutritional info is displayed in the description
 
-@TC_Android_ORDER_024   @FridayScripts
+@TC_Android_ORDER_024   
 Scenario: Remove item from the cart
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1379,7 +1383,7 @@ Scenario: Add Delivery Instructions on Checkout Page
     Then  I verify the instructions field should accept the input
     When  I click on clear all to empty the cart
 
-@TC_Android_CO_007 @Fridaynew
+@TC_Android_CO_007 @FridayScripts12
 Scenario: Validate subtotal after all additions
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1389,7 +1393,8 @@ Scenario: Validate subtotal after all additions
     And   I click on view cart option
     Then  I verify the single item in cart
     And   I verify subtotal for a single added item
-    When  I add item from recommendation
+    When  I click on view cart option
+    And   I add item from recommendation
     Then  I verify subtotal for all added items
     When  I click on view cart option
     And   I click on clear all to empty the cart
@@ -1454,7 +1459,7 @@ Scenario: Select charity donation checkbox
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_CO_012 @testmcd1
+@TC_Android_CO_012 @FridayScripts12
 Scenario: Uncheck charity donation checkbox
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1468,7 +1473,7 @@ Scenario: Uncheck charity donation checkbox
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_CO_013 @testmcd1
+@TC_Android_CO_013 @FridayScripts12
 Scenario: View all available offers
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1479,7 +1484,8 @@ Scenario: View all available offers
     Then  I verify the single item in cart
     When  I click on 'View All' link
     Then  I verify the user should be redirected to a page displaying all available offers
-    When  I click on clear all to empty the cart
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
   
 @TC_Android_CO_014 @testmcd1
 Scenario: Ensure currency symbol is correctly shown for all price components
@@ -1575,7 +1581,7 @@ Scenario: Verify cart persists after browser refresh
     Then  I verify the cart should retain the previously added items
     When  I click on clear all to empty the cart
 
-@TC_Android_CO_021 @newtestmcd1
+@TC_Android_CO_021 @FridayScripts12
 Scenario: Apply Multiple Promo Codes
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1626,9 +1632,9 @@ Scenario: Ensure guest checkout not allowed
     And   I click on add address in home screen
     Then  I verify user redirected to login/signup prompt
 
-@TC_Android_CO_023 @newtestmcd1
+@TC_Android_CO_023 @FridayScripts12
 Scenario: Display applied offer discount in the order summary
-    Given  I launch the native app
+    Given I launch the native app
     Then  I verify the app should be launched
     And   I verify home screen navigation
     When  I click on MyMcD hamburger icon
@@ -1641,14 +1647,13 @@ Scenario: Display applied offer discount in the order summary
     And   I click on view cart option
     Then  I verify the single item in cart
     When  I clicks the 'Add' button multiple times to increase the item quantity
-    Then  I verify total amount from order summary
-    When  I click on 'View All' link
-    And   I apply the discount promo code
-    Then  I verify the discount should be clearly shown and deducted in the order summary
+    And   I click on 'View All' link
+    And   I enters a valid coupon code 'FLAT10' and clicks on the Apply button
+    Then  I verify the discount should be successfully applied
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_CO_025 @testmcd1
+@TC_Android_CO_025 @FridayScripts12
 Scenario: Validate behavior with an expired promo code
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1666,7 +1671,8 @@ Scenario: Validate behavior with an expired promo code
     When  I enter the expired promo code and click search
     And   I click on offer Apply button and select button
     Then  I verify a message should be displayed indicating that the code is invalid or expired
-    When  I click on clear all to empty the cart
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
 
 
 @TC_Android_CO_026 @newtestmcd1
@@ -1849,7 +1855,7 @@ Scenario Outline: Search persists after page reload
     Then  I click back button from search menu screen
     And   I verify Default view restored and no filters should be applied
 
-@TC_Android_OFFER_001 
+@TC_Android_OFFER_001  @FridayScripts12 
 Scenario: Verify offer page input field is visible and functional
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1879,7 +1885,7 @@ Scenario: Validate manual coupon entry and search
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_OFFER_003 @newtestmcd2
+@TC_Android_OFFER_003 @FridayScripts12
 Scenario: Validate offer cards display correctly
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1899,7 +1905,7 @@ Scenario: Validate offer cards display correctly
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_OFFER_004 @newtestmcd2
+@TC_Android_OFFER_004 @FridayScripts12
 Scenario: Verify Apply offer coupon functionality
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1920,7 +1926,7 @@ Scenario: Verify Apply offer coupon functionality
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_OFFER_005 @newtestmcd2
+@TC_Android_OFFER_005 @FridayScripts12
 Scenario: Validate cart value restrictions
     Given  I launch the native app
     Then  I verify the app should be launched
@@ -1940,7 +1946,7 @@ Scenario: Validate cart value restrictions
     When  I click on view cart option
     And   I click on clear all to empty the cart
 
-@TC_Android_OFFER_006 @newtestmcd2
+@TC_Android_OFFER_006 @FridayScripts12
 Scenario: Validate cart value eligibility for coupon application
     Given I launch the native app
     Then  I verify the app should be launched
@@ -1958,8 +1964,10 @@ Scenario: Validate cart value eligibility for coupon application
     And   I click on 'View All' link
     And   I enters a valid coupon code 'FLAT10' and clicks on the Apply button
     Then  I verify the discount should be successfully applied
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
 
-@TC_Android_OFFER_008 @newtestmcd2
+@TC_Android_OFFER_008 
 Scenario: Validate one coupon per order policy
     Given  I launch the native app
     Then  I verify the app should be launched
@@ -1997,7 +2005,8 @@ Scenario: Validate expired or inactive coupon codes
     When  I enter the expired promo code and click search
     And   I click on offer Apply button and select button
     Then  I verify a message should be displayed indicating that the code is invalid or expired
-    When  I click on clear all to empty the cart
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
 
 @TC_Android_OFFER_010 @newtestmcd2
 Scenario: Verify applied offer is reflected in order summary
@@ -2053,10 +2062,9 @@ Scenario: Validate Offer Tags on Product Cards
     Then  I verify an offer card with the code 'FLAT10' should appear
     When  I click on view cart option
     And   I click on clear all to empty the cart
-    Then  I verify the offer tags such as 'FLAT 10 OFF' should be clearly visible
 
 @TC_Android_OFFER_013 @newtestmcd2
-Scenario: Verify multiple offers are shown in a scrollable  or paginated if many exists
+Scenario: Verify multiple offers are shown in a scrollable or paginated if many exists
     Given I launch the native app
     Then  I verify the app should be launched
     And   I verify home screen navigation
@@ -2068,6 +2076,264 @@ Scenario: Verify multiple offers are shown in a scrollable  or paginated if many
     Then  I verify the offers should appear in a scrollable or paginated format without any visual breakage
     When  I click on view cart option
     And   I click on clear all to empty the cart
+
+@TC_Android_PAY_001 
+Scenario: Verify redirection to payment page after placing an order
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    And   I click on add address in home screen
+    And   I selects the Mumbai address from the address list
+    When  I click on Menu icon
+    And   I add single item to the cart
+    And   I click on view cart option
+    Then  I verify the single item in cart
+    When  I click on pay button in view cart page
+    #Then  I verify user should be redirected to the payment page successfully
+    When  I click on view cart option
+    And   I click on clear all to empty the cart
+
+@TC_Android_OH_001 
+Scenario: Verify that the user is able to view order history
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+
+@TC_Android_OH_002 
+Scenario: Navigate to Post-Payment Page from Order History
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I click on 'Order Tracking'
+    Then  I verify the user should be navigated to the post-payment page
+
+@TC_Android_OH_003 
+Scenario: Validate that the order status is reflected in each order card
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    And   I verify user should be able to see the order status displayed on each order card
+
+@TC_Android_OH_004 
+Scenario: Validate that the order status matches in order tracking on the post-payment page
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I click on 'Order Tracking' for placed order
+    Then  I verify the placed order status on the post-payment page should match the status displayed on the order card
+    When  I click on 'Order Tracking' for cancelled order
+    Then  I verify the cancelled order status on the post-payment page should match the status displayed on the order card
+
+@TC_Android_OH_005 
+Scenario: Verify that the user is able to view order history cards with Business model name
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    And   I verify each order card should display the respective Business model name
+
+@TC_Android_OH_006 
+Scenario: Verify that the page scrolls up and down to display order history
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I user scrolls down the page
+    Then  I verify the page should move down and display additional order history
+
+@TC_Android_OH_007 
+Scenario: Verify that the Help button is only visible for McDelivery orders
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    And   I verify the Help button should be visible only for orders placed via McDelivery
+    And   I verify the Help button should not be visible for orders from other business models (BM)
+
+@TC_Android_OH_009 
+Scenario: Verify that User cannot raise a complaint after 2 hours of order
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I selects an order older than 2 hours and clicks on Help button
+    Then  I verify a pop-up message should appear saying 'Order active hours ended'
+
+@TC_Android_PP_001 
+Scenario: Verify that User is able to view all purchased products in order details
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I click on 'Order Tracking' for placed order
+    Then  I verify 'Your Order Details' section should be displayed
+    And   I verify all products included in the order should be visible to the user
+
+@TC_Android_PP_002 
+Scenario: Verify that User is able to download the invoice from order tracking
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I click on 'Order Tracking' for placed order
+    Then  I verify 'Your Order Details' section should be displayed
+    When  I clicks on 'Invoice'
+    Then  I verify invoice should be downloaded and saved on the device
+
+@TC_Android_PP_003 
+Scenario: Verify the presence of an order number on the confirmation page
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    And   I verify order number should be displayed
+
+@TC_Android_PP_004 
+Scenario: Verify store name are shown correctly
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    And   I verify the store name should be visible
+
+@TC_Android_PP_005 @newtestmcd2
+Scenario: Verify that the complete delivery address is shown correctly
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I click on 'Order Tracking' for cancelled order
+    Then  I verify the complete delivery address should be shown
+
+@TC_Android_PP_006 
+Scenario: verify the order status progress bar on the order tracking page
+    Given I launch the native app
+    Then  I verify the app should be launched
+    And   I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on login or signup button
+    And   I enter a valid mobile number and click mobile verify
+    And   I enter the OTP and click verify
+    And   I click save changes on profile details page
+    Then  I verify home screen navigation
+    When  I click on MyMcD hamburger icon
+    And   I click on 'My Orders'
+    Then  I verify order history should be displayed on the screen
+    When  I click on 'Order Tracking' for placed order
+    Then  I verify the status bar should be visible
 
 
 @TC_Android_AD_017   

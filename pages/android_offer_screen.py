@@ -14,11 +14,10 @@ locators = {
         "OFFER_APPLIED_SUCCESS_MESSAGE": (AppiumBy.XPATH, "//android.widget.TextView[@text= 'Promo Applied Successfully']"),
         "SUCCESS_MESSAGE_OK_BUTTON": (AppiumBy.XPATH, "//android.widget.Button[@text='OK']"),
         "FIRST_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='SPD82AA49EE9040']"),
-        "APPLY_SECOND_OFFER": (AppiumBy.XPATH, "(//android.widget.Button[@text='Apply'])[1]"),
         "SECOND_OFFER_NAME": (AppiumBy.XPATH, "//android.widget.TextView[@text='SPDB28292DD88C1']"),
         "OFFER_CODE": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offer Applied!']/following-sibling::android.widget.TextView[1]"),
         "COUPON_LIST_CODES": (AppiumBy.XPATH, "//android.widget.TextView[contains(@text,'SPD')]"),
-        "OFFER_APPLIED_TEXT": (AppiumBy.XPATH, "//android.widget.TextView[@text='Offer Applied!']"),
+        "OFFER_APPLIED_TEXT": (AppiumBy.XPATH, "//android.view.View[@text='Offer Applied! View All']"),
         "CHANGE_OFFER": (AppiumBy.XPATH, "//android.widget.TextView[@text='Change Offer']"),
         "OFFER_SERCHBAR": (AppiumBy.XPATH, "//android.widget.EditText"),
         "OFFER_APPLY_BUTTON": (AppiumBy.XPATH, "//android.widget.Button[@text='Apply']"),
@@ -29,6 +28,7 @@ locators = {
         "SHOW_MORE": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Show More'])[1]"),
         "APPLY_BUTTON": (AppiumBy.XPATH, "(//android.widget.Button[@text='Apply'])[1]"),
         "FREEDELIVERY_COUPON_CODE": (AppiumBy.XPATH, "//android.widget.TextView[@text='freedelivery@199']"),
+        "FREEDELIVERY_FREEPRODUCT_COUPON_CODE": (AppiumBy.XPATH, "(//android.widget.TextView[@text='Freedelivery+Free product'])[1]"),
 }
 
 class AndroidOfferPage(BasePage):
@@ -39,6 +39,8 @@ class AndroidOfferPage(BasePage):
                 self.actions.is_element_displayed(*locators['OFFERS_PAGE'])
                 print("ALL available offers is displayed")
                 # Navigate back after verification
+                self.driver.back()
+                time.sleep(1)
                 self.driver.back()
                 time.sleep(1)
 
@@ -63,7 +65,6 @@ class AndroidOfferPage(BasePage):
                         EC.visibility_of_element_located(locators['OFFER_APPLIED_TEXT'])
                         )
 
-                        # **Dynamically fetch applied coupon code (green label)**
                         applied_coupon = WebDriverWait(self.driver, 30).until(
                                 EC.visibility_of_element_located(locators['FIRST_OFFER_NAME'])
                                 ).text.strip()
@@ -91,44 +92,22 @@ class AndroidOfferPage(BasePage):
                         self.actions.click_button(*locators['SUCCESS_MESSAGE_OK_BUTTON'])
                         print("Second coupon applied successfully")
 
-                        # Step 3: Fetch the new applied coupon code dynamically
                         final_applied_coupon = WebDriverWait(self.driver, 30).until(
                                 EC.visibility_of_element_located(locators['SECOND_OFFER_NAME'])
                                 ).text.strip()
 
                         print(f"Fetched second applied coupon: {final_applied_coupon}")
 
-                        # Step 4: Validate coupon switch
+                        #  Validate coupon switch
                         assert final_applied_coupon != applied_coupon, (
                         f"Coupon did not switch! Expected a different coupon but found: {final_applied_coupon}"
                         )
 
-                        print(f"✅ Successfully switched from {applied_coupon} to {final_applied_coupon}!")
+                        print(f" Successfully switched from {applied_coupon} to {final_applied_coupon}!")
 
                 except Exception as e:
-                        print(f"❌ Test failed: {str(e)}")
+                        print(f" Test failed: {str(e)}")
                         raise
-
-        def enter_promo_code_and_click_search(self):
-                self.actions.is_element_displayed(*locators['OFFER_SERCHBAR'])
-                promo_code = "FLAT10"
-
-                # Scroll to the promo code
-                self.driver.find_element(
-                AppiumBy.ANDROID_UIAUTOMATOR,
-                f'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("{promo_code}"))'
-                )
-
-                # Now click the corresponding Apply button
-                xpath = f"//android.widget.TextView[@text='{promo_code}']/following::android.widget.Button[@text='Apply'][1]"
-                self.driver.find_element(AppiumBy.XPATH, xpath).click()
-                self.actions.is_element_displayed(*locators['DISCOUNT_COUPON'])
-                print("Discount coupon headline is displayed")
-                self.actions.is_element_displayed(*locators['OFFER_APPLIED_SUCCESS_MESSAGE'])
-                print("Promo applies successfully text is displayed")
-                time.sleep(1)
-                self.actions.click_button(*locators['SUCCESS_MESSAGE_OK_BUTTON'])
-                print("Ok button is clicked")
 
 
         def enter_expired_promo_code_and_click_search(self, Expired_Promo):
@@ -159,6 +138,8 @@ class AndroidOfferPage(BasePage):
                 self.actions.click_button(*locators['SUCCESS_MESSAGE_OK_BUTTON'])
                 print("Clicked 'Ok button")
                 time.sleep(2)
+                self.driver.back()
+                time.sleep(1)
                 self.driver.back()
 
         def verify_input_box_for_entering_coupon_code_visible_and_functional(self, Coupon_code):
@@ -241,3 +222,61 @@ class AndroidOfferPage(BasePage):
                 print("Clicked 'Ok button")
                 time.sleep(2)
                 self.driver.back()
+                time.sleep(1)
+                self.driver.back()
+
+        def verify_offers_screen_is_diplayed(self):
+                time.sleep(5)
+                self.actions.is_element_displayed(*locators['OFFERS_PAGE'])
+                print("ALL available offers is displayed")
+
+        def verify_all_buttons_are_functional_and_displays_correctly(self,Flat10_Coupon_code ):
+                time.sleep(5)
+                self.actions.is_element_displayed(*locators['OFFER_SERCHBAR'])
+                self.actions.enter_text(*locators["OFFER_SERCHBAR"], Flat10_Coupon_code)
+                time.sleep(3)
+                self.actions.click_button(*locators["OFFER_SERCHBAR"])
+                print("Entered a flat10 coupon code and hit search button")
+                self.actions.is_element_displayed(*locators['FLAT10_COUPON_CODE'])
+                print("Freedelivery coupon code is displayed")
+                self.actions.is_element_displayed(*locators['COUPON_DESCRIPTION'])
+                print("Coupon description is displayed")
+                self.actions.is_element_displayed(*locators['SHOW_MORE'])
+                print("Show more link is displayed")
+                self.actions.is_element_displayed(*locators['APPLY_BUTTON'])
+                print("Apply button is displayed")   
+                time.sleep(3)
+                self.actions.click_button(*locators["APPLY_BUTTON"])
+                print("Entered coupon code and clicked apply button")
+                self.actions.is_element_displayed(*locators['OFFER_APPLIED_SUCCESS_MESSAGE'])
+                time.sleep(2)
+                self.actions.click_button(*locators["SUCCESS_MESSAGE_OK_BUTTON"])
+                self.driver.back()
+                time.sleep(1)
+                self.driver.back()
+                time.sleep(1)
+                self.driver.back() 
+
+        def verify_offers_page_should_be_scrollable_if_many_offer_exists(self):
+                time.sleep(5)
+
+                try:
+                        # Use UiScrollable to scroll until the element is visible
+                        self.driver.find_element(
+                        AppiumBy.ANDROID_UIAUTOMATOR,
+                        'new UiScrollable(new UiSelector().scrollable(true))'
+                        '.scrollIntoView(new UiSelector().textContains("Freedelivery+Free product"));'
+                        )
+
+                        # Verify element is displayed
+                        self.actions.is_element_displayed(*locators['FREEDELIVERY_FREEPRODUCT_COUPON_CODE'])
+                        print("Freedelivery+Free product coupon code is displayed")
+
+                except Exception as e:
+                        raise AssertionError(f"Unable to find or scroll to Freedelivery+Free product coupon code. Error: {e}")
+                
+                self.driver.back()
+                time.sleep(1)
+                self.driver.back()
+
+

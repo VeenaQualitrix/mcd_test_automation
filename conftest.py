@@ -30,6 +30,7 @@ from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
 
 import os
 from pathlib import Path
@@ -454,6 +455,16 @@ def mobile_driver():
     appium_service.start(args=['--allow-insecure=adb_shell', '--allow-cors'])
     if not appium_service.is_running:
         raise Exception("Appium server did not start!") 
+    
+
+@pytest.fixture
+def user_data_store():
+    """Fixture to store user input temporarily across steps."""
+    return {}
+
+@pytest.fixture
+def context():
+    return {}
     
 
     
